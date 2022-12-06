@@ -9,9 +9,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/yangxj96-bean" />
+            <option value="$PROJECT_DIR$/yangxj96-common" />
             <option value="$PROJECT_DIR$/yangxj96-serve" />
             <option value="$PROJECT_DIR$/yangxj96-serve/yangxj96-serve-auth" />
+            <option value="$PROJECT_DIR$/yangxj96-serve/yangxj96-serve-dept" />
             <option value="$PROJECT_DIR$/yangxj96-serve/yangxj96-serve-gateway" />
+            <option value="$PROJECT_DIR$/yangxj96-serve/yangxj96-serve-system" />
             <option value="$PROJECT_DIR$/yangxj96-starter" />
             <option value="$PROJECT_DIR$/yangxj96-starter/yangxj96-starter-remote" />
           </set>

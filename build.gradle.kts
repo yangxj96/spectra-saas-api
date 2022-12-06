@@ -12,6 +12,7 @@ allprojects {
     version = "1.0.0-SNAPSHOT"
 
     repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/public/") }
         maven { url = uri("https://repo.spring.io/milestone") }
         mavenCentral()
     }
@@ -40,6 +41,7 @@ subprojects {
     // 定义的变量,可以再全局使用
     extra["springCloudVersion"] = "2022.0.0-RC2"
     extra["mybatisVersion"] = "3.0.0"
+    extra["mybatisPlusVersion"] = "3.5.2"
 
     // 等同于dependencyManagement {}
     configure<DependencyManagementExtension> {
@@ -50,6 +52,9 @@ subprojects {
 
     dependencies {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+        compileOnly("org.projectlombok:lombok")
+        annotationProcessor("org.projectlombok:lombok")
     }
 
     tasks.getByName<Test>("test") {
