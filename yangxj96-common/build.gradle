@@ -1,7 +1,8 @@
 dependencies {
+    api(project(":yangxj96-bean"))
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
     implementation("com.baomidou:mybatis-plus-boot-starter:${mybatisPlusVersion}")
-
-
 }

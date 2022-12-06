@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/yangxj96-serve/yangxj96-serve-system" />
             <option value="$PROJECT_DIR$/yangxj96-starter" />
             <option value="$PROJECT_DIR$/yangxj96-starter/yangxj96-starter-remote" />
+            <option value="$PROJECT_DIR$/yangxj96-starter/yangxj96-starter-security" />
           </set>
         </option>
       </GradleProjectSettings>

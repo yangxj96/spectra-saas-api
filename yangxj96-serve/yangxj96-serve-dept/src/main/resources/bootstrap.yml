@@ -1,15 +1,9 @@
 yangxj96:
   security:
-    enable: false
+    enable: true
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
-  data:
-    redis:
-      host: 1.14.6.120
-      password: QPOCe^7Q5qtoPD&O
-      port: 6379
-      database: 9

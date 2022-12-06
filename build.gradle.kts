@@ -51,10 +51,19 @@ subprojects {
     }
 
     dependencies {
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+        // 测试 begin
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        // 测试 end
+
+        // 工具 begin
+        implementation("org.apache.commons:commons-lang3:3.12.0")
+        implementation("org.apache.commons:commons-collections4:4.4")
+        implementation("org.apache.commons:commons-pool2:2.11.1")
+        implementation("cn.hutool:hutool-all:5.8.10")
         compileOnly("org.projectlombok:lombok")
         annotationProcessor("org.projectlombok:lombok")
+        // 工具 end
     }
 
     tasks.getByName<Test>("test") {

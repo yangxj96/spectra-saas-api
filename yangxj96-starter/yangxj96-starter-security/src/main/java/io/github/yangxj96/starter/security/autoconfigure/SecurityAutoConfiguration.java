@@ -1,0 +1,158 @@
+package io.github.yangxj96.starter.security.autoconfigure;
+
+import io.github.yangxj96.common.respond.R;
+import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
+import io.github.yangxj96.starter.security.properties.SecurityProperties;
+import io.github.yangxj96.starter.security.store.TokenStore;
+import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+/**
+ * security配置
+ *
+ * @author 杨新杰
+ */
+@Slf4j
+@EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@ConditionalOnProperty(name = "yangxj96.security.enable", havingValue = "true")
+@EnableConfigurationProperties(SecurityProperties.class)
+public class SecurityAutoConfiguration {
+
+    private static final String LOG_PREFIX = "[安全配置] - ";
+
+    @Resource
+    private AuthenticationConfiguration authenticationConfiguration;
+
+    private final SecurityProperties properties;
+
+    public SecurityAutoConfiguration(@Autowired SecurityProperties properties) {
+        this.properties = properties;
+    }
+
+    /**
+     * 密码管理器
+     *
+     * @return {@link PasswordEncoder}
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        log.info("{}初始化密码管理器", LOG_PREFIX);
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+        log.info("{}初始化Token存储介质", LOG_PREFIX);
+        return new RedisTokenStore();
+    }
+
+
+    /**
+     * 为了跨域验证,放行所有options类型的请求
+     *
+     * @return {@link WebSecurityCustomizer}
+     */
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        log.info("{}初始化放行", LOG_PREFIX);
+//        // You are asking Spring Security to ignore Mvc [pattern='/**', OPTIONS].
+//        // This is not recommended
+//        // please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+//        // 大概意思就是建议在SecurityFilterChain放行
+//        return web -> web
+//                .ignoring()
+//                .requestMatchers(HttpMethod.OPTIONS, "/**");
+//    }
+
+    /**
+     * security的核心规则配置
+     *
+     * @return {@link SecurityFilterChain }
+     */
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, TokenStore tokenStore) throws Exception {
+        log.info("{}初始化security核心配置", LOG_PREFIX);
+        http
+                .securityContext(security -> security.requireExplicitSave(true));
+
+        // 禁用 cors csrf form httpBasic
+        http
+                .cors().disable()
+                .csrf().disable()
+                .httpBasic().disable()
+                .formLogin().disable();
+
+        // 放行所有请求,需要权限的请求则使用注解进行控制
+        http
+                .authorizeHttpRequests()
+                .anyRequest()
+                .permitAll();
+
+        // 出错的时候的返回
+        http
+                .exceptionHandling()
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    log.info("无权访问");
+                    R.failure();
+                })
+                .authenticationEntryPoint((request, response, authException) -> {
+                    log.info("无权访问");
+                    R.failure();
+                })
+        ;
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http
+                .addFilterAt(new UserAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(), tokenStore), UsernamePasswordAuthenticationFilter.class)
+        ;
+
+        return http.build();
+    }
+
+    /**
+     * 角色继承
+     *
+     * @return {@link RoleHierarchy}
+     */
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        log.info("{}初始化角色继承", LOG_PREFIX);
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+        return hierarchy;
+    }
+
+    /**
+     * 认证管理器
+     *
+     * @return {@link AuthenticationManager}
+     * @throws Exception e
+     */
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        log.info("{}载入认证管理器", LOG_PREFIX);
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+
+}

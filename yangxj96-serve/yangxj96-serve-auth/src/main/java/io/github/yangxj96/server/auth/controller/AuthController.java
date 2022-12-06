@@ -1,0 +1,90 @@
+package io.github.yangxj96.server.auth.controller;
+
+import io.github.yangxj96.bean.security.TokenAccess;
+import io.github.yangxj96.bean.security.TokenRefresh;
+import io.github.yangxj96.common.respond.R;
+import io.github.yangxj96.starter.security.store.TokenStore;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+/**
+ * 认证控制器
+ *
+ * @author 杨新杰
+ * @date 2021/11/30 15:19
+ */
+@Slf4j
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+
+	@Resource
+	private AuthenticationManager authenticationManager;
+
+	@Resource
+	private TokenStore tokenStore;
+
+	/**
+	 * 用户名密码方式登录
+	 *
+	 * @param username 用户名
+	 * @param password 密码
+	 * @return 登录结果
+	 */
+	@PostMapping("/login")
+	public TokenAccess login(String username, String password) {
+		TokenAccess token = null;
+		// 构建后认证
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+		Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+		// 判断是否登录成功,进行创建token且响应
+		try {
+			if (authenticate.isAuthenticated()) {
+				token = tokenStore.create(authenticate);
+				R.success();
+			} else {
+				R.failure();
+			}
+		} catch (Exception e){
+			R.failure();
+		}
+		return token;
+	}
+
+	/**
+	 * 刷新token
+	 *
+	 * @param token token
+	 * @return 刷新后的token信息
+	 */
+	@PostMapping("/refresh")
+	public TokenRefresh refresh(String token) {
+		TokenRefresh refresh = tokenStore.refresh(token);
+		R.success();
+		return refresh;
+	}
+
+	/**
+	 * 通用退出方法
+	 *
+	 * @param token token
+	 */
+	@PreAuthorize("isAuthenticated()")
+	@PostMapping("/logout")
+	public void logout(String token) {
+		if (tokenStore.remove(token)) {
+			R.success();
+		} else {
+			R.failure();
+		}
+	}
+
+}
