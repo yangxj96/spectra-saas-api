@@ -124,12 +124,6 @@ public class RemoteAutoConfiguration {
         OkHttpClient delegate = new OkHttpClient(okHttpClient);
         // return new FeignBlockingLoadBalancerClient(delegate, loadBalancerClient, properties, loadBalancerClientFactory)
         return new FeignBlockingLoadBalancerClient(delegate, loadBalancerClient, loadBalancerClientFactory, Collections.emptyList());
-        //return new RetryableFeignBlockingLoadBalancerClient(
-//                delegate,
-//                loadBalancerClient,
-//                loadBalancedRetryFactory,
-//                loadBalancerClientFactory,
-//                Collections.emptyList());
     }
 
 }

@@ -65,24 +65,6 @@ public class SecurityAutoConfiguration {
         return new RedisTokenStore();
     }
 
-
-    /**
-     * 为了跨域验证,放行所有options类型的请求
-     *
-     * @return {@link WebSecurityCustomizer}
-     */
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        log.info("{}初始化放行", LOG_PREFIX);
-//        // You are asking Spring Security to ignore Mvc [pattern='/**', OPTIONS].
-//        // This is not recommended
-//        // please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-//        // 大概意思就是建议在SecurityFilterChain放行
-//        return web -> web
-//                .ignoring()
-//                .requestMatchers(HttpMethod.OPTIONS, "/**");
-//    }
-
     /**
      * security的核心规则配置
      *
