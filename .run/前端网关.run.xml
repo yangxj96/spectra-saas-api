@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="前端网关" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="yangxj96-saas-api-gradle.yangxj96-serve.yangxj96-serve-gateway.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.gateway.Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
