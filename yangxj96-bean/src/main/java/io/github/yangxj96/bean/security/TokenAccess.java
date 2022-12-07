@@ -1,9 +1,10 @@
 package io.github.yangxj96.bean.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.github.yangxj96.common.base.BasicEntity;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,42 +12,38 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenAccess implements Serializable {
+@TableName(value = "t_token_access")
+public class TokenAccess extends BasicEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     /**
-     * 认证token
+     * token
      */
-    private String accessToken;
+    @TableField(value = "token")
+    private String token;
 
     /**
-     * 刷新token
+     * 所属用户id
      */
-    private String refreshToken;
-
-    /**
-     * 用户名
-     */
+    @TableField(value = "username")
     private String username;
 
     /**
-     * 过期时间
+     * 权限对象
      */
-    private LocalDateTime expiration;
+    @TableField(value = "authentication")
+    private byte[] authentication;
 
     /**
-     * 角色列表
+     * 到期时间
      */
-    private List<String> roles;
-
-    /**
-     * 权限列表
-     */
-    private List<String> authority;
+    @TableField(value = "expiration_time")
+    private LocalDateTime expirationTime;
 
 }

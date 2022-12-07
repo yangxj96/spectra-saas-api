@@ -1,5 +1,6 @@
 package io.github.yangxj96.starter.security.store.impl;
 
+import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.starter.security.store.TokenStore;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 public class RedisTokenStore implements TokenStore {
 
     @Override
-    public TokenAccess create(Authentication auth) throws SQLException {
+    public Token create(Authentication auth) throws SQLException {
         return null;
     }
 
@@ -23,12 +24,11 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
-    public boolean remove(String token) {
-        return false;
+    public void remove(String token) {
     }
 
     @Override
-    public TokenRefresh refresh(String refreshToken) {
+    public Token refresh(String refreshToken) {
         return null;
     }
 

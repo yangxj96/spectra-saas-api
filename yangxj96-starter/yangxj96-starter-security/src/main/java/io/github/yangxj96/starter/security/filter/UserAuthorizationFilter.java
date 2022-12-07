@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import java.io.IOException;
 
+@Slf4j
 public class UserAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final TokenStore tokenStore;
@@ -25,8 +27,12 @@ public class UserAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String authorization = request.getHeader("Authorization");
 		if (StringUtils.isNotEmpty(authorization)) {
-			// 放入security上下文,就可以进行认证了
-			SecurityContextHolder.getContext().setAuthentication(tokenStore.read(authorization));
+			try {
+				// 放入security上下文,就可以进行认证了
+				SecurityContextHolder.getContext().setAuthentication(tokenStore.read(authorization));
+			} catch (Exception e) {
+				log.debug("读取认证信息错误");
+			}
 		}
 		super.doFilterInternal(request, response, chain);
     }

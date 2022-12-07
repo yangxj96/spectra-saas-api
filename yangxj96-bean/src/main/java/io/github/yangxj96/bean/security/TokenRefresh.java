@@ -1,23 +1,43 @@
 package io.github.yangxj96.bean.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import io.github.yangxj96.common.base.BasicEntity;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenRefresh implements Serializable {
+@TableName(value = "t_token_refresh")
+public class TokenRefresh extends BasicEntity implements  Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private String token;
+	/**
+	 * 权限token id
+	 */
+	@TableField(value = "access_id")
+	private Long accessId;
+
+	/**
+	 * token
+	 */
+	@TableField(value = "token")
+	private String token;
+
+	/**
+	 * 到期时间
+	 */
+	@TableField(value = "expiration_time")
+	private LocalDateTime expirationTime;
 
 
 }

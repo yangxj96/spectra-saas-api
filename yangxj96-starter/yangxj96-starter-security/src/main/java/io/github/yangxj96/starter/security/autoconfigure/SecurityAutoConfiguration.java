@@ -4,6 +4,7 @@ import io.github.yangxj96.common.respond.R;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.properties.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
+import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -42,6 +44,9 @@ public class SecurityAutoConfiguration {
     @Resource
     private AuthenticationConfiguration authenticationConfiguration;
 
+    @Resource
+    private JdbcTemplate jdbcTemplate;
+
     private final SecurityProperties properties;
 
     public SecurityAutoConfiguration(@Autowired SecurityProperties properties) {
@@ -62,7 +67,8 @@ public class SecurityAutoConfiguration {
     @Bean
     public TokenStore tokenStore() {
         log.info("{}初始化Token存储介质", LOG_PREFIX);
-        return new RedisTokenStore();
+        // return new RedisTokenStore();
+        return new JdbcTokenStore(jdbcTemplate);
     }
 
     /**

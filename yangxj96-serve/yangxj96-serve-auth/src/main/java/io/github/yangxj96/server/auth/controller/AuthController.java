@@ -1,5 +1,6 @@
 package io.github.yangxj96.server.auth.controller;
 
+import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.common.respond.R;
@@ -26,65 +27,66 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-	@Resource
-	private AuthenticationManager authenticationManager;
+    @Resource
+    private AuthenticationManager authenticationManager;
 
-	@Resource
-	private TokenStore tokenStore;
+    @Resource
+    private TokenStore tokenStore;
 
-	/**
-	 * 用户名密码方式登录
-	 *
-	 * @param username 用户名
-	 * @param password 密码
-	 * @return 登录结果
-	 */
-	@PostMapping("/login")
-	public TokenAccess login(String username, String password) {
-		TokenAccess token = null;
-		// 构建后认证
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-		Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-		// 判断是否登录成功,进行创建token且响应
-		try {
-			if (authenticate.isAuthenticated()) {
-				token = tokenStore.create(authenticate);
-				R.success();
-			} else {
-				R.failure();
-			}
-		} catch (Exception e){
-			R.failure();
-		}
-		return token;
-	}
+    /**
+     * 用户名密码方式登录
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 登录结果
+     */
+    @PostMapping("/login")
+    public Token login(String username, String password) {
+        Token token = null;
+        // 构建后认证
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        // 判断是否登录成功,进行创建token且响应
+        try {
+            if (authenticate.isAuthenticated()) {
+                token = tokenStore.create(authenticate);
+                R.success();
+            } else {
+                R.failure();
+            }
+        } catch (Exception e) {
+            R.failure();
+        }
+        return token;
+    }
 
-	/**
-	 * 刷新token
-	 *
-	 * @param token token
-	 * @return 刷新后的token信息
-	 */
-	@PostMapping("/refresh")
-	public TokenRefresh refresh(String token) {
-		TokenRefresh refresh = tokenStore.refresh(token);
-		R.success();
-		return refresh;
-	}
+    /**
+     * 刷新token
+     *
+     * @param token token
+     * @return 刷新后的token信息
+     */
+    @PostMapping("/refresh")
+    public Token refresh(String token) {
+        Token refresh = tokenStore.refresh(token);
+        R.success();
+        return refresh;
+    }
 
-	/**
-	 * 通用退出方法
-	 *
-	 * @param token token
-	 */
-	@PreAuthorize("isAuthenticated()")
-	@PostMapping("/logout")
-	public void logout(String token) {
-		if (tokenStore.remove(token)) {
-			R.success();
-		} else {
-			R.failure();
-		}
-	}
+    /**
+     * 通用退出方法
+     *
+     * @param token token
+     */
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/logout")
+    public void logout(String token) {
+        try {
+            tokenStore.remove(token);
+            R.success();
+        } catch (Exception e) {
+            R.failure();
+        }
+    }
 
 }
