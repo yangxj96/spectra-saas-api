@@ -36,8 +36,8 @@ public class JdbcTokenStore implements TokenStore {
         // 插入access token
         var accessSql = """
                  INSERT INTO db_user.t_token_access
-                 (id, token, username, authentication, expiration_time, created_by, created_time, updated_by, updated_time) 
-                 VALUES 
+                 (id, token, username, authentication, expiration_time, created_by, created_time, updated_by, updated_time)
+                 VALUES
                  (?,?,?,?,?,?,?,?,?)
                 """;
 
@@ -62,8 +62,8 @@ public class JdbcTokenStore implements TokenStore {
 
         var refreshSql = """
                  INSERT INTO db_user.t_token_refresh
-                 (id, access_id, token, expiration_time, created_by, created_time, updated_by, updated_time) 
-                 VALUES 
+                 (id, access_id, token, expiration_time, created_by, created_time, updated_by, updated_time)
+                 VALUES
                  (?,?,?,?,?,?,?,?)
                 """;
 

@@ -68,9 +68,14 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public Token refresh(String token) {
-        Token refresh = tokenStore.refresh(token);
-        R.success();
-        return refresh;
+        try {
+            Token refresh = tokenStore.refresh(token);
+            R.success();
+            return refresh;
+        } catch (Exception e) {
+            R.failure();
+            return null;
+        }
     }
 
     /**
