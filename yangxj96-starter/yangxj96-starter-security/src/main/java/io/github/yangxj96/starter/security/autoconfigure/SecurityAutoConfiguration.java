@@ -1,16 +1,19 @@
 package io.github.yangxj96.starter.security.autoconfigure;
 
 import io.github.yangxj96.common.respond.R;
+import io.github.yangxj96.starter.security.bean.StoreType;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.properties.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
+import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -45,6 +48,9 @@ public class SecurityAutoConfiguration {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
+
     private final SecurityProperties properties;
 
     public SecurityAutoConfiguration(@Autowired SecurityProperties properties) {
@@ -62,12 +68,6 @@ public class SecurityAutoConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        log.info("{}初始化Token存储介质", LOG_PREFIX);
-        // return new RedisTokenStore();
-        return new JdbcTokenStore(jdbcTemplate);
-    }
 
     /**
      * security的核心规则配置
@@ -75,7 +75,7 @@ public class SecurityAutoConfiguration {
      * @return {@link SecurityFilterChain }
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, TokenStore tokenStore) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         log.info("{}初始化security核心配置", LOG_PREFIX);
         http
                 .securityContext(security -> security.requireExplicitSave(true));
@@ -108,8 +108,13 @@ public class SecurityAutoConfiguration {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        TokenStore store = new JdbcTokenStore(jdbcTemplate);
+        if (properties.getStoreType() == StoreType.REDIS) {
+            store = new RedisTokenStore(redisTemplate);
+        }
+
         http
-                .addFilterAt(new UserAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(), tokenStore), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(new UserAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(), store), UsernamePasswordAuthenticationFilter.class)
         ;
 
         return http.build();

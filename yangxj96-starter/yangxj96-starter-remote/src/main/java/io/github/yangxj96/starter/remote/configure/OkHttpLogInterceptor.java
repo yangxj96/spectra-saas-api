@@ -32,7 +32,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         //个新的response给应用层处理
         ResponseBody responseBody = response.peekBody((long) 1024 * 1024);
 
-        log.debug(String.format("接收响应: [%s] %n返回json:【%s】 %.1fms%n%s",
+        log.debug(String.format("接收响应: [%s] %n返回json:[%s] %.1fms%n%s",
                 response.request().url(),
                 responseBody.string(),
                 (t2 - t1) / 1e6d,

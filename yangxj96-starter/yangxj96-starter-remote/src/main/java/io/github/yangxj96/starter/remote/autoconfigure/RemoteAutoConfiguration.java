@@ -27,6 +27,11 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
+/**
+ * 远程请求的openfeign配置
+ *
+ * @author 杨新杰
+ */
 @Slf4j
 @Import(value = {FeignLoadBalancerAutoConfiguration.class})
 @AutoConfiguration(before = FeignLoadBalancerAutoConfiguration.class)
@@ -57,7 +62,7 @@ public class RemoteAutoConfiguration {
                 properties.getConnectTimeOut(), TimeUnit.MILLISECONDS,
                 properties.getReadTimeOut(), TimeUnit.MILLISECONDS,
                 true);
-        // @formatter:on
+                // @formatter:on
     }
 
     /**
@@ -110,7 +115,7 @@ public class RemoteAutoConfiguration {
     /**
      * feign 客户端
      *
-     * @return feign 日志
+     * @return feign 客户端
      */
     @Bean
     @ConditionalOnMissingBean
@@ -121,7 +126,6 @@ public class RemoteAutoConfiguration {
 
         log.debug(LOG_PREFIX + "使用okhttp3作为底层");
         OkHttpClient delegate = new OkHttpClient(okHttpClient);
-        // return new FeignBlockingLoadBalancerClient(delegate, loadBalancerClient, properties, loadBalancerClientFactory)
         return new FeignBlockingLoadBalancerClient(delegate, loadBalancerClient, loadBalancerClientFactory, Collections.emptyList());
     }
 
