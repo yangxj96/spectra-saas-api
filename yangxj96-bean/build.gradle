@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":yangxj96-common"))
+    implementation(project(":yangxj96-common"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")

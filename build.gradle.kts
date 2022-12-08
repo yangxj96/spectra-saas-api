@@ -14,6 +14,7 @@ allprojects {
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
         maven { url = uri("https://repo.spring.io/milestone") }
+        maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
         mavenCentral()
     }
 
@@ -41,7 +42,7 @@ subprojects {
     // 定义的变量,可以再全局使用
     extra["springCloudVersion"] = "2022.0.0-RC2"
     extra["mybatisVersion"] = "3.0.0"
-    extra["mybatisPlusVersion"] = "3.5.2"
+    extra["mybatisPlusVersion"] = "3.5.2.7-SNAPSHOT"
 
     // 等同于dependencyManagement {}
     configure<DependencyManagementExtension> {

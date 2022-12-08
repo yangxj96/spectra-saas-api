@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "t_token_refresh")
+@TableName(value = "db_user.t_token_refresh")
 public class TokenRefresh extends BasicEntity implements  Serializable {
 
     @Serial

@@ -4,23 +4,39 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
+import io.github.yangxj96.bean.user.User;
 import io.github.yangxj96.common.utils.ObjectUtils;
 import io.github.yangxj96.starter.security.store.TokenStore;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDateTime;
-
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * jdbc 存储token的实现
  */
+@Slf4j
 public class JdbcTokenStore implements TokenStore {
 
     public final JdbcTemplate jdbcTemplate;
+
+    private static final String QUERY_ACCESS_SQL = "SELECT id, token, username, authentication, expiration_time, created_by, created_time, updated_by, updated_time FROM db_user.t_token_access ";
+
+    private static final String QUERY_REFRESH_SQL = "SELECT id, access_id, token, expiration_time, created_by, created_time, updated_by, updated_time FROM db_user.t_token_refresh ";
+
+    private static final String DELETE_ACCESS_SQL = "DELETE FROM db_user.t_token_access WHERE ";
+
+    private static final String DELETE_REFRESH_SQL = "DELETE FROM db_user.t_token_refresh WHERE ";
 
 
     public JdbcTokenStore(JdbcTemplate jdbcTemplate) {
@@ -30,6 +46,38 @@ public class JdbcTokenStore implements TokenStore {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Token create(Authentication auth) throws SQLException {
+        var username = ((User) auth.getPrincipal()).getUsername();
+        // 先检查是否已经有token了
+        var countSql = "SELECT count(1) FROM db_user.t_token_access WHERE username = ?";
+        Map<String, Object> count = jdbcTemplate.queryForMap(countSql, username);
+        if (!count.isEmpty() && ((Long) count.get("count")) > 0) {
+            try {
+                var checkSql = "SELECT * FROM db_user.t_token_access WHERE username = '" + username + "'";
+                TokenAccess access = jdbcTemplate.queryForObject(checkSql, TokenAccess.class);
+                // 存在则直接查询且返回
+                if (null != access) {
+                    var refreshSql = QUERY_REFRESH_SQL + "WHERE access_id = " + access.getId();
+                    TokenRefresh refresh = jdbcTemplate.queryForObject(refreshSql, TokenRefresh.class);
+                    if (null != refresh) {
+                        var authorities = new ArrayList<String>();
+                        for (GrantedAuthority authority : auth.getAuthorities()) {
+                            authorities.add(authority.getAuthority());
+                        }
+                        return Token
+                                .builder()
+                                .username(access.getUsername())
+                                .accessToken(access.getToken())
+                                .refreshToken(refresh.getToken())
+                                .authorities(authorities)
+                                .expirationTime(access.getExpirationTime())
+                                .build();
+                    }
+                }
+            } catch (Exception e) {
+                throw new SQLException("查询结果异常");
+            }
+        }
+
         // 生成token
         var token = Token.generate(auth);
 
@@ -90,7 +138,7 @@ public class JdbcTokenStore implements TokenStore {
     @Transactional(rollbackFor = Exception.class)
     public Authentication read(String token) throws SQLException {
 
-        var sql = "SELECT * FROM db_user.t_token_access WHERE token = " + token + " AND LIMIT 1";
+        var sql = QUERY_ACCESS_SQL + "WHERE token = " + token + " AND LIMIT 1";
 
         var datum = jdbcTemplate.queryForObject(sql, TokenAccess.class);
 
@@ -107,26 +155,20 @@ public class JdbcTokenStore implements TokenStore {
     @Transactional(rollbackFor = Exception.class)
     public void remove(String token) throws SQLException {
 
-        var accessSql = "SELECT " +
-                "id, token, username, authentication, expiration_time, created_by, created_time, updated_by, updated_time " +
-                "FROM db_user.t_token_access " +
-                "WHERE token = " + token;
+        var accessSql = QUERY_ACCESS_SQL + "WHERE token = " + token;
         TokenAccess access = jdbcTemplate.queryForObject(accessSql, TokenAccess.class);
         if (access == null) {
             return;
         }
 
-        var refreshSql = "SELECT " +
-                "id, access_id, token, expiration_time, created_by, created_time, updated_by, updated_time " +
-                "FROM db_user.t_token_refresh " +
-                "WHERE access_id = " + access.getId();
+        var refreshSql = QUERY_REFRESH_SQL + "WHERE access_id = " + access.getId();
         TokenRefresh refresh = jdbcTemplate.queryForObject(refreshSql, TokenRefresh.class);
 
-        if (jdbcTemplate.update("DELETE FROM db_user.t_token_access WHERE id = " + access.getId()) <= 0) {
+        if (jdbcTemplate.update(DELETE_ACCESS_SQL + "id = " + access.getId()) <= 0) {
             throw new SQLException("删除access token 错误");
         }
 
-        if (refresh != null && jdbcTemplate.update("DELETE FROM db_user.t_token_refresh WHERE id = " + refresh.getId()) <= 0) {
+        if (refresh != null && jdbcTemplate.update(DELETE_REFRESH_SQL + "id = " + refresh.getId()) <= 0) {
             throw new SQLException("删除refresh token 错误");
         }
     }
@@ -134,19 +176,13 @@ public class JdbcTokenStore implements TokenStore {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Token refresh(String refreshToken) throws SQLException {
-        var refresh = jdbcTemplate.queryForObject("SELECT " +
-                        "id, access_id, token, expiration_time, created_by, created_time, updated_by, updated_time " +
-                        "FROM db_user.t_token_refresh " +
-                        "WHERE token = " + refreshToken
+        var refresh = jdbcTemplate.queryForObject(QUERY_REFRESH_SQL + "WHERE token = " + refreshToken
                 , TokenRefresh.class);
         if (null == refresh) {
             throw new NullPointerException("未能获取refresh token信息");
         }
 
-        var access = jdbcTemplate.queryForObject("SELECT " +
-                        "id, token, username, authentication, expiration_time, created_by, created_time, updated_by, updated_time " +
-                        "FROM db_user.t_token_access " +
-                        "WHERE id = " + refresh.getAccessId()
+        var access = jdbcTemplate.queryForObject(QUERY_ACCESS_SQL + "WHERE id = " + refresh.getAccessId()
                 , TokenAccess.class);
         if (null == access) {
             throw new NullPointerException("未能获取access token信息");
@@ -161,9 +197,9 @@ public class JdbcTokenStore implements TokenStore {
     @Transactional(rollbackFor = Exception.class)
     public void autoClean() {
         // 删除access token
-        jdbcTemplate.update("DELETE FROM db_user.t_token_access WHERE expiration_time <= now()");
+        jdbcTemplate.update(DELETE_ACCESS_SQL + "expiration_time <= now()");
         // 删除refresh token
-        jdbcTemplate.update("DELETE FROM db_user.t_token_refresh WHERE expiration_time <= now()");
+        jdbcTemplate.update(DELETE_REFRESH_SQL + "expiration_time <= now()");
     }
 
 

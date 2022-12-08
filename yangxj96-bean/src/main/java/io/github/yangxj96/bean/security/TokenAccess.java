@@ -16,7 +16,7 @@ import java.util.List;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "t_token_access")
+@TableName(value = "db_user.t_token_access")
 public class TokenAccess extends BasicEntity implements Serializable {
 
     @Serial

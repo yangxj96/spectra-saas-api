@@ -3,7 +3,7 @@ dependencies {
     api(project(":yangxj96-common"))
     api(project(":yangxj96-starter"))
 
-     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-validation")

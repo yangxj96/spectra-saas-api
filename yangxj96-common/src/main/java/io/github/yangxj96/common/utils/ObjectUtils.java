@@ -2,9 +2,15 @@ package io.github.yangxj96.common.utils;
 
 import java.io.*;
 
+/**
+ * 对象工具类
+ */
 public class ObjectUtils {
 
-        /**
+    private ObjectUtils() {
+    }
+
+    /**
      * 字节数组转对象
      *
      * @param bytes 字节数组
@@ -12,8 +18,8 @@ public class ObjectUtils {
      */
     public static Object byteToObject(byte[] bytes) {
         try (
-                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-                ObjectInputStream oi = new ObjectInputStream(bais)
+                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
+                ObjectInputStream oi = new ObjectInputStream(stream)
         ) {
             return oi.readObject();
         } catch (IOException | ClassNotFoundException e) {
