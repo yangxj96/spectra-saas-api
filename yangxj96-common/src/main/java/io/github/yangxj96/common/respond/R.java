@@ -25,12 +25,12 @@ public class R implements Serializable {
 
     private transient Object data;
 
-    public static R success(){
+    public static R success() {
         return R.builder().code(RStatus.SUCCESS.getCode()).msg(RStatus.SUCCESS.getMsg()).build();
     }
 
-    public static R failure(){
-         return R.builder().code(RStatus.FAILURE.getCode()).msg(RStatus.FAILURE.getMsg()).build();
+    public static R failure() {
+        return R.builder().code(RStatus.FAILURE.getCode()).msg(RStatus.FAILURE.getMsg()).build();
     }
 
 

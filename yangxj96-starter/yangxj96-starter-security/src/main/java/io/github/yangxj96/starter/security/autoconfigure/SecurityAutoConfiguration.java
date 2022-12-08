@@ -5,7 +5,6 @@ import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.properties.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
-import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

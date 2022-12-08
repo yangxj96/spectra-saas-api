@@ -1,8 +1,6 @@
 package io.github.yangxj96.server.auth.controller;
 
 import io.github.yangxj96.bean.security.Token;
-import io.github.yangxj96.bean.security.TokenAccess;
-import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.common.respond.R;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import jakarta.annotation.Resource;

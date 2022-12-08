@@ -26,14 +26,14 @@ public class UserAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String authorization = request.getHeader("Authorization");
-		if (StringUtils.isNotEmpty(authorization)) {
-			try {
-				// 放入security上下文,就可以进行认证了
-				SecurityContextHolder.getContext().setAuthentication(tokenStore.read(authorization));
-			} catch (Exception e) {
-				log.debug("读取认证信息错误");
-			}
-		}
-		super.doFilterInternal(request, response, chain);
+        if (StringUtils.isNotEmpty(authorization)) {
+            try {
+                // 放入security上下文,就可以进行认证了
+                SecurityContextHolder.getContext().setAuthentication(tokenStore.read(authorization));
+            } catch (Exception e) {
+                log.debug("读取认证信息错误");
+            }
+        }
+        super.doFilterInternal(request, response, chain);
     }
 }

@@ -66,23 +66,23 @@ public class User extends BasicEntity implements Serializable, UserDetails {
     @TableField(exist = false)
     private List<? extends GrantedAuthority> authorities;
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return !this.accessExpired;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return !this.accessExpired;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return !this.accessLocked;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return !this.accessLocked;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return !this.credentialsExpired;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !this.credentialsExpired;
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return this.accessEnable;
-	}
+    @Override
+    public boolean isEnabled() {
+        return this.accessEnable;
+    }
 }

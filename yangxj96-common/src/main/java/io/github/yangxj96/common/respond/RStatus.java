@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum RStatus {
 
-    SUCCESS(0,"success"),
-    FAILURE(-1,"failure");
+    SUCCESS(0, "success"),
+    FAILURE(-1, "failure");
 
     private final Integer code;
 
@@ -14,6 +14,6 @@ public enum RStatus {
 
     RStatus(Integer code, String msg) {
         this.code = code;
-        this.msg  = msg;
+        this.msg = msg;
     }
 }

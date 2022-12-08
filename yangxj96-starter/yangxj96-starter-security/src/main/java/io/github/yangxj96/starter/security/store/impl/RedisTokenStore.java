@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RedisTokenStore implements TokenStore {
 
-    private final RedisTemplate<String,Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final ValueOperations<String, Object> opsStr;
 
@@ -92,7 +92,7 @@ public class RedisTokenStore implements TokenStore {
 
     @Override
     public void remove(String token) {
-        var access  = (TokenAccess) opsStr.get(ACCESS_TOKEN_PREFIX + token);
+        var access = (TokenAccess) opsStr.get(ACCESS_TOKEN_PREFIX + token);
         if (null == access) {
             return;
         }

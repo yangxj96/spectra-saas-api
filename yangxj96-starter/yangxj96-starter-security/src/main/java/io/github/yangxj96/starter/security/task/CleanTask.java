@@ -24,28 +24,28 @@ public class CleanTask {
     private TokenStore tokenStore;
 
     @Resource
-	private ScheduledAnnotationBeanPostProcessor postProcessor;
+    private ScheduledAnnotationBeanPostProcessor postProcessor;
 
 
-	@Scheduled(fixedRate = (60 * 1000))
-	public void tokenAutoClean() {
-		if (tokenStore instanceof RedisTokenStore) {
-			log.debug("当前为Redis为存储介质,取消当前自动执行任务");
-			Set<ScheduledTask> tasks = postProcessor.getScheduledTasks();
-			tasks.forEach(task -> {
-				Task t = task.getTask();
-				ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) t.getRunnable();
-				if (Objects.equals(runnable.getMethod().getName(), "tokenAutoClean")) {
-					postProcessor.postProcessBeforeDestruction(runnable.getTarget(), "tokenAutoClean");
-				}
-			});
-		}
-		try {
-			tokenStore.autoClean();
-		} catch (Exception e) {
-			log.error("自动清理token出现异常,请检查");
-		}
-	}
+    @Scheduled(fixedRate = (60 * 1000))
+    public void tokenAutoClean() {
+        if (tokenStore instanceof RedisTokenStore) {
+            log.debug("当前为Redis为存储介质,取消当前自动执行任务");
+            Set<ScheduledTask> tasks = postProcessor.getScheduledTasks();
+            tasks.forEach(task -> {
+                Task t = task.getTask();
+                ScheduledMethodRunnable runnable = (ScheduledMethodRunnable) t.getRunnable();
+                if (Objects.equals(runnable.getMethod().getName(), "tokenAutoClean")) {
+                    postProcessor.postProcessBeforeDestruction(runnable.getTarget(), "tokenAutoClean");
+                }
+            });
+        }
+        try {
+            tokenStore.autoClean();
+        } catch (Exception e) {
+            log.error("自动清理token出现异常,请检查");
+        }
+    }
 
 
 }

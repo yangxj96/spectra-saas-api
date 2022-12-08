@@ -7,8 +7,8 @@ package io.github.yangxj96.common.exception;
  */
 public class PlaceholderException extends RuntimeException {
 
-	public PlaceholderException() {
-		super("仅在占位的时候使用");
-	}
+    public PlaceholderException() {
+        super("仅在占位的时候使用");
+    }
 
 }

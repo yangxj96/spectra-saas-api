@@ -10,10 +10,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface BasicService<O extends BasicEntity> extends IService<O> {
 
-	O create(O datum);
+    O create(O datum);
 
-	boolean delete(String id);
+    boolean delete(String id);
 
-	O modify(O datum);
+    O modify(O datum);
 
 }

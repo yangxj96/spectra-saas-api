@@ -27,42 +27,42 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BasicEntity implements Serializable {
 
-	@Serial
-	private static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 数据id
-	 */
-	@TableId(value = "id", type = IdType.ASSIGN_ID)
-	@JsonSerialize(using = ToStringSerializer.class)
-	private Long id;
+    /**
+     * 数据id
+     */
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
 
-	/**
-	 * 创建人
-	 */
-	@TableField(value = "created_by", fill = FieldFill.INSERT)
-	@JsonIgnore
-	private Long createdBy;
+    /**
+     * 创建人
+     */
+    @TableField(value = "created_by", fill = FieldFill.INSERT)
+    @JsonIgnore
+    private Long createdBy;
 
-	/**
-	 * 创建时间
-	 */
-	@TableField(value = "created_time", fill = FieldFill.INSERT)
-	@JsonIgnore
-	private LocalDateTime createdTime;
+    /**
+     * 创建时间
+     */
+    @TableField(value = "created_time", fill = FieldFill.INSERT)
+    @JsonIgnore
+    private LocalDateTime createdTime;
 
-	/**
-	 * 更新人
-	 */
-	@TableField(value = "updated_by", fill = FieldFill.INSERT_UPDATE)
-	@JsonIgnore
-	private Long updatedBy;
+    /**
+     * 更新人
+     */
+    @TableField(value = "updated_by", fill = FieldFill.INSERT_UPDATE)
+    @JsonIgnore
+    private Long updatedBy;
 
-	/**
-	 * 更新时间
-	 */
-	@TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
-	@JsonIgnore
-	private LocalDateTime updatedTime;
+    /**
+     * 更新时间
+     */
+    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
+    @JsonIgnore
+    private LocalDateTime updatedTime;
 
 }

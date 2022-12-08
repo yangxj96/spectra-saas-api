@@ -14,7 +14,7 @@ public class DemoController {
     private DemoFeignClient demoFeignClient;
 
     @GetMapping("/d1")
-    public String d1(){
+    public String d1() {
         return demoFeignClient.get();
     }
 
