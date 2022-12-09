@@ -1,0 +1,2 @@
+io.github.yangxj96.starter.db.autoconfigure.MybatisPlusAutoConfiguration
+io.github.yangxj96.starter.db.autoconfigure.RedisAutoConfiguration
