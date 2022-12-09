@@ -52,7 +52,7 @@ public class JacksonAutoConfiguration {
     @Primary
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     public ObjectMapper objectMapper() {
-        log.debug("{}构建ObjectMapper", LOG_PREFIX);
+        log.debug("{}SERVLET构建ObjectMapper", LOG_PREFIX);
         ObjectMapper om = new ObjectMapper();
 
         log.debug(LOG_PREFIX + "LocalDateTime序列化/反序列化格式:{}", properties.getLocalDateTimeFormat());
@@ -86,7 +86,7 @@ public class JacksonAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     public Jackson2ObjectMapperBuilderCustomizer configuration() {
         return builder -> {
-            log.debug("{}构建ObjectMapper", LOG_PREFIX);
+            log.debug("{}REACTIVE构建ObjectMapper", LOG_PREFIX);
 
             log.debug(LOG_PREFIX + "LocalDateTime序列化/反序列化格式:{}", properties.getLocalDateTimeFormat());
             log.debug(LOG_PREFIX + "LocalDate序列化/反序列化格式:{}", properties.getLocalDateFormat());
