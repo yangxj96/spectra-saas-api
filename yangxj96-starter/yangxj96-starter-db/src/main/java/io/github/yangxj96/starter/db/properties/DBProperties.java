@@ -10,9 +10,9 @@ public class DBProperties {
     /**
      * 是否启用
      */
-    private Boolean jdbcEnable = true;
+    private boolean jdbcEnable = true;
 
-    private Boolean redisEnable = true;
+    private boolean redisEnable = true;
 
     private Integer securityDB = 9;
 

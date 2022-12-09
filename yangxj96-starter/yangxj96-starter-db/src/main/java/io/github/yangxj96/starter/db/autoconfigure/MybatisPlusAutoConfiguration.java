@@ -13,11 +13,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
 @Slf4j
-@ConditionalOnProperty(name = "yangxj96.db.jdbc-enable", havingValue = "true")
+@ConditionalOnProperty(name = "yangxj96.db.jdbc-enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties.class)
 public class MybatisPlusAutoConfiguration {
 
@@ -29,12 +30,13 @@ public class MybatisPlusAutoConfiguration {
         this.properties = properties;
     }
 
-    @Bean
-    @ConfigurationProperties("spring.datasource")
-    public DataSource dataSource() {
-        log.debug("{}载入默认数据源", LOG_PREFIX);
-        return new HikariDataSource();
-    }
+//    @Bean
+//    @Primary
+//    @ConfigurationProperties("spring.datasource")
+//    public DataSource dataSource() {
+//        log.info("{}载入默认数据源", LOG_PREFIX);
+//        return new HikariDataSource();
+//    }
 
     @Bean
     public MetaObjectHandler metaObjectHandler() {

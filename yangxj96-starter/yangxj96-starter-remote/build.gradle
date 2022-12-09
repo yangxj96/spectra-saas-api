@@ -12,4 +12,5 @@ dependencies {
     // okhttp 日志拦截器
     implementation("com.squareup.okhttp3:logging-interceptor")
 
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

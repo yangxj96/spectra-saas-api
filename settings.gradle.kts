@@ -20,5 +20,9 @@ findProject(":yangxj96-starter:yangxj96-starter-remote")?.name = "yangxj96-start
 
 include("yangxj96-starter:yangxj96-starter-security")
 findProject(":yangxj96-starter:yangxj96-starter-security")?.name = "yangxj96-starter-security"
+
 include("yangxj96-starter:yangxj96-starter-db")
 findProject(":yangxj96-starter:yangxj96-starter-db")?.name = "yangxj96-starter-db"
+
+include("yangxj96-starter:yangxj96-starter-common")
+findProject(":yangxj96-starter:yangxj96-starter-common")?.name = "yangxj96-starter-common"

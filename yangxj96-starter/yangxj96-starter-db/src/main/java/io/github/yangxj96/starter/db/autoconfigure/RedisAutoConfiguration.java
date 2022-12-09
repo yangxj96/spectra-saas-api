@@ -22,7 +22,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
-@ConditionalOnProperty(name = "yangxj96.db.redis-enable", havingValue = "true")
+@ConditionalOnProperty(name = "yangxj96.db.redis-enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties.class)
 public class RedisAutoConfiguration {
 

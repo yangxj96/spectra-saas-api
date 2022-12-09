@@ -36,7 +36,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Slf4j
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
-@ConditionalOnProperty(name = "yangxj96.security.enable", havingValue = "true")
+@ConditionalOnProperty(name = "yangxj96.security.enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityAutoConfiguration {
 
@@ -48,8 +48,8 @@ public class SecurityAutoConfiguration {
     @Resource
     private JdbcTemplate jdbcTemplate;
 
-    @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    @Resource(name = "securityRedisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
 
     private final SecurityProperties properties;
 
@@ -110,6 +110,7 @@ public class SecurityAutoConfiguration {
 
         TokenStore store = new JdbcTokenStore(jdbcTemplate);
         if (properties.getStoreType() == StoreType.REDIS) {
+            log.debug("{},切换到redis", LOG_PREFIX);
             store = new RedisTokenStore(redisTemplate);
         }
 

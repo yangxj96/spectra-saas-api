@@ -42,4 +42,11 @@ management:
 logging:
   level:
     root: info
+    yangxj96: debug
+  group:
+    yangxj96:
+      - io.github.yangxj96.starter.common.autoconfigure
+      - io.github.yangxj96.starter.db.autoconfigure
+      - io.github.yangxj96.starter.remote.autoconfigure
+      - io.github.yangxj96.starter.security.autoconfigure
 

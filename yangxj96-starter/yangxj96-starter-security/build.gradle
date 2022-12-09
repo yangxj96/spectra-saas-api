@@ -2,6 +2,7 @@ dependencies {
     api(project(":yangxj96-bean"))
     api(project(":yangxj96-common"))
     api(project(":yangxj96-starter"))
+    api(project(":yangxj96-starter:yangxj96-starter-db"))
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-autoconfigure")
@@ -9,4 +10,5 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.baomidou:mybatis-plus-boot-starter:${mybatisPlusVersion}")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 }

@@ -37,7 +37,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfiguration {
 
-    private static final String LOG_PREFIX = "[auth安全配置] - ";
+    private static final String LOG_PREFIX = "[安全配置] ";
 
     @Resource
     private UserDetailsService userDetailsService;
