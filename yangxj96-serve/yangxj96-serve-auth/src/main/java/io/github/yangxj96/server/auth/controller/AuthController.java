@@ -92,4 +92,17 @@ public class AuthController {
         }
     }
 
+
+    /**
+     * 检查token状态
+     *
+     * @param token token
+     * @return token信息
+     */
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/logout")
+    public Token checkToken(String token) {
+        return null;
+    }
+
 }

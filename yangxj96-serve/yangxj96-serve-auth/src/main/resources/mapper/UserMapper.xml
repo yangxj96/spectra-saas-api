@@ -24,4 +24,30 @@
         id, username, "password", access_expired, access_locked, access_enable, credentials_expired,
         created_by, created_time, updated_by, updated_time
     </sql>
+
+  <insert id="relevance">
+    INSERT INTO db_user.t_user_to_role(id, user_id, role_id, created_by, created_time, updated_by, updated_time)
+    VALUES (#{id}, #{user}, #{role}, 0, now(), 0, now())
+  </insert>
+
+  <select id="getRoleByUserId" resultType="io.github.yangxj96.bean.user.Role">
+      SELECT r.*
+      FROM db_user.t_role r,
+           db_user.t_user_to_role tr,
+           db_user.t_user u
+      WHERE u.id = #{userId}
+        AND r.id = tr.role_id
+        AND tr.user_id = u.id
+  </select>
+
+  <select id="getAuthorityByRoleIds" resultType="io.github.yangxj96.bean.user.Authority">
+      SELECT DISTINCT (a.*)
+      FROM db_user.t_authority a,
+           db_user.t_role_to_authority ta
+      WHERE a.id = ta.authority_id
+        AND ta.role_id IN
+      <foreach collection="ids" open="(" close=")" separator="," index="idx" item="item" >
+          #{item}
+      </foreach>
+  </select>
 </mapper>

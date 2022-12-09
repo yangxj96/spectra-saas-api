@@ -11,8 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 
 /**
  * 用户名密码登录
@@ -40,8 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (null == user) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        // user.setAuthorities(userService.getAuthorities(user.getId()))
-        user.setAuthorities(Collections.emptyList());
+        user.setAuthorities(userService.getAuthoritiesByUserId(user.getId()));
         return user;
     }
 
