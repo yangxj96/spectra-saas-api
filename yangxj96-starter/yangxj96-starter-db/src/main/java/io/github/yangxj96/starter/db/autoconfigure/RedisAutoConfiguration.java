@@ -19,6 +19,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
@@ -72,6 +73,25 @@ public class RedisAutoConfiguration {
     }
 
     /**
+     * Security使用的byte[]的redisTemplate
+     *
+     * @return {@link RedisTemplate}
+     */
+    @Bean("securityBytesRedisTemplate")
+    public RedisTemplate<String, byte[]> securityBytesRedisTemplate() {
+        log.debug("{}配置RedisTemplate<String,byte[]>的序列化方式", LOG_PREFIX);
+        RedisConnectionFactory factory = buildRedisConnectionFactory(properties.getSecurityDB());
+        RedisTemplate<String, byte[]> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+        // 设置value的序列化规则和 key的序列化规则
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(RedisSerializer.byteArray());
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
+
+
+    /**
      * 构建redis连接池工厂
      *
      * @param index 哪一个库
@@ -112,8 +132,6 @@ public class RedisAutoConfiguration {
     private RedisTemplate<String, Object> commonConfig(RedisTemplate<String, Object> redisTemplate) {
         // 使用Jackson2JsonRedisSerialize 替换默认序列化
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
-        // 这个代码已经弃用,设置方式提取到了构造函数
-        // jackson2JsonRedisSerializer.setObjectMapper(om)
         // 设置value的序列化规则和 key的序列化规则
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);

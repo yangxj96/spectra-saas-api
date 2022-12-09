@@ -7,9 +7,11 @@ import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
 import jakarta.annotation.Resource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -52,28 +54,7 @@ class RedisServiceTest {
                     .expirationTime(token.getExpirationTime().plusHours(1))
                     .build();
 
-
-            redisTemplate
-                    .opsForValue()
-                    .setIfAbsent(
-                            "access_token:" + token.getAccessToken(),
-                            om.writeValueAsString(access)
-                    );
-
-            redisTemplate
-                    .opsForValue()
-                    .setIfAbsent(
-                            "refresh_token:" + token.getRefreshToken(),
-                            om.writeValueAsString(refresh)
-                    );
-
-            redisTemplate
-                    .opsForList()
-                    .rightPushAll(
-                            "authority:" + token.getAccessToken(),
-                            token.getAuthorities().toArray()
-                    );
-
+            ValueOperations<String, Object> opsStr = redisTemplate.opsForValue();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,9 +65,16 @@ class RedisServiceTest {
     @Test
     void removeKeys() {
         Set<String> keys = redisTemplate.keys("*");
-        for (String key : keys) {
-            Boolean delete = redisTemplate.delete(key);
-            System.out.println("key:" + key + " R:" + delete);
+        int count = 0;
+        if (null != keys) {
+            for (String key : keys) {
+                Boolean delete = redisTemplate.delete(key);
+                if (Boolean.TRUE.equals(delete)) {
+                    count++;
+                }
+                System.out.println("key:" + key + " R:" + delete);
+            }
+            Assertions.assertEquals(keys.size(), count, "没有全部删除完成");
         }
     }
 

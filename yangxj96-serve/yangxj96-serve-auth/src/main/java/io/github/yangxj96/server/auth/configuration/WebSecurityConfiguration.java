@@ -2,13 +2,11 @@ package io.github.yangxj96.server.auth.configuration;
 
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.store.TokenStore;
-import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -43,9 +41,6 @@ public class WebSecurityConfiguration {
     private UserDetailsService userDetailsService;
 
     @Resource
-    private JdbcTemplate jdbcTemplate;
-
-    @Resource
     private AuthenticationConfiguration authenticationConfiguration;
 
     /**
@@ -67,7 +62,7 @@ public class WebSecurityConfiguration {
     @Bean
     public TokenStore tokenStore() {
         log.info("{}载入token认证策略", LOG_PREFIX);
-        return new JdbcTokenStore(jdbcTemplate);
+        return new RedisTokenStore();
     }
 
     /**
@@ -110,7 +105,9 @@ public class WebSecurityConfiguration {
 
         // 添加获取授权的过滤器
         http
-                .addFilterAt(new UserAuthorizationFilter(authenticationManager(), tokenStore), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(
+                        new UserAuthorizationFilter(authenticationManager(), tokenStore),
+                        UsernamePasswordAuthenticationFilter.class)
         ;
 
         // 认证

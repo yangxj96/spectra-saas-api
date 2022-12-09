@@ -1,10 +1,10 @@
 package io.github.yangxj96.server.auth;
 
-import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.github.yangxj96.bean.user.User;
 import io.github.yangxj96.server.auth.service.UserService;
 import jakarta.annotation.Resource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,7 +34,7 @@ class ApplicationTest {
                 .updatedTime(LocalDateTime.now())
                 .build();
 
-        Assert.isTrue(userService.save(user), "插入失败");
+        Assertions.assertTrue(userService.save(user), "插入失败");
     }
 
 }

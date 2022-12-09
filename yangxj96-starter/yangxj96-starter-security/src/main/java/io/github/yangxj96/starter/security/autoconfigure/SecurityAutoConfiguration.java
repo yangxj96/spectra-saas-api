@@ -111,7 +111,7 @@ public class SecurityAutoConfiguration {
         TokenStore store = new JdbcTokenStore(jdbcTemplate);
         if (properties.getStoreType() == StoreType.REDIS) {
             log.debug("{},切换到redis", LOG_PREFIX);
-            store = new RedisTokenStore(redisTemplate);
+            store = new RedisTokenStore();
         }
 
         http

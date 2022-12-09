@@ -15,6 +15,12 @@ spring:
       password: QuVsKppcWvwwX2Vv
       port: 6379
       database: 9
+      lettuce:
+        pool:
+          max-active: 8
+          min-idle: 0
+          max-idle: 8
+          max-wait: -1
 
 # mybatis plus 删除
 mybatis-plus:
