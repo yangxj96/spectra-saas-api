@@ -4,6 +4,8 @@ import java.io.*;
 
 /**
  * 对象工具类
+ *
+ * @author yangxj96
  */
 public class ObjectUtils {
 

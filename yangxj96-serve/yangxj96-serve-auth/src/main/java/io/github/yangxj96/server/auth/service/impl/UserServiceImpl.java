@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 用户service的实现
+ *
+ * @author yangxj96
+ */
 @Service
 public class UserServiceImpl extends BasicServiceImpl<UserMapper, User> implements UserService {
 

@@ -30,7 +30,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 /**
  * Security 相关配置
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 @Slf4j
 @Configuration

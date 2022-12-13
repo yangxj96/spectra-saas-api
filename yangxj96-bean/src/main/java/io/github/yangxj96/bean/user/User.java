@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * 用户表
+ *
+ * @author yangxj96
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

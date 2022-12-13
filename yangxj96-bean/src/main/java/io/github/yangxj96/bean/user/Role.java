@@ -10,6 +10,8 @@ import java.io.Serializable;
 
 /**
  * 角色表
+ *
+ * @author yangxj96
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

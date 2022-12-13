@@ -1,5 +1,6 @@
 package io.github.yangxj96.starter.security.autoconfigure;
 
+import cn.hutool.extra.spring.SpringUtil;
 import io.github.yangxj96.starter.security.bean.StoreType;
 import io.github.yangxj96.starter.security.exception.AccessDeniedHandlerImpl;
 import io.github.yangxj96.starter.security.exception.AuthenticationEntryPointImpl;
@@ -32,7 +33,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * security配置
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 @Slf4j
 @EnableWebSecurity
@@ -41,19 +42,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[安全配置] - ";
-
-    @Resource(name = "securityRedisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Resource(name = "securityBytesRedisTemplate")
-    private RedisTemplate<String, byte[]> bytesRedisTemplate;
-
+    private static final String LOG_PREFIX = "[autoconfig-security] ";
     @Resource
     private AuthenticationConfiguration authenticationConfiguration;
-
-    @Resource
-    private JdbcTemplate jdbcTemplate;
 
     private final SecurityProperties properties;
 
@@ -105,9 +96,15 @@ public class SecurityAutoConfiguration {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        TokenStore store = new JdbcTokenStore(jdbcTemplate);
-        if (properties.getStoreType() == StoreType.REDIS) {
-            log.debug("{},切换到redis", LOG_PREFIX);
+        TokenStore store;
+        if (properties.getStoreType() == StoreType.JDBC) {
+            log.debug("{},store使用jdbc", LOG_PREFIX);
+            JdbcTemplate jdbcTemplate = SpringUtil.getBean(JdbcTemplate.class);
+            store = new JdbcTokenStore(jdbcTemplate);
+        } else {
+            log.debug("{},store使用redis", LOG_PREFIX);
+            RedisTemplate<String, Object> redisTemplate = SpringUtil.getBean("securityRedisTemplate");
+            RedisTemplate<String, byte[]> bytesRedisTemplate = SpringUtil.getBean("securityBytesRedisTemplate");
             store = new RedisTokenStore(redisTemplate, bytesRedisTemplate);
         }
 

@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 /**
  * RESTFul 接口公用数据库实体层
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 @Data
 @SuperBuilder

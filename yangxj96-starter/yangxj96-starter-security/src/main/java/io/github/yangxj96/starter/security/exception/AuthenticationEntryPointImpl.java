@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * 认证失败的处理实现
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 

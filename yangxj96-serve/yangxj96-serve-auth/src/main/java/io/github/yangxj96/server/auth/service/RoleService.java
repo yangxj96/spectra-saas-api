@@ -3,6 +3,11 @@ package io.github.yangxj96.server.auth.service;
 import io.github.yangxj96.bean.user.Role;
 import io.github.yangxj96.common.base.BasicService;
 
+/**
+ * 角色service层
+ *
+ * @author yangxj96
+ */
 public interface RoleService extends BasicService<Role> {
 
     /**

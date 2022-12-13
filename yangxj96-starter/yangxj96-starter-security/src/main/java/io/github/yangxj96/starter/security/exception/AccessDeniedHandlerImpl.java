@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * 无权访问自定义响应
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 

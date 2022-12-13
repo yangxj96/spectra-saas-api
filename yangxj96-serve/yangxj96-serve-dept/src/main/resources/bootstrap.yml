@@ -21,6 +21,11 @@ spring:
           max-idle: 8
           max-wait: -1
   cloud:
+    loadbalancer:
+      cache:
+        enabled: true
+        caffeine:
+          spec: initialCapacity=500,expireAfterWrite=5s
     polaris:
       address: grpc://49.235.101.106:8091
       namespace: yangxj96

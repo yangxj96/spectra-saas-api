@@ -5,18 +5,18 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.zaxxer.hikari.HikariDataSource;
 import io.github.yangxj96.starter.db.configure.jdbc.MetaObjectHandlerImpl;
 import io.github.yangxj96.starter.db.properties.DBProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 
-import javax.sql.DataSource;
-
+/**
+ * mybatis的自动配置类
+ *
+ * @author yangxj96
+ */
 @Slf4j
 @ConditionalOnProperty(name = "yangxj96.db.jdbc-enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties.class)
@@ -24,19 +24,12 @@ public class MybatisPlusAutoConfiguration {
 
     private final DBProperties properties;
 
-    private static final String LOG_PREFIX = "[自动配置-MyBatis] ";
+    private static final String LOG_PREFIX = "[autoconfig-mybatis plus] ";
 
     public MybatisPlusAutoConfiguration(DBProperties properties) {
         this.properties = properties;
     }
 
-//    @Bean
-//    @Primary
-//    @ConfigurationProperties("spring.datasource")
-//    public DataSource dataSource() {
-//        log.info("{}载入默认数据源", LOG_PREFIX);
-//        return new HikariDataSource();
-//    }
 
     @Bean
     public MetaObjectHandler metaObjectHandler() {
