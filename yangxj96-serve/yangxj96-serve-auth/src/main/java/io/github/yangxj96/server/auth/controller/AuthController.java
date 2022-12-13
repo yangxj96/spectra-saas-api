@@ -100,7 +100,7 @@ public class AuthController {
      * @return token信息
      */
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/logout")
+    @PostMapping("/checkToken")
     public Token checkToken(String token) {
         return null;
     }

@@ -33,5 +33,14 @@ public class R implements Serializable {
         return R.builder().code(RStatus.FAILURE.getCode()).msg(RStatus.FAILURE.getMsg()).build();
     }
 
+    public static R specify(RStatus status){
+        return R.builder().code(status.getCode()).msg(status.getMsg()).build();
+    }
+
+     public static R specify(RStatus status,Object data){
+         R r = specify(status);
+         r.setData(data);
+         return r;
+    }
 
 }

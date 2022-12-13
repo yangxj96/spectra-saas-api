@@ -1,5 +1,7 @@
 package io.github.yangxj96.server.auth.configuration;
 
+import io.github.yangxj96.starter.security.exception.AccessDeniedHandlerImpl;
+import io.github.yangxj96.starter.security.exception.AuthenticationEntryPointImpl;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
@@ -36,6 +38,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfiguration {
 
     private static final String LOG_PREFIX = "[安全配置] ";
+
 
     @Resource
     private UserDetailsService userDetailsService;
@@ -98,6 +101,13 @@ public class WebSecurityConfiguration {
         http
                 .authorizeHttpRequests()
                 .anyRequest().permitAll()
+        ;
+
+        // 认证异常和无权限异常处理
+        http
+                .exceptionHandling()
+                .accessDeniedHandler(new AccessDeniedHandlerImpl())
+                .authenticationEntryPoint(new AuthenticationEntryPointImpl())
         ;
 
         // 不保存session

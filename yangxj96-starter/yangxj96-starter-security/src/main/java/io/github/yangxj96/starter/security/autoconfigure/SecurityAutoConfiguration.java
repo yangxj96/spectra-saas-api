@@ -2,6 +2,8 @@ package io.github.yangxj96.starter.security.autoconfigure;
 
 import io.github.yangxj96.common.respond.R;
 import io.github.yangxj96.starter.security.bean.StoreType;
+import io.github.yangxj96.starter.security.exception.AccessDeniedHandlerImpl;
+import io.github.yangxj96.starter.security.exception.AuthenticationEntryPointImpl;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.properties.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
@@ -86,6 +88,12 @@ public class SecurityAutoConfiguration {
                 .csrf().disable()
                 .httpBasic().disable()
                 .formLogin().disable();
+
+        // 认证异常和无权访问处理
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(new AuthenticationEntryPointImpl())
+                .accessDeniedHandler(new AccessDeniedHandlerImpl());
 
         // 放行所有请求,需要权限的请求则使用注解进行控制
         http
