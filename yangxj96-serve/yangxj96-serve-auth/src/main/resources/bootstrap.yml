@@ -1,9 +1,10 @@
-yangxj96:
-  security:
-    enable: false
+server:
+  port: 0
 spring:
   main:
     banner-mode: off
+  application:
+    name: yangxj96-serve-auth
   datasource:
     url: jdbc:postgresql://localhost:5432/yangxj96_saas_db
     username: postgres
@@ -21,6 +22,10 @@ spring:
           min-idle: 0
           max-idle: 8
           max-wait: -1
+  cloud:
+    polaris:
+      address: grpc://49.235.101.106:8091
+      namespace: yangxj96
 
 # mybatis plus 删除
 mybatis-plus:
@@ -36,6 +41,10 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-not-delete-value: false
       logic-delete-value: true
+
+yangxj96:
+  security:
+    enable: false
 
 # 端点检查放开所有
 management:

@@ -7,7 +7,6 @@ import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.bean.user.User;
 import io.github.yangxj96.common.utils.ObjectUtils;
 import io.github.yangxj96.starter.security.store.TokenStore;
-import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 
@@ -19,11 +18,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class RedisTokenStore implements TokenStore {
 
-    @Resource(name = "securityRedisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Resource(name = "securityBytesRedisTemplate")
-    private RedisTemplate<String, byte[]> bytesRedisTemplate;
+    private final RedisTemplate<String, byte[]> bytesRedisTemplate;
 
     private static final String ACCESS_PREFIX = "access:";
     private static final String ACCESS_TO_USER_PREFIX = "access_to_user:";
@@ -31,6 +28,11 @@ public class RedisTokenStore implements TokenStore {
     private static final String ACCESS_TO_REFRESH_PREFIX = "access_to_refresh:";
     private static final String REFRESH_TO_ACCESS_PREFIX = "refresh_to_access:";
     private static final String AUTHORITY_PREFIX = "authority_token:";
+
+    public RedisTokenStore(RedisTemplate<String, Object> redisTemplate,RedisTemplate<String, byte[]> bytesRedisTemplate){
+        this.redisTemplate      = redisTemplate;
+        this.bytesRedisTemplate = bytesRedisTemplate;
+    }
 
     @Override
     public Token create(Authentication auth) {

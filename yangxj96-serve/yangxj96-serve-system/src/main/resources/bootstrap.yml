@@ -1,8 +1,8 @@
 server:
-  port: 8080
+  port: 0
 spring:
   application:
-    name: yangxj96-serve-gateway
+    name: yangxj96-serve-system
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
@@ -42,7 +42,7 @@ mybatis-plus:
 
 yangxj96:
   security:
-    enable: false
+    enable: true
     store-type: redis
 
 # 端点检查放开所有

@@ -1,6 +1,5 @@
 package io.github.yangxj96.starter.security.autoconfigure;
 
-import io.github.yangxj96.common.respond.R;
 import io.github.yangxj96.starter.security.bean.StoreType;
 import io.github.yangxj96.starter.security.exception.AccessDeniedHandlerImpl;
 import io.github.yangxj96.starter.security.exception.AuthenticationEntryPointImpl;
@@ -44,14 +43,17 @@ public class SecurityAutoConfiguration {
 
     private static final String LOG_PREFIX = "[安全配置] - ";
 
+    @Resource(name = "securityRedisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource(name = "securityBytesRedisTemplate")
+    private RedisTemplate<String, byte[]> bytesRedisTemplate;
+
     @Resource
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Resource
     private JdbcTemplate jdbcTemplate;
-
-    @Resource(name = "securityRedisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
 
     private final SecurityProperties properties;
 
@@ -101,25 +103,12 @@ public class SecurityAutoConfiguration {
                 .anyRequest()
                 .permitAll();
 
-        // 出错的时候的返回
-        http
-                .exceptionHandling()
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    log.info("无权访问");
-                    R.failure();
-                })
-                .authenticationEntryPoint((request, response, authException) -> {
-                    log.info("无权访问");
-                    R.failure();
-                })
-        ;
-
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         TokenStore store = new JdbcTokenStore(jdbcTemplate);
         if (properties.getStoreType() == StoreType.REDIS) {
             log.debug("{},切换到redis", LOG_PREFIX);
-            store = new RedisTokenStore();
+            store = new RedisTokenStore(redisTemplate, bytesRedisTemplate);
         }
 
         http

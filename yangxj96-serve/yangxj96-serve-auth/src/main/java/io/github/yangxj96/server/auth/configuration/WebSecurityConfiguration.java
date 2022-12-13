@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -46,6 +47,12 @@ public class WebSecurityConfiguration {
     @Resource
     private AuthenticationConfiguration authenticationConfiguration;
 
+    @Resource(name = "securityRedisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource(name = "securityBytesRedisTemplate")
+    private RedisTemplate<String, byte[]> bytesRedisTemplate;
+
     /**
      * 密码管理器
      *
@@ -65,7 +72,7 @@ public class WebSecurityConfiguration {
     @Bean
     public TokenStore tokenStore() {
         log.info("{}载入token认证策略", LOG_PREFIX);
-        return new RedisTokenStore();
+        return new RedisTokenStore(redisTemplate,bytesRedisTemplate);
     }
 
     /**
