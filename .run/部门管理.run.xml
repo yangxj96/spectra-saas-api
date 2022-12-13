@@ -3,6 +3,7 @@
     <module name="yangxj96-saas-api-gradle.yangxj96-serve.yangxj96-serve-dept.main" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.dept.Application" />
+    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m -Xlog:gc*" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
