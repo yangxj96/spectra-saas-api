@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 响应的token实体
+ *
+ * @author yangxj96
+ */
 @Data
 @Builder
 @AllArgsConstructor

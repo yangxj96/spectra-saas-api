@@ -29,6 +29,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+/**
+ * Jackson的相关配置的自动配置类
+ *
+ * @author yangxj96
+ */
 @Slf4j
 @AutoConfiguration
 @ConditionalOnProperty(name = "it100000.jackson.enable", havingValue = "true", matchIfMissing = true)
@@ -37,7 +42,7 @@ public class JacksonAutoConfiguration {
 
     private final JacksonProperties properties;
 
-    private static final String LOG_PREFIX = "[自动配置-jackson] ";
+    private static final String LOG_PREFIX = "[autoconfig-jackson] ";
 
     public JacksonAutoConfiguration(JacksonProperties properties) {
         this.properties = properties;

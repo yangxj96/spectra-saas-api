@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * 通用响应
+ *
+ * @author yangxj96
+ */
 @Data
 @Builder
 @AllArgsConstructor

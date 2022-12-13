@@ -6,6 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
+/**
+ * 用户service层
+ *
+ * @author yangxj96
+ */
 public interface UserService extends BasicService<User> {
 
 

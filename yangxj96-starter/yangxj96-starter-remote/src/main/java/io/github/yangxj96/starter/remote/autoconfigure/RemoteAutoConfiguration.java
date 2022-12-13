@@ -11,18 +11,18 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.loadbalancer.LoadBalancedRetryFactory;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.loadbalancer.FeignBlockingLoadBalancerClient;
-import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration;
-import org.springframework.cloud.openfeign.loadbalancer.OnRetryNotEnabledCondition;
+import org.springframework.cloud.openfeign.loadbalancer.*;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -30,7 +30,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 /**
  * 远程请求的openfeign配置
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 @Slf4j
 @Import(value = {FeignLoadBalancerAutoConfiguration.class})
@@ -39,7 +39,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @EnableConfigurationProperties(RemoteProperties.class)
 public class RemoteAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[remote-starter] - ";
+    private static final String LOG_PREFIX = "[autoconfig-remote] ";
 
     /**
      * 项目配置文件
@@ -110,6 +110,20 @@ public class RemoteAutoConfiguration {
                 .connectionPool(new ConnectionPool())
                 .addInterceptor(new OkHttpLogInterceptor())
                 .build();
+    }
+
+    @Bean
+    public Client feignRetryClient(
+            LoadBalancerClient loadBalancerClient,
+            okhttp3.OkHttpClient okHttpClient,
+            LoadBalancedRetryFactory loadBalancedRetryFactory,
+            LoadBalancerClientFactory loadBalancerClientFactory,
+            List<LoadBalancerFeignRequestTransformer> transformers
+    ) {
+        log.debug(LOG_PREFIX + "可重试的feign");
+        OkHttpClient delegate = new OkHttpClient(okHttpClient);
+        return new RetryableFeignBlockingLoadBalancerClient(delegate, loadBalancerClient, loadBalancedRetryFactory,
+                loadBalancerClientFactory, transformers);
     }
 
     /**

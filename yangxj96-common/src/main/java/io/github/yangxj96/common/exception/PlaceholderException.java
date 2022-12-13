@@ -3,7 +3,7 @@ package io.github.yangxj96.common.exception;
 /**
  * 占位异常
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 public class PlaceholderException extends RuntimeException {
 

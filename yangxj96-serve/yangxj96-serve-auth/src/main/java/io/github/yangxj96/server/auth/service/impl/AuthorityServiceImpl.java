@@ -6,6 +6,11 @@ import io.github.yangxj96.server.auth.mapper.AuthorityMapper;
 import io.github.yangxj96.server.auth.service.AuthorityService;
 import org.springframework.stereotype.Service;
 
+/**
+ * 权限service的实现
+ *
+ * @author yangxj96
+ */
 @Service
 public class AuthorityServiceImpl extends BasicServiceImpl<AuthorityMapper, Authority> implements AuthorityService {
 

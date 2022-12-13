@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
  *
  * @param <O> 入参对象,可以为数据库po对象或者是自定义的dto对象
  * @param <S> 相关的service层,需要继承BasicService
- * @author 杨新杰
+ * @author yangxj96
  */
 @Validated
 public abstract class BasicController<O extends BasicEntity, S extends BasicService<O>> {

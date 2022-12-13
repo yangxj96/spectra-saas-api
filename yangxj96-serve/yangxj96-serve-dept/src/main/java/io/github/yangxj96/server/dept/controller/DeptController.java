@@ -6,6 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 部门管理的controller层
+ *
+ * @author yangxj96
+ */
 @RestController
 @RequestMapping("")
 public class DeptController {
@@ -18,7 +23,7 @@ public class DeptController {
     @PreAuthorize("isAuthenticated() && hasAnyAuthority('USER_INSERT2')")
     @GetMapping("/d2")
     public R d2() {
-       return R.success();
+        return R.success();
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")

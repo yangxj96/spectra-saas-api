@@ -13,6 +13,12 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
+/**
+ * 存储的access token实体
+ *
+ * @author yangxj96
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder

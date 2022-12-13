@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * 用户名密码登录
+ * 用户名密码登录的实现
  *
- * @author 杨新杰
- * @date 2021/11/30 14:02
+ * @author yangxj96
  */
 @Slf4j
 @Service

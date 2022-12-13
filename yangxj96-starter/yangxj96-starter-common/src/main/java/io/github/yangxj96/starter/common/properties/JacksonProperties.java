@@ -3,6 +3,11 @@ package io.github.yangxj96.starter.common.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * Jackson自动配置的props
+ *
+ * @author yangxj96
+ */
 @Data
 @ConfigurationProperties(prefix = "yangxj96.jackson")
 public class JacksonProperties {

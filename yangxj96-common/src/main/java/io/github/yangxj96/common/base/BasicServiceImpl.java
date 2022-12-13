@@ -6,7 +6,9 @@ import io.github.yangxj96.common.exception.PlaceholderException;
 /**
  * RESTFul 接口公用service层
  *
- * @author 杨新杰
+ * @param <M> 子类对应的mapper
+ * @param <O> 子类对应的实体
+ * @author yangxj96
  */
 public class BasicServiceImpl<M extends BasicMapper<O>, O extends BasicEntity> extends ServiceImpl<M, O> implements BasicService<O> {
 

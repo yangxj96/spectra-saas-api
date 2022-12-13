@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * 认证控制器
  *
- * @author 杨新杰
- * @date 2021/11/30 15:19
+ * @author yangxj96
  */
 @Slf4j
 @RestController

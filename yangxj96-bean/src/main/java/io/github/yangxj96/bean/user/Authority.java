@@ -9,7 +9,9 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 
 /**
- * 角色表
+ * 权限表实体
+ *
+ * @author yangxj96
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

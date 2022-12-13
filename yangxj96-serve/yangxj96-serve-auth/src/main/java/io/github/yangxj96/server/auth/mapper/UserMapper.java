@@ -8,6 +8,11 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 用户mapper层
+ *
+ * @author yangxj96
+ */
 public interface UserMapper extends BasicMapper<User> {
 
     boolean relevance(@Param("id") Long id, @Param("user") Long user, @Param("role") Long role);

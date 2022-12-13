@@ -3,9 +3,10 @@ package io.github.yangxj96.common.base;
 /**
  * 校验分组
  *
- * @author 杨新杰
+ * @author yangxj96
  */
 public class ValidationGroups {
+
     /**
      * 校验新增分组
      **/
