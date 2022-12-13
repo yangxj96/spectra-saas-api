@@ -70,3 +70,7 @@
 
 - Spring Security框架的自定义
 - 除了[身份认证服务](yangxj96-serve/yangxj96-serve-auth)需要额外的定制外,其余的服务都需要开启才能进行认证
+
+# 使用许可
+
+[GPL](LICENSE) © Richard Littauer
