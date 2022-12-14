@@ -65,4 +65,8 @@ public class BasicEntity implements Serializable {
     @JsonIgnore
     private LocalDateTime updatedTime;
 
+    @TableField(value = "deleted")
+    @JsonIgnore
+    private Boolean deleted;
+
 }

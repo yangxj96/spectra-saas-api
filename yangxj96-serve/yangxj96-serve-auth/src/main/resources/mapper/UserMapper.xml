@@ -1,53 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.github.yangxj96.server.auth.mapper.UserMapper">
+
     <!-- @formatter:off -->
-  <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.user.User">
-    <!--@mbg.generated-->
-    <!--@Table db_user.t_user-->
-    <id column="id"                      jdbcType="BIGINT"    property="id" />
-    <result column="username"            jdbcType="VARCHAR"   property="username" />
-    <result column="password"            jdbcType="VARCHAR"   property="password" />
-    <result column="access_expired"      jdbcType="BOOLEAN"   property="accessExpired" />
-    <result column="access_locked"       jdbcType="BOOLEAN"   property="accessLocked" />
-    <result column="access_enable"       jdbcType="BOOLEAN"   property="accessEnable" />
-    <result column="credentials_expired" jdbcType="BOOLEAN"   property="credentialsExpired" />
-    <result column="created_by"          jdbcType="BIGINT"    property="createdBy" />
-    <result column="created_time"        jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="updated_by"          jdbcType="BIGINT"    property="updatedBy" />
-    <result column="updated_time"        jdbcType="TIMESTAMP" property="updatedTime" />
-  </resultMap>
-  <!-- @formatter:on -->
+    <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.user.User">
+        <!--@mbg.generated-->
+        <!--@Table db_user.t_user-->
+        <id column="id"                      jdbcType="BIGINT"    property="id"/>
+        <result column="username"            jdbcType="VARCHAR"   property="username"/>
+        <result column="password"            jdbcType="VARCHAR"   property="password"/>
+        <result column="access_expired"      jdbcType="BOOLEAN"   property="accessExpired"/>
+        <result column="access_locked"       jdbcType="BOOLEAN"   property="accessLocked"/>
+        <result column="access_enable"       jdbcType="BOOLEAN"   property="accessEnable"/>
+        <result column="credentials_expired" jdbcType="BOOLEAN"   property="credentialsExpired"/>
+        <result column="created_by"          jdbcType="BIGINT"    property="createdBy"/>
+        <result column="created_time"        jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by"          jdbcType="BIGINT"    property="updatedBy"/>
+        <result column="updated_time"        jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="deleted"             jdbcType="BOOLEAN"   property="deleted"/>
+    </resultMap>
+    <!-- @formatter:on -->
 
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, username, "password", access_expired, access_locked, access_enable, credentials_expired,
-        created_by, created_time, updated_by, updated_time
+        id,
+        username,
+        "password",
+        access_expired,
+        access_locked,
+        access_enable,
+        credentials_expired,
+        created_by,
+        created_time,
+        updated_by,
+        updated_time
     </sql>
 
-  <insert id="relevance">
-    INSERT INTO db_user.t_user_to_role(id, user_id, role_id, created_by, created_time, updated_by, updated_time)
-    VALUES (#{id}, #{user}, #{role}, 0, now(), 0, now())
-  </insert>
+    <insert id="relevance">
+        INSERT INTO db_user.t_user_to_role(id, user_id, role_id, created_by, created_time, updated_by, updated_time)
+        VALUES (#{id}, #{user}, #{role}, 0, now(), 0, now())
+    </insert>
 
-  <select id="getRoleByUserId" resultType="io.github.yangxj96.bean.user.Role">
-      SELECT r.*
-      FROM db_user.t_role r,
-           db_user.t_user_to_role tr,
-           db_user.t_user u
-      WHERE u.id = #{userId}
-        AND r.id = tr.role_id
-        AND tr.user_id = u.id
-  </select>
+    <select id="getRoleByUserId" resultType="io.github.yangxj96.bean.user.Role">
+        SELECT r.*
+        FROM db_user.t_role r,
+             db_user.t_user_to_role tr,
+             db_user.t_user u
+        WHERE u.id = #{userId}
+          AND r.id = tr.role_id
+          AND tr.user_id = u.id
+    </select>
 
-  <select id="getAuthorityByRoleIds" resultType="io.github.yangxj96.bean.user.Authority">
-      SELECT DISTINCT (a.*)
-      FROM db_user.t_authority a,
-           db_user.t_role_to_authority ta
-      WHERE a.id = ta.authority_id
-        AND ta.role_id IN
-      <foreach collection="ids" open="(" close=")" separator="," index="idx" item="item" >
-          #{item}
-      </foreach>
-  </select>
+    <select id="getAuthorityByRoleIds" resultType="io.github.yangxj96.bean.user.Authority">
+        SELECT DISTINCT (a.*)
+        FROM db_user.t_authority a,
+             db_user.t_role_to_authority ta
+        WHERE a.id = ta.authority_id
+          AND ta.role_id IN
+        <foreach collection="ids" open="(" close=")" separator="," index="idx" item="item">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
