@@ -2,7 +2,7 @@ dependencies {
 
     api(project(":yangxj96-starter"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.springframework.boot:spring-boot-starter-web")
     // RPC调用
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     // 负载均衡
