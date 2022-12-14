@@ -11,7 +11,8 @@ public enum RStatus {
 
     /*
     code分布:
-    认证相关: 100000 - 200000
+    认证相关: 100000 - 199999
+    服务异常: 200000 - 299999
      */
 
     SUCCESS(0, "success"),
@@ -19,7 +20,10 @@ public enum RStatus {
     AUTHENTICATION(100000, "认证异常"),
     ACCESS_DENIED(100001, "无权限"),
     USERNAME_ABSENCE(100002, "用户不存在"),
-    PASSWORD_ERROR(100003, "密码错误");
+    PASSWORD_ERROR(100003, "密码错误"),
+    GATEWAY_NOT_FOUND(200001, "未找到服务"),
+    GATEWAY_RESPONSE_STATUS(200002, "网关响应状态"),
+    NULL_POINTER(200003, "空指针异常");
 
     private final Integer code;
 
