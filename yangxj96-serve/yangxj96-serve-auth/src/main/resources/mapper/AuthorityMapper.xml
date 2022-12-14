@@ -2,22 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.github.yangxj96.server.auth.mapper.AuthorityMapper">
     <!-- @formatter:off -->
-  <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.user.Authority">
-    <!--@mbg.generated-->
-    <!--@Table db_user.t_authority-->
-    <id column="id"               jdbcType="BIGINT"    property="id" />
-    <result column="name"         jdbcType="VARCHAR"   property="name" />
-    <result column="description"  jdbcType="VARCHAR"   property="description" />
-    <result column="created_by"   jdbcType="BIGINT"    property="createdBy" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="updated_by"   jdbcType="BIGINT"    property="updatedBy" />
-    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
-  </resultMap>
-  <!-- @formatter:on -->
+    <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.user.Authority">
+        <!--@mbg.generated-->
+        <!--@Table db_user.t_authority-->
+        <id column="id"               jdbcType="BIGINT"    property="id"/>
+        <result column="name"         jdbcType="VARCHAR"   property="name"/>
+        <result column="description"  jdbcType="VARCHAR"   property="description"/>
+        <result column="created_by"   jdbcType="BIGINT"    property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by"   jdbcType="BIGINT"    property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="deleted"      jdbcType="BOOLEAN"   property="deleted"/>
+    </resultMap>
+    <!-- @formatter:on -->
 
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
-        id, "name",description,created_by, created_time, updated_by, updated_time
+        id,
+        "name",
+        description,
+        created_by,
+        created_time,
+        updated_by,
+        updated_time
     </sql>
-
 </mapper>
