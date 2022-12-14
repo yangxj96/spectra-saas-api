@@ -1,7 +1,7 @@
 dependencies {
     implementation(project(":yangxj96-common"))
 
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.baomidou:mybatis-plus-boot-starter:${mybatisPlusVersion}")
 }
