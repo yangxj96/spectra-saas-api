@@ -1,4 +1,4 @@
-package io.github.yangxj96.starter.remote.fallback;
+package io.github.yangxj96.starter.remote.properties;
 
 import feign.Logger;
 import feign.Retryer;

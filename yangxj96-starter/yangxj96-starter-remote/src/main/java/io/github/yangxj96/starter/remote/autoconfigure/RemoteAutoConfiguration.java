@@ -3,7 +3,7 @@ package io.github.yangxj96.starter.remote.autoconfigure;
 import feign.*;
 import feign.okhttp.OkHttpClient;
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor;
-import io.github.yangxj96.starter.remote.fallback.RemoteProperties;
+import io.github.yangxj96.starter.remote.properties.RemoteProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;

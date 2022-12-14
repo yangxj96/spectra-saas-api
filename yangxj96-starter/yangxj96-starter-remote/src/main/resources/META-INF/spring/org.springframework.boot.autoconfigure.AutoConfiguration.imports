@@ -1,1 +1,2 @@
 io.github.yangxj96.starter.remote.autoconfigure.RemoteAutoConfiguration
+io.github.yangxj96.starter.remote.autoconfigure.RemoteFallbackAutoConfiguration
