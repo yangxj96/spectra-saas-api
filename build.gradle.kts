@@ -65,6 +65,7 @@ subprojects {
         implementation("cn.hutool:hutool-all:5.8.10")
         compileOnly("org.projectlombok:lombok")
         annotationProcessor("org.projectlombok:lombok")
+        compileOnly("org.jetbrains:annotations:23.0.0")
         // 工具 end
     }
 

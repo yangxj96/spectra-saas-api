@@ -6,6 +6,7 @@ import io.github.yangxj96.common.respond.R;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -90,22 +91,22 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
         }
 
         @Override
-        public MultiValueMap<String, ResponseCookie> getCookies() {
+        public @NotNull MultiValueMap<String, ResponseCookie> getCookies() {
             return getDelegate().getCookies();
         }
 
         @Override
-        public void addCookie(ResponseCookie cookie) {
+        public void addCookie(@NotNull ResponseCookie cookie) {
             getDelegate().addCookie(cookie);
         }
 
         @Override
-        public DataBufferFactory bufferFactory() {
+        public @NotNull DataBufferFactory bufferFactory() {
             return getDelegate().bufferFactory();
         }
 
         @Override
-        public void beforeCommit(Supplier<? extends Mono<Void>> action) {
+        public void beforeCommit(@NotNull Supplier<? extends Mono<Void>> action) {
             getDelegate().beforeCommit(action);
         }
 
@@ -115,7 +116,7 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
         }
 
         @Override
-        public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
+        public @NotNull Mono<Void> writeWith(@NotNull Publisher<? extends DataBuffer> body) {
             HttpHeaders httpHeaders = new HttpHeaders();
             if (isNotModify(exchange, httpHeaders)) {
                 return this.writeWith(body);
@@ -158,17 +159,17 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
         }
 
         @Override
-        public Mono<Void> writeAndFlushWith(Publisher<? extends Publisher<? extends DataBuffer>> body) {
+        public @NotNull Mono<Void> writeAndFlushWith(@NotNull Publisher<? extends Publisher<? extends DataBuffer>> body) {
             return getDelegate().writeAndFlushWith(body);
         }
 
         @Override
-        public Mono<Void> setComplete() {
+        public @NotNull Mono<Void> setComplete() {
             return getDelegate().setComplete();
         }
 
         @Override
-        public HttpHeaders getHeaders() {
+        public @NotNull HttpHeaders getHeaders() {
             return getDelegate().getHeaders();
         }
 
