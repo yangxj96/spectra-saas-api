@@ -2,7 +2,7 @@
   <configuration default="false" name="系统配置" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="yangxj96-saas-api-gradle.yangxj96-serve.yangxj96-serve-system.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.system.Application" />
-    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m -Xlog:gc*" />
+    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
