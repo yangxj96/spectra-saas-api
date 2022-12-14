@@ -64,8 +64,8 @@ subprojects {
         implementation("org.apache.commons:commons-pool2:2.11.1")
         implementation("cn.hutool:hutool-all:5.8.10")
         compileOnly("org.projectlombok:lombok")
-        annotationProcessor("org.projectlombok:lombok")
         compileOnly("org.jetbrains:annotations:23.0.0")
+        annotationProcessor("org.projectlombok:lombok")
         // 工具 end
     }
 
