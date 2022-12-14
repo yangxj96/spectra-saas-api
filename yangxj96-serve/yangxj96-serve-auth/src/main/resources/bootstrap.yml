@@ -6,9 +6,9 @@ spring:
   application:
     name: yangxj96-serve-auth
   datasource:
-    url: jdbc:postgresql://localhost:5432/yangxj96_saas_db
+    url: jdbc:postgresql://49.235.101.106:5432/yangxj96_saas_db
     username: postgres
-    password: root
+    password: QuVsKppcWvwwX2Vv
     driver-class-name: org.postgresql.Driver
   data:
     redis:
@@ -45,6 +45,7 @@ mybatis-plus:
 yangxj96:
   security:
     enable: false
+    store-type: redis
 
 # 端点检查放开所有
 management:
