@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8080
 spring:
   main:
     banner-mode: off
@@ -12,8 +12,8 @@ spring:
     driver-class-name: org.postgresql.Driver
   data:
     redis:
-      host: 49.235.101.106
-      password: QuVsKppcWvwwX2Vv
+      host: 1.14.6.120
+      password: QPOCe^7Q5qtoPD&O
       port: 6379
       database: 9
       lettuce:
