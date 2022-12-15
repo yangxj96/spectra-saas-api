@@ -1,5 +1,6 @@
 package io.github.yangxj96.server.system;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author yangxj96
  */
+@MapperScan("io.github.yangxj96.server.system.mapper")
 @SpringBootApplication
 public class Application {
 

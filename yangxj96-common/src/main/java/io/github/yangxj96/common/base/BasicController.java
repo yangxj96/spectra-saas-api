@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @Validated
 public abstract class BasicController<O extends BasicEntity, S extends BasicService<O>> {
 
-    private final S bindService;
+    protected final S bindService;
 
     protected BasicController(S bindService) {
         this.bindService = bindService;
