@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -123,7 +122,6 @@ public class JacksonAutoConfiguration {
      */
     @Bean
     @DependsOn("requestMappingHandlerAdapter")
-    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     public Converter<String, Date> dateConverter() {
         return source -> DateUtil.parse(source.trim());
     }
@@ -136,7 +134,6 @@ public class JacksonAutoConfiguration {
      */
     @Bean
     @DependsOn("requestMappingHandlerAdapter")
-    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     public Converter<String, LocalDateTime> localDateTimeConverter() {
         return source -> LocalDateTime.parse(source.trim(), DateTimeFormatter.ofPattern(properties.getLocalDateTimeFormat()));
     }
@@ -149,7 +146,6 @@ public class JacksonAutoConfiguration {
      */
     @Bean
     @DependsOn("requestMappingHandlerAdapter")
-    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     public Converter<String, LocalDate> localDateConverter() {
         return source -> LocalDate.parse(source.trim(), DateTimeFormatter.ofPattern(properties.getLocalDateFormat()));
     }
@@ -161,7 +157,6 @@ public class JacksonAutoConfiguration {
      */
     @Bean
     @DependsOn("requestMappingHandlerAdapter")
-    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     public Converter<String, LocalTime> localTimeConverter() {
         return source -> LocalTime.parse(source.trim(), DateTimeFormatter.ofPattern(properties.getLocalTimeFormat()));
     }
