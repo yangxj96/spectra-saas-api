@@ -1,6 +1,7 @@
 dependencies {
 
     api(project(":yangxj96-starter"))
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     // RPC调用
@@ -15,5 +16,5 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     // 重试机制
     implementation("org.springframework.retry:spring-retry")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+
 }

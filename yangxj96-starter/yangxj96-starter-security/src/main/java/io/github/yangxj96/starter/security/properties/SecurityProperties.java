@@ -15,6 +15,8 @@ public class SecurityProperties {
 
     /**
      * 存储介质类型
+     * <br/>
+     * 如果是redis类型的话,需要yangxj96.db.redis-enable=true
      */
     private StoreType storeType = StoreType.JDBC;
 
