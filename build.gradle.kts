@@ -1,14 +1,16 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     java
     id("java-library")
     id("org.springframework.boot") version "3.0.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
+    id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
 }
 
 allprojects {
-    group = "org.example"
+    group = "io.github.yangxj96.commonsaas"
     version = "1.0.0-SNAPSHOT"
 
     repositories {
@@ -27,6 +29,7 @@ subprojects {
     apply(plugin = "java-library")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 
     // java源码和目标文件版本
     java {
@@ -53,26 +56,42 @@ subprojects {
     }
 
     dependencies {
-
         // 测试 begin
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
-
-        // 工具 begin
-        implementation("org.apache.commons:commons-lang3:3.12.0")
-        implementation("org.apache.commons:commons-collections4:4.4")
-        implementation("org.apache.commons:commons-pool2:2.11.1")
-        implementation("cn.hutool:hutool-all:5.8.10")
         compileOnly("org.projectlombok:lombok")
         compileOnly("org.jetbrains:annotations:23.0.0")
         annotationProcessor("org.projectlombok:lombok")
-        // 工具 end
     }
 
     tasks.getByName<Test>("test") {
         useJUnitPlatform()
     }
 
+    // 官方提供的打包为OCI镜像的配置
+    tasks.named<BootBuildImage>("bootBuildImage") {
+        publish.set(false)
+        imageName.set("${project.name}:${project.version}")
+        environment.set(
+            mapOf(
+                "HTTP_PROXY" to "http://192.168.2.29:8889",
+                "HTTPS_PROXY" to "http://192.168.2.29:8889"
+            )
+        )
+        docker {
+            host.set("tcp://localhost:2375")
+        }
+        buildCache {
+            volume {
+                name.set("cache-${rootProject.name}.build")
+            }
+        }
+        launchCache {
+            volume {
+                name.set("cache-${rootProject.name}.launch")
+            }
+        }
+    }
 }
 
 

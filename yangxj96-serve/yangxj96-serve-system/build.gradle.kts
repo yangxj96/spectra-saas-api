@@ -4,8 +4,6 @@ dependencies {
     api(project(":yangxj96-common"))
     api(project(":yangxj96-starter:yangxj96-starter-common"))
     api(project(":yangxj96-starter:yangxj96-starter-remote"))
+    api(project(":yangxj96-starter:yangxj96-starter-db"))
     api(project(":yangxj96-starter:yangxj96-starter-security"))
-
-    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:${mybatisVersion}")
-    runtimeOnly("org.postgresql:postgresql")
 }
