@@ -25,7 +25,7 @@ spring:
   cloud:
     polaris:
       address: grpc://49.235.101.106:8091
-      namespace: yangxj96
+      namespace: default
 
 # mybatis plus 删除
 mybatis-plus:

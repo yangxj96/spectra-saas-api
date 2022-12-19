@@ -23,13 +23,19 @@ spring:
   cloud:
     polaris:
       address: grpc://49.235.101.106:8091
-      namespace: yangxj96
+      namespace: default
     gateway:
       routes:
         - id: yangxj96-serve-auth
           uri: lb://yangxj96-serve-auth
           predicates:
             - Path=/api/auth/**
+          filters:
+            - StripPrefix=2
+        - id: yangxj96-serve-dept
+          uri: lb://yangxj96-serve-dept
+          predicates:
+            - Path=/api/dept/**
           filters:
             - StripPrefix=2
 
