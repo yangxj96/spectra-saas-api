@@ -21,8 +21,8 @@ public class DeptController {
     private DemoFeignClient demoFeignClient;
 
     @GetMapping("/d1")
-    public String d1() {
-        return "{}";
+    public int d1() {
+        return 1;
     }
 
     @PreAuthorize("isAuthenticated() && hasAnyAuthority('USER_INSERT2')")
