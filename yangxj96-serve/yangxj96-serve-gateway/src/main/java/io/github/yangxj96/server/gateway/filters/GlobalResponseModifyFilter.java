@@ -1,5 +1,6 @@
 package io.github.yangxj96.server.gateway.filters;
 
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yangxj96.common.respond.R;
@@ -18,7 +19,9 @@ import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
@@ -30,7 +33,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
@@ -77,7 +79,7 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
         @Override
         public @NotNull Mono<Void> writeWith(@NotNull Publisher<? extends DataBuffer> body) {
             HttpHeaders httpHeaders = new HttpHeaders();
-            if (isNotModify(exchange,httpHeaders)) {
+            if (isNotModify(exchange, httpHeaders)) {
                 return super.writeWith(body);
             }
 
@@ -114,14 +116,18 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
                         Flux<DataBuffer> flux = messageBody
                                 .map(buffer -> modify(buffer, result))
                                 .switchIfEmpty(emptyBody(result))
-                                .doOnNext(data -> headers.setContentLength(data.readableByteCount()));
+                                .doOnNext(data -> {
+                                    headers.setContentLength(data.readableByteCount());
+                                    // 移除认证用的code
+                                    headers.remove(RHttpHeadersExpand.RESULT_CODE);
+                                });
 
                         return getDelegate().writeWith(flux);
                     }));
 
         }
 
-         //// 私有方法区
+        //// 私有方法区
 
 
         /**
@@ -162,15 +168,21 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
          * @return {@link DataBuffer}
          */
         private DataBuffer modify(DataBuffer buffer, R result) {
+            byte[] bytes;
+            String str = String.valueOf(StandardCharsets.UTF_8.decode(buffer.toByteBuffer()));
             try {
-                CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer.toByteBuffer());
-                result.setData(om.readTree(String.valueOf(charBuffer)));
-                DataBufferUtils.release(buffer);
-                return getDelegate().bufferFactory().wrap(om.writeValueAsBytes(result));
+                if (JSONUtil.isTypeJSON(str)) {
+                    result.setData(om.readTree(str));
+                } else {
+                    result.setData(str);
+                }
+                bytes = om.writeValueAsBytes(result);
             } catch (JsonProcessingException e) {
                 log.error("json转换异常,可能是非json类型的返回,{}", e.getMessage());
-                return getDelegate().bufferFactory().wrap(formattingErr());
+                bytes = formattingErr();
             }
+            DataBufferUtils.release(buffer);
+            return getDelegate().bufferFactory().wrap(bytes);
         }
 
         private byte[] formattingErr() {

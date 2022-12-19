@@ -21,8 +21,8 @@ public class DeptController {
     private DemoFeignClient demoFeignClient;
 
     @GetMapping("/d1")
-    public R d1() {
-        return R.success();
+    public String d1() {
+        return "{}";
     }
 
     @PreAuthorize("isAuthenticated() && hasAnyAuthority('USER_INSERT2')")
@@ -39,7 +39,7 @@ public class DeptController {
 
 
     @GetMapping("/d4")
-    public String d4(){
+    public String d4() {
         return demoFeignClient.get();
     }
 
