@@ -60,7 +60,7 @@ subprojects {
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
         compileOnly("org.projectlombok:lombok")
-        compileOnly("org.jetbrains:annotations:23.0.0")
+        compileOnly("org.jetbrains:annotations:23.1.0")
         annotationProcessor("org.projectlombok:lombok")
     }
 

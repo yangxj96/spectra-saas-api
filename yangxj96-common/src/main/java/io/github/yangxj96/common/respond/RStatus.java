@@ -2,6 +2,8 @@ package io.github.yangxj96.common.respond;
 
 import lombok.Getter;
 
+import java.util.Objects;
+
 /**
  * 通用响应的状态,<br/>
  * 进行主要是进行标准化响应内容,也许以后如果增加国际化相关内容可能会有用
@@ -22,7 +24,7 @@ public enum RStatus {
     USERNAME_ABSENCE(100002, "用户不存在"),
     PASSWORD_ERROR(100003, "密码错误"),
     GATEWAY_NOT_FOUND(200001, "未找到服务"),
-    GATEWAY_RESPONSE_STATUS(200002, "网关响应状态"),
+    GATEWAY_RESPONSE_STATUS(200002, "网关响应状态异常"),
     NULL_POINTER(200003, "空指针异常");
 
     private final Integer code;
@@ -32,5 +34,14 @@ public enum RStatus {
     RStatus(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
+    }
+
+    public static String getMsgByCode(Integer code) {
+        for (RStatus status : values()) {
+            if (Objects.equals(status.code, code)) {
+                return status.msg;
+            }
+        }
+        return "undefined";
     }
 }

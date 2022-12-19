@@ -3,6 +3,8 @@ package io.github.yangxj96.server.gateway.filters;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yangxj96.common.respond.R;
+import io.github.yangxj96.common.respond.RHttpHeadersExpand;
+import io.github.yangxj96.common.respond.RStatus;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,13 +17,12 @@ import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.*;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -32,7 +33,6 @@ import reactor.core.publisher.Mono;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 @Slf4j
 @Component
@@ -59,67 +59,26 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
         return new ModifyServerHttpResponse(exchange, serverCodecConfigurer, om);
     }
 
-    public static class ModifyServerHttpResponse implements ServerHttpResponse {
+    public static class ModifyServerHttpResponse extends ServerHttpResponseDecorator {
 
         private final ServerCodecConfigurer serverCodecConfigurer;
 
         private final ServerWebExchange exchange;
 
-        private final ServerHttpResponse delegate;
-
         private final ObjectMapper om;
 
         public ModifyServerHttpResponse(ServerWebExchange exchange, ServerCodecConfigurer serverCodecConfigurer, ObjectMapper om) {
+            super(exchange.getResponse());
             this.exchange = exchange;
-            this.delegate = exchange.getResponse();
             this.serverCodecConfigurer = serverCodecConfigurer;
             this.om = om;
-        }
-
-        public ServerHttpResponse getDelegate() {
-            return this.delegate;
-        }
-
-        @Override
-        public HttpStatusCode getStatusCode() {
-            return getDelegate().getStatusCode();
-        }
-
-        @Override
-        public boolean setStatusCode(HttpStatusCode status) {
-            return getDelegate().setStatusCode(status);
-        }
-
-        @Override
-        public @NotNull MultiValueMap<String, ResponseCookie> getCookies() {
-            return getDelegate().getCookies();
-        }
-
-        @Override
-        public void addCookie(@NotNull ResponseCookie cookie) {
-            getDelegate().addCookie(cookie);
-        }
-
-        @Override
-        public @NotNull DataBufferFactory bufferFactory() {
-            return getDelegate().bufferFactory();
-        }
-
-        @Override
-        public void beforeCommit(@NotNull Supplier<? extends Mono<Void>> action) {
-            getDelegate().beforeCommit(action);
-        }
-
-        @Override
-        public boolean isCommitted() {
-            return getDelegate().isCommitted();
         }
 
         @Override
         public @NotNull Mono<Void> writeWith(@NotNull Publisher<? extends DataBuffer> body) {
             HttpHeaders httpHeaders = new HttpHeaders();
-            if (isNotModify(exchange, httpHeaders)) {
-                return this.writeWith(body);
+            if (isNotModify(exchange,httpHeaders)) {
+                return super.writeWith(body);
             }
 
             ClientResponse clientResponse = ClientResponse
@@ -142,9 +101,12 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
                     .then(Mono.defer(() -> {
                         R result = new R();
                         HttpHeaders headers = exchange.getResponse().getHeaders();
-                        String code = headers.getFirst("result-code");
+                        String code = headers.getFirst(RHttpHeadersExpand.RESULT_CODE);
                         if (StringUtils.isNotEmpty(code)) {
                             result.setCode(Integer.parseInt(code));
+                            result.setMsg(RStatus.getMsgByCode(result.getCode()));
+                        } else {
+                            result.setCode(0);
                             result.setMsg("success");
                         }
                         Flux<DataBuffer> messageBody = cachedBodyOutputMessage.getBody();
@@ -156,24 +118,10 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
 
                         return getDelegate().writeWith(flux);
                     }));
+
         }
 
-        @Override
-        public @NotNull Mono<Void> writeAndFlushWith(@NotNull Publisher<? extends Publisher<? extends DataBuffer>> body) {
-            return getDelegate().writeAndFlushWith(body);
-        }
-
-        @Override
-        public @NotNull Mono<Void> setComplete() {
-            return getDelegate().setComplete();
-        }
-
-        @Override
-        public @NotNull HttpHeaders getHeaders() {
-            return getDelegate().getHeaders();
-        }
-
-        //// 私有方法区
+         //// 私有方法区
 
 
         /**
@@ -189,7 +137,7 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
             // 先把Content-Type设置为响应类型
             headers.add(HttpHeaders.CONTENT_TYPE, contentType);
             // 响应的是文件流
-            return contentType.contains(MediaType.APPLICATION_JSON_VALUE);
+            return contentType.contains(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         }
 
         /**

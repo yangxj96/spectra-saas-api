@@ -1,19 +1,19 @@
 server:
-  port: 8080
+  port: 0
 spring:
   application:
     name: yangxj96-serve-system
   datasource:
-    url: jdbc:postgresql://49.235.101.106:5432/yangxj96_saas_db
+    url: jdbc:postgresql://127.0.0.1:5432/yangxj96_saas_db
     username: postgres
     password: QuVsKppcWvwwX2Vv
     driver-class-name: org.postgresql.Driver
   data:
     redis:
-      host: 1.14.6.120
-      password: QPOCe^7Q5qtoPD&O
+      host: 127.0.0.1
+      password: QuVsKppcWvwwX2Vv
       port: 6379
-      database: 9
+      database: 10
       lettuce:
         pool:
           max-active: 8
