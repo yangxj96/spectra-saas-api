@@ -4,16 +4,16 @@ spring:
   application:
     name: yangxj96-serve-gateway
   datasource:
-    url: jdbc:postgresql://49.235.101.106:5432/yangxj96_saas_db
+    url: jdbc:postgresql://127.0.0.1:5432/yangxj96_saas_db
     username: postgres
     password: QuVsKppcWvwwX2Vv
     driver-class-name: org.postgresql.Driver
   data:
     redis:
-      host: 49.235.101.106
+      host: 127.0.0.1
       password: QuVsKppcWvwwX2Vv
       port: 6379
-      database: 9
+      database: 10
       lettuce:
         pool:
           max-active: 8
@@ -24,6 +24,14 @@ spring:
     polaris:
       address: grpc://49.235.101.106:8091
       namespace: yangxj96
+    gateway:
+      routes:
+        - id: yangxj96-serve-auth
+          uri: lb://yangxj96-serve-auth
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=2
 
 # mybatis plus 删除
 mybatis-plus:
@@ -50,6 +58,9 @@ management:
     web:
       exposure:
         include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 # 日志
 logging:
