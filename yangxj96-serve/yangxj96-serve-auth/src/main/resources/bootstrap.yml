@@ -46,6 +46,8 @@ yangxj96:
   security:
     enable: false
     store-type: redis
+  db:
+    security-db: 9
 
 # 端点检查放开所有
 management:
