@@ -56,7 +56,10 @@ mybatis-plus:
 
 yangxj96:
   db:
-    redis-enable: false
+    redis-enable: true
+  security:
+    enable: false
+    store-type: redis
 
 # 端点检查放开所有
 management:

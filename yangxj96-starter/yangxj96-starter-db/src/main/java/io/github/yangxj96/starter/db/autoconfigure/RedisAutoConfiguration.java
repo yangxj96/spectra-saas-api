@@ -7,12 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -30,6 +29,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Slf4j
 @ConditionalOnProperty(name = "yangxj96.db.redis-enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties.class)
+@AutoConfiguration(before = org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class)
 public class RedisAutoConfiguration {
 
     private static final String LOG_PREFIX = "[autoconfig-redis] ";
@@ -71,7 +71,7 @@ public class RedisAutoConfiguration {
     @ConditionalOnProperty(name = "yangxj96.security.store-type", havingValue = "redis")
     public RedisTemplate<String, Object> securityRedisTemplate() {
         log.debug("{}Security使用的RedisTemplate<String, Object>", LOG_PREFIX);
-        RedisConnectionFactory factory = buildRedisConnectionFactory(properties.getSecurityDB());
+        RedisConnectionFactory factory = buildRedisConnectionFactory(properties.getSecurityDb());
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         return commonConfig(redisTemplate);
@@ -86,7 +86,7 @@ public class RedisAutoConfiguration {
     @ConditionalOnProperty(name = "yangxj96.security.store-type", havingValue = "redis")
     public RedisTemplate<String, byte[]> securityBytesRedisTemplate() {
         log.debug("{}Security使用的RedisTemplate<String, byte[]>", LOG_PREFIX);
-        RedisConnectionFactory factory = buildRedisConnectionFactory(properties.getSecurityDB());
+        RedisConnectionFactory factory = buildRedisConnectionFactory(properties.getSecurityDb());
         RedisTemplate<String, byte[]> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(factory);
         // 设置value的序列化规则和 key的序列化规则
