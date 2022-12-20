@@ -2,13 +2,11 @@ package io.github.yangxj96.server.gateway.service.impl;
 
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -34,22 +32,4 @@ public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
         return 1;
     }
 
-    public int update(RouteDefinition definition) {
-        routeService.delete(Mono.just(definition.getId()));
-        return add(definition);
-    }
-
-    public Mono<ResponseEntity<Object>> add(String id) {
-        return routeService
-                .delete(Mono.just(id))
-                .then(
-                        Mono.defer(() ->
-                                Mono.just(ResponseEntity.ok().build())
-                                        .onErrorResume(
-                                                NotFoundException.class::isInstance,
-                                                t -> Mono.just(ResponseEntity.notFound().build())
-                                        )
-                        )
-                );
-    }
 }

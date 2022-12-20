@@ -13,8 +13,6 @@ import java.io.Serializable;
 
 /**
  * 路由表定义
- *
- * @author yangxj96
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -53,4 +51,10 @@ public class SysRoute extends BasicEntity implements Serializable {
      */
     @TableField(value = "metadata")
     private String metadata;
+
+    /**
+     * 路由id
+     */
+    @TableField(value = "route_id")
+    private String routeId;
 }

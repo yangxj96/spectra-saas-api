@@ -3,6 +3,7 @@ package io.github.yangxj96.server.gateway.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionRepository;
@@ -19,6 +20,7 @@ import java.util.List;
  *
  * @author yangxj96
  */
+@Slf4j
 @Service
 public class DBRouteServiceImpl implements RouteDefinitionRepository {
 
@@ -35,9 +37,10 @@ public class DBRouteServiceImpl implements RouteDefinitionRepository {
         List<RouteDefinition> routes = new ArrayList<>();
         List<Object> values = redisTemplate.opsForHash().values(GATEWAY_REDIS_KEY);
         if (!values.isEmpty()) {
-            values.forEach(
-                    definition -> routes.add(om.convertValue(definition.toString(), RouteDefinition.class))
-            );
+            values.forEach(definition -> {
+                log.info(definition.toString());
+                routes.add(om.convertValue(definition.toString(), RouteDefinition.class));
+            });
             return Flux.fromIterable(routes);
         }
         // 此处应该从DB中获取
