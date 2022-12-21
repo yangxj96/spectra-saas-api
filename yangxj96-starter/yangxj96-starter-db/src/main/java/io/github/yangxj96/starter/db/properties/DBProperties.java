@@ -19,6 +19,6 @@ public class DBProperties {
 
     private boolean redisEnable = true;
 
-    private Integer securityDB = 9;
+    private Integer securityDb = 9;
 
 }
