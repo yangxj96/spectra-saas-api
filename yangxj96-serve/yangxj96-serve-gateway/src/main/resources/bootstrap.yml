@@ -42,7 +42,7 @@ spring:
 # mybatis plus 删除
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: io.github.yangxj96.bean.user
+  type-aliases-package: io.github.yangxj96.bean.gateway
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     local-cache-scope: statement

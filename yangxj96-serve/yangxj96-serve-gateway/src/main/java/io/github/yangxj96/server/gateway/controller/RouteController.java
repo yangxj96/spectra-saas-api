@@ -1,17 +1,17 @@
 package io.github.yangxj96.server.gateway.controller;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yangxj96.bean.gateway.SysRoute;
+import io.github.yangxj96.server.gateway.service.SysRouteService;
 import io.github.yangxj96.server.gateway.service.impl.DynamicRouteServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.cloud.gateway.filter.FilterDefinition;
-import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
+import org.springframework.cloud.gateway.handler.predicate.AbstractRoutePredicateFactory;
 import org.springframework.cloud.gateway.route.RouteDefinition;
+import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +21,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -36,15 +33,22 @@ public class RouteController {
     @Resource
     private DynamicRouteServiceImpl dynamicRouteService;
 
+    @Resource
+    private SysRouteService bindService;
+
+    @Resource
+    private RouteLocator locator;
 
     @PreAuthorize("hasRole('ROLE_SYSADMIN')")
     @PostMapping("")
-    public Mono<String> create(@RequestBody SysRoute route) throws JsonProcessingException {
-        dynamicRouteService.add(assembleRouteDefinition(route));
+    public Mono<String> create(@RequestBody SysRoute route) {
+        if (dynamicRouteService.add(assembleRouteDefinition(route)) == 1) {
+            bindService.save(route);
+        }
         return Mono.just("Hello World");
     }
 
-    private RouteDefinition assembleRouteDefinition(SysRoute route) throws JsonProcessingException {
+    private RouteDefinition assembleRouteDefinition(SysRoute route) {
         RouteDefinition definition = new RouteDefinition();
         definition.setId(route.getRouteId());
         definition.setOrder(route.getOrder());
@@ -57,35 +61,16 @@ public class RouteController {
         }
         definition.setUri(uri);
         // 设置元数据
-        if (StringUtils.isNotBlank(route.getMetadata())) {
-            Map<String, Object> metadata = om.readValue(route.getMetadata(), new TypeReference<>() {
-            });
-            definition.setMetadata(metadata);
+        if (MapUtil.isNotEmpty(route.getMetadata())) {
+            definition.setMetadata(route.getMetadata());
         }
         // 设置断言
-        if (StringUtils.isNotBlank(route.getPredicates())) {
-            List<PredicateDefinition> predicates = new ArrayList<>();
-            for (JsonNode node : om.readTree(route.getPredicates())) {
-                PredicateDefinition datum = new PredicateDefinition();
-                datum.setArgs(om.readValue(node.get("args").asText(), new TypeReference<>() {
-                }));
-                datum.setName(node.get("name").asText());
-                predicates.add(datum);
-            }
-            definition.setPredicates(predicates);
+        if (CollUtil.isNotEmpty(route.getPredicates())) {
+            definition.setPredicates(route.getPredicates());
         }
-
         // 设置过滤器
-        if (StringUtils.isNotBlank(route.getFilters())) {
-            List<FilterDefinition> filters = new ArrayList<>();
-            for (JsonNode node : om.readTree(route.getFilters())) {
-                FilterDefinition datum = new FilterDefinition();
-                datum.setArgs(om.readValue(node.get("args").asText(), new TypeReference<>() {
-                }));
-                datum.setName(node.get("name").asText());
-                filters.add(datum);
-            }
-            definition.setFilters(filters);
+        if (CollUtil.isNotEmpty(route.getFilters())) {
+            definition.setFilters(route.getFilters());
         }
         return definition;
     }

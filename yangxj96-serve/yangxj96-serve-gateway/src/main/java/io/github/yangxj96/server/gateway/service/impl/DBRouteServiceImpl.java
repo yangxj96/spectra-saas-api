@@ -39,7 +39,13 @@ public class DBRouteServiceImpl implements RouteDefinitionRepository {
         if (!values.isEmpty()) {
             values.forEach(definition -> {
                 log.info(definition.toString());
-                routes.add(om.convertValue(definition.toString(), RouteDefinition.class));
+                try {
+                    routes.add(om.readValue(definition.toString(), RouteDefinition.class));
+                } catch (JsonProcessingException e) {
+                    log.error("转换出错:" + e.getMessage());
+                    e.printStackTrace();
+
+                }
             });
             return Flux.fromIterable(routes);
         }

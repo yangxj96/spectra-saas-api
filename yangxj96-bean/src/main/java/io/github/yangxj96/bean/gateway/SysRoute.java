@@ -2,14 +2,19 @@ package io.github.yangxj96.bean.gateway;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import io.github.yangxj96.common.base.BasicEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.cloud.gateway.filter.FilterDefinition;
+import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 路由表定义
@@ -19,7 +24,7 @@ import java.io.Serializable;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "db_system.t_sys_route")
+@TableName(value = "db_system.t_sys_route", autoResultMap = true)
 public class SysRoute extends BasicEntity implements Serializable {
 
     /**
@@ -37,20 +42,20 @@ public class SysRoute extends BasicEntity implements Serializable {
     /**
      * 断言
      */
-    @TableField(value = "predicates")
-    private String predicates;
+    @TableField(value = "predicates", typeHandler = JacksonTypeHandler.class)
+    private List<PredicateDefinition> predicates;
 
     /**
      * 过滤器
      */
-    @TableField(value = "filters")
-    private String filters;
+    @TableField(value = "filters", typeHandler = JacksonTypeHandler.class)
+    private List<FilterDefinition> filters;
 
     /**
      * 元数据
      */
-    @TableField(value = "metadata")
-    private String metadata;
+    @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
+    private Map<String, Object> metadata;
 
     /**
      * 路由id
