@@ -25,7 +25,12 @@ public enum RStatus {
     PASSWORD_ERROR(100003, "密码错误"),
     GATEWAY_NOT_FOUND(200001, "未找到服务"),
     GATEWAY_RESPONSE_STATUS(200002, "网关响应状态异常"),
-    NULL_POINTER(200003, "空指针异常");
+    NULL_POINTER(200003, "空指针异常"),
+    FAILURE_INSERT(200004, "插入失败"),
+    FAILURE_DELETE(200005, "删除失败"),
+    FAILURE_UPDATE(200006, "更新失败"),
+    FAILURE_SELECT(200007, "查询失败"),
+    NOT_FIND_ROUTE(200008, "未找到路由");
 
     private final Integer code;
 
