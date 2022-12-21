@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.yangxj96.server.gateway.mapper.SysRouteMapper">
+  <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.gateway.SysRoute">
+    <!--@mbg.generated-->
+    <!--@Table db_system.t_sys_route-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="uri" jdbcType="VARCHAR" property="uri" />
+    <result column="order" jdbcType="INTEGER" property="order" />
+    <result column="predicates" jdbcType="VARCHAR" property="predicates" />
+    <result column="filters" jdbcType="VARCHAR" property="filters" />
+    <result column="metadata" jdbcType="VARCHAR" property="metadata" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
+    <result column="updated_time" jdbcType="BIGINT" property="updatedTime" />
+    <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, uri, "order", predicates, filters, metadata, created_by, created_time, updated_by, 
+    updated_time, deleted
+  </sql>
+</mapper>
