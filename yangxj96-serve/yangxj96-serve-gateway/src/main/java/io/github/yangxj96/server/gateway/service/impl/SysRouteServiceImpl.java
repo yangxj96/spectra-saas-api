@@ -18,5 +18,4 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
         super(bindMapper);
     }
 
-
 }
