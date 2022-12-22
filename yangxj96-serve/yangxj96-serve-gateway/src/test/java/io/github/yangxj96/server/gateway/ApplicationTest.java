@@ -1,6 +1,8 @@
 package io.github.yangxj96.server.gateway;
 
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
@@ -18,6 +20,11 @@ class ApplicationTest {
         System.out.println("当前时间:" + now);
         System.out.println("Zone:" + newYork + " Timestamp = " + Timestamp.from(newYork.toInstant()));
         System.out.println("Zone:" + shangHai + " Timestamp = " + Timestamp.from(shangHai.toInstant()));
+    }
+
+    @Test
+    void test01(){
+        Assertions.assertTrue(true);
     }
 
 }
