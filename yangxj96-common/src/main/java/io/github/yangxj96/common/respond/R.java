@@ -38,6 +38,13 @@ public class R implements Serializable {
         return R.builder().code(RStatus.SUCCESS.getCode()).msg(RStatus.SUCCESS.getMsg()).build();
     }
 
+    public static R success(Object data) {
+        setHeader(RStatus.SUCCESS);
+        R r = success();
+        r.setData(data);
+        return r;
+    }
+
     public static R failure() {
         setHeader(RStatus.FAILURE);
         return R.builder().code(RStatus.FAILURE.getCode()).msg(RStatus.FAILURE.getMsg()).build();

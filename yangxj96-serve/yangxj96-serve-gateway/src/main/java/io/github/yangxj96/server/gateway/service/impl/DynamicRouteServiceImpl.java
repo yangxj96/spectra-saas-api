@@ -7,6 +7,7 @@ import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -17,6 +18,7 @@ import reactor.core.publisher.Mono;
  * @author yangxj96
  */
 @Slf4j
+@Primary
 @Service
 public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
 
@@ -26,29 +28,20 @@ public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
     @Resource
     private DBRouteServiceImpl routeService;
 
-
     @Override
     public void setApplicationEventPublisher(@NotNull ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
     }
 
-    /**
-     * 新增路由
-     *
-     * @param definition 路由定义信息
-     */
-    public void add(RouteDefinition definition) {
-        routeService.save(Mono.just(definition)).subscribe();
-        publisher.publishEvent(new RefreshRoutesEvent(this));
+    public void save(Mono<RouteDefinition> route) {
+        routeService.save(route).subscribe(r -> this.publisher.publishEvent(new RefreshRoutesEvent(this)));
     }
 
-    /**
-     * 删除路由
-     *
-     * @param id 路由id
-     */
-    public void delete(String id) {
-        routeService.delete(Mono.just(id)).subscribe(r -> publisher.publishEvent(new RefreshRoutesEvent(this)));
+    public void delete(Mono<String> routeId) {
+        routeService.delete(routeId).subscribe(r -> this.publisher.publishEvent(new RefreshRoutesEvent(this)));
     }
 
+    public void update(Mono<RouteDefinition> route) {
+        // TODO document why this method is empty
+    }
 }

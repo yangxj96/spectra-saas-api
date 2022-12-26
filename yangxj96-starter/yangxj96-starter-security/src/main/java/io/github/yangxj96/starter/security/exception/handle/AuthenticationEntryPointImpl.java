@@ -1,4 +1,4 @@
-package io.github.yangxj96.starter.security.exception;
+package io.github.yangxj96.starter.security.exception.handle;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
             ObjectMapper mapper = SpringUtil.getBean(ObjectMapper.class);
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
-            mapper.writeValue(response.getOutputStream(), R.specify(RStatus.AUTHENTICATION));
+            mapper.writeValue(response.getOutputStream(), R.specify(RStatus.SECURITY_AUTHENTICATION));
         } catch (Exception e) {
             throw new ServletException("格式化异常");
         }

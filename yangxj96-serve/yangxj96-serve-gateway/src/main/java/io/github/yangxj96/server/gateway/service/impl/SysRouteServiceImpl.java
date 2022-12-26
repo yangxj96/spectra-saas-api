@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * 路由表定义service实现层
  *
@@ -36,7 +38,7 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
     @Transactional(rollbackFor = Exception.class)
     public Mono<Boolean> addRoute(SysRoute route) {
         return Mono.defer(() -> {
-            dynamicRouteService.add(RouteUtil.assembleRouteDefinition(route));
+            dynamicRouteService.save(Mono.just(RouteUtil.assembleRouteDefinition(route)));
             return Mono.just(this.save(route));
         });
     }
@@ -49,7 +51,7 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
             if (route == null) {
                 return Mono.just(RStatus.NOT_FIND_ROUTE);
             }
-            dynamicRouteService.delete(id);
+            dynamicRouteService.delete(Mono.just(id));
             if (this.removeById(route.getId())) {
                 // 不能在redisTemplate删除key后直接删除,会导致删除失败.暂时不明白为什么
                 publisher.publishEvent(new RefreshRoutesEvent(this));
@@ -60,4 +62,22 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
         });
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Mono<RStatus> modifyById(SysRoute route) {
+        return Mono.defer(() -> {
+            SysRoute datum = this.getById(route.getId());
+            if (null == datum) {
+                return Mono.just(RStatus.FAILURE_DATA_NULL);
+            }
+            this.updateById(route);
+            dynamicRouteService.update(Mono.just(RouteUtil.assembleRouteDefinition(route)));
+            return Mono.just(RStatus.SUCCESS);
+        });
+    }
+
+    @Override
+    public Mono<List<SysRoute>> select() {
+        return Mono.just(this.list());
+    }
 }

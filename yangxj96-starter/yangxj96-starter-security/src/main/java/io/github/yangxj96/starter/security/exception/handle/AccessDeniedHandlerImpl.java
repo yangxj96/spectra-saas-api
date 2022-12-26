@@ -1,4 +1,4 @@
-package io.github.yangxj96.starter.security.exception;
+package io.github.yangxj96.starter.security.exception.handle;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +25,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
             ObjectMapper mapper = SpringUtil.getBean(ObjectMapper.class);
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_OK);
-            mapper.writeValue(response.getOutputStream(), R.specify(RStatus.ACCESS_DENIED));
+            mapper.writeValue(response.getOutputStream(), R.specify(RStatus.SECURITY_ACCESS_DENIED));
         } catch (Exception e) {
             throw new ServletException("格式化异常");
         }

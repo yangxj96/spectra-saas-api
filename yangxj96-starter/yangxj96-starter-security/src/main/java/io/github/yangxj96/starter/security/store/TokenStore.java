@@ -1,6 +1,7 @@
 package io.github.yangxj96.starter.security.store;
 
 import io.github.yangxj96.bean.security.Token;
+import io.github.yangxj96.starter.security.exception.TokenCleanException;
 import org.springframework.security.core.Authentication;
 
 import java.sql.SQLException;
@@ -46,6 +47,6 @@ public interface TokenStore {
     /**
      * 用于定时任务自动清理过期token
      */
-    void autoClean() throws Exception;
+    void autoClean() throws TokenCleanException;
 
 }

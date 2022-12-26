@@ -1,5 +1,6 @@
 package io.github.yangxj96.server.gateway.service.impl;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yangxj96.constant.SystemRedisKey;
@@ -9,6 +10,8 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
+import org.springframework.data.redis.core.ReactiveHashOperations;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -23,14 +26,19 @@ public class RouteDefinitionLocatorImpl implements RouteDefinitionLocator {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Resource(name = "reactiveRedisRouteDefinitionTemplate")
+    private ReactiveRedisTemplate<String, RouteDefinition> template;
+
     @Resource
     private SysRouteService routeService;
+
     @Resource
     private ObjectMapper om;
 
     @Override
     public Flux<RouteDefinition> getRouteDefinitions() {
         List<RouteDefinition> routes = new ArrayList<>();
+        ReactiveHashOperations<String, Object, Object> ops = template.opsForHash();
         List<Object> values = redisTemplate.opsForHash().values(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY);
         if (!values.isEmpty()) {
             values.forEach(definition -> {
@@ -45,8 +53,12 @@ public class RouteDefinitionLocatorImpl implements RouteDefinitionLocator {
             routeService.list(new LambdaQueryWrapper<>()).forEach(item -> {
                 RouteDefinition definition = RouteUtil.assembleRouteDefinition(item);
                 // 放到redis缓存中
-                redisTemplate.opsForHash().putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), definition);
-                routes.add(definition);
+                ops.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), JSONUtil.parse(definition).toStringPretty())
+                        .subscribe(r -> {
+                            if (r.equals(Boolean.TRUE)) {
+                                routes.add(definition);
+                            }
+                        });
             });
         }
         return Flux.fromIterable(routes);

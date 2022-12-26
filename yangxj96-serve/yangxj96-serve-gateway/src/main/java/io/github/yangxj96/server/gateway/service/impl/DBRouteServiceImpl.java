@@ -3,12 +3,11 @@ package io.github.yangxj96.server.gateway.service.impl;
 import io.github.yangxj96.constant.SystemRedisKey;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ReactiveHashOperations;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -22,8 +21,9 @@ import reactor.core.publisher.Mono;
 @Service
 public class DBRouteServiceImpl implements RouteDefinitionWriter {
 
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    @Resource(name = "reactiveRedisRouteDefinitionTemplate")
+    private ReactiveRedisTemplate<String, RouteDefinition> template;
+
 
     /**
      * 添加一个路由定义
@@ -34,12 +34,14 @@ public class DBRouteServiceImpl implements RouteDefinitionWriter {
     @Override
     public Mono<Void> save(Mono<RouteDefinition> route) {
         return route.flatMap(definition -> {
-            Boolean result = redisTemplate.opsForHash().putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), definition);
-            if (result.equals(Boolean.TRUE)) {
-                return Mono.empty();
-            } else {
-                return Mono.error(new RuntimeException("插入redis失败"));
-            }
+            ReactiveHashOperations<String, Object, Object> ops = template.opsForHash();
+            return ops.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), definition).flatMap(r -> {
+                if (r.equals(Boolean.TRUE)) {
+                    return Mono.empty();
+                } else {
+                    return Mono.error(new RuntimeException("插入redis失败"));
+                }
+            });
         });
     }
 
@@ -52,12 +54,15 @@ public class DBRouteServiceImpl implements RouteDefinitionWriter {
     @Override
     public Mono<Void> delete(Mono<String> routeId) {
         return routeId.flatMap(id -> {
-            HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
-            if (hash.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id).equals(Boolean.TRUE)) {
-                hash.delete(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id);
-                return Mono.empty();
-            }
-            return Mono.defer(() -> Mono.error(new NotFoundException("未找到路由,id:" + id)));
+            ReactiveHashOperations<String, Object, Object> hash = template.opsForHash();
+            return hash.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id)
+                    .flatMap(b -> {
+                        if (b.equals(Boolean.TRUE)) {
+                            return hash.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id).flatMap(r -> Mono.empty());
+                        }
+                        return Mono.error(new RuntimeException("删除失败"));
+                    });
+
         });
     }
 

@@ -19,10 +19,11 @@ public enum RStatus {
 
     SUCCESS(0, "success"),
     FAILURE(-1, "failure"),
-    AUTHENTICATION(100000, "认证异常"),
-    ACCESS_DENIED(100001, "无权限"),
-    USERNAME_ABSENCE(100002, "用户不存在"),
-    PASSWORD_ERROR(100003, "密码错误"),
+    SECURITY_AUTHENTICATION(100000, "认证异常"),
+    SECURITY_ACCESS_DENIED(100001, "无权限"),
+    SECURITY_USERNAME_ABSENCE(100002, "用户不存在"),
+    SECURITY_PASSWORD_ERROR(100003, "密码错误"),
+    SECURITY_TOKEN_CLEAN(100004, "Token自动清理异常"),
     GATEWAY_NOT_FOUND(200001, "未找到服务"),
     GATEWAY_RESPONSE_STATUS(200002, "网关响应状态异常"),
     NULL_POINTER(200003, "空指针异常"),
@@ -30,7 +31,8 @@ public enum RStatus {
     FAILURE_DELETE(200005, "删除失败"),
     FAILURE_UPDATE(200006, "更新失败"),
     FAILURE_SELECT(200007, "查询失败"),
-    NOT_FIND_ROUTE(200008, "未找到路由");
+    FAILURE_DATA_NULL(200008, "查询不到数据"),
+    NOT_FIND_ROUTE(200009, "未找到路由");
 
     private final Integer code;
 
