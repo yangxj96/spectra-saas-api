@@ -9,15 +9,19 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -60,6 +64,32 @@ public class RedisAutoConfiguration {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return commonConfig(redisTemplate);
+    }
+
+    @Bean
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+    public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(@Autowired ReactiveRedisConnectionFactory connectionFactory) {
+        log.debug("{}配置reactiveRedisTemplate<String,Object>的序列化方式", LOG_PREFIX);
+        RedisSerializationContext.SerializationPair<String> strSerializer = RedisSerializationContext
+                .SerializationPair.fromSerializer(StringRedisSerializer.UTF_8);
+
+        RedisSerializationContext.SerializationPair<Object> objSerializer = RedisSerializationContext
+                .SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(om, Object.class));
+
+
+        RedisSerializationContext.RedisSerializationContextBuilder<String, Object> builder =
+                RedisSerializationContext.newSerializationContext();
+        builder.key(strSerializer);
+        builder.hashKey(strSerializer);
+
+        builder.value(objSerializer);
+        builder.hashValue(objSerializer);
+
+        builder.string(strSerializer);
+
+        RedisSerializationContext<String, Object> build = builder.build();
+
+        return new ReactiveRedisTemplate<>(connectionFactory, build);
     }
 
     /**
@@ -127,6 +157,7 @@ public class RedisAutoConfiguration {
         factory.afterPropertiesSet();
         return factory;
     }
+
 
 
     /**

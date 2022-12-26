@@ -65,9 +65,9 @@ public class GlobalExceptionHandle implements ErrorWebExceptionHandler {
             // 响应错误
             case "org.springframework.web.server.ResponseStatusException" -> R.specify(RStatus.GATEWAY_RESPONSE_STATUS);
             // 无权访问
-            case "org.springframework.security.access.AccessDeniedException" -> R.specify(RStatus.ACCESS_DENIED);
+            case "org.springframework.security.access.AccessDeniedException" -> R.specify(RStatus.SECURITY_ACCESS_DENIED);
             // 认证异常
-            case "org.springframework.security.authentication.AuthenticationServiceException" -> R.specify(RStatus.AUTHENTICATION);
+            case "org.springframework.security.authentication.AuthenticationServiceException" -> R.specify(RStatus.SECURITY_AUTHENTICATION);
             // 空指针
             case "java.lang.NullPointerException" -> R.specify(RStatus.NULL_POINTER);
             // 没找到对应的错误

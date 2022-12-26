@@ -2,8 +2,8 @@ package io.github.yangxj96.starter.security.autoconfigure;
 
 import cn.hutool.extra.spring.SpringUtil;
 import io.github.yangxj96.starter.security.bean.StoreType;
-import io.github.yangxj96.starter.security.exception.AccessDeniedHandlerImpl;
-import io.github.yangxj96.starter.security.exception.AuthenticationEntryPointImpl;
+import io.github.yangxj96.starter.security.exception.handle.AccessDeniedHandlerImpl;
+import io.github.yangxj96.starter.security.exception.handle.AuthenticationEntryPointImpl;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.properties.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;

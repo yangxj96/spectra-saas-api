@@ -5,6 +5,8 @@ import io.github.yangxj96.common.base.BasicService;
 import io.github.yangxj96.common.respond.RStatus;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * 路由表定义service层
  *
@@ -27,4 +29,10 @@ public interface SysRouteService extends BasicService<SysRoute> {
      * @return void
      */
     Mono<RStatus> deleteRoute(String id);
+
+    Mono<RStatus> modifyById(SysRoute route);
+
+    Mono<List<SysRoute>> select();
+
+
 }
