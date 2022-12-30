@@ -42,7 +42,7 @@ public class RouteController {
      * @param id 路由id
      * @return void
      */
-    // @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_DELETE')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_DELETE')")
     @DeleteMapping("/{id}")
     public Mono<R> delete(@PathVariable String id) {
         return bindService.deleteRoute(id).flatMap(status -> Mono.just(R.specify(status)));
