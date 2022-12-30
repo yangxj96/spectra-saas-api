@@ -63,12 +63,23 @@ public class RouteController {
     /**
      * 查询路由信息
      *
-     * @return 路由列表(db中的,不是redis中的)
+     * @return 路由列表(db中的, 不是redis中的)
      */
     @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_SELECT')")
     @GetMapping
     public Mono<R> select() {
         return bindService.select().flatMap(list -> Mono.just(R.success(list)));
+    }
+
+    /**
+     * 刷新路由信息
+     *
+     * @return 刷新结果
+     */
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_REFRESH')")
+    @GetMapping("/refresh")
+    public Mono<R> refresh() {
+        return bindService.refresh().flatMap(i -> Mono.just(R.specify(i)));
     }
 
 }
