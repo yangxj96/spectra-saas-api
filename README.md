@@ -16,7 +16,6 @@
 - 🚀️  `mybatis-plus 3.5.2.7-SNAPSHOT`
 - ...
 
-
 # 2 IDEA环境`JVM`参数配置
 
 > tips: 主要目的减少web服务的的内存占用
