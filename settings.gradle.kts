@@ -1,4 +1,4 @@
-rootProject.name = "yangxj96-saas-api-gradle"
+rootProject.name = "yangxj96-saas-api"
 
 include("yangxj96-bean")
 include("yangxj96-common")
