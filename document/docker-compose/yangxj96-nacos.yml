@@ -1,8 +1,0 @@
-version: "3"
-services:
-  yangxj96-polaris:
-    image: polarismesh/polaris-server-standalone:v1.10.0-alpha.1
-    container_name: yangxj96-polaris
-    restart: always
-    privileged: true
-    network_mode: "host"

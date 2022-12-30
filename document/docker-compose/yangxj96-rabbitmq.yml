@@ -1,7 +1,7 @@
 version: '3'
 services:
   yangxj96-rabbitmq:
-    image: rabbitmq:3.9.11-alpine
+    image: rabbitmq:3.11.5
     container_name: yangxj96-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: root
