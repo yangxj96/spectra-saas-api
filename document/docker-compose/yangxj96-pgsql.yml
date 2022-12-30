@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: QuVsKppcWvwwX2Vv
-      LANG: zh_CN.utf8
+      #LANG: zh_CN.utf8
     volumes:
       - "/docker/PostgreSQL/data:/var/lib/postgresql/data"
       - "/docker/PostgreSQL/config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
