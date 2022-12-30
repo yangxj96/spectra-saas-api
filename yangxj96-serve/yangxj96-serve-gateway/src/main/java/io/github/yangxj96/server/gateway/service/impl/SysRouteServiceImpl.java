@@ -8,8 +8,7 @@ import io.github.yangxj96.server.gateway.mapper.SysRouteMapper;
 import io.github.yangxj96.server.gateway.service.SysRouteService;
 import io.github.yangxj96.server.gateway.utils.RouteUtil;
 import jakarta.annotation.Resource;
-import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
-import org.springframework.context.ApplicationEventPublisher;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -21,14 +20,12 @@ import java.util.List;
  *
  * @author yangxj96
  */
+@Slf4j
 @Service
 public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRoute> implements SysRouteService {
 
     @Resource
     private DynamicRouteServiceImpl dynamicRouteService;
-
-    @Resource
-    private ApplicationEventPublisher publisher;
 
     protected SysRouteServiceImpl(SysRouteMapper bindMapper) {
         super(bindMapper);
@@ -37,29 +34,28 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Mono<Boolean> addRoute(SysRoute route) {
-        return Mono.defer(() -> {
-            dynamicRouteService.save(Mono.just(RouteUtil.assembleRouteDefinition(route)));
-            return Mono.just(this.save(route));
-        });
+        return Mono
+                .defer(() -> Mono.just(this.save(route)))
+                .and(dynamicRouteService.save(Mono.just(RouteUtil.assembleRouteDefinition(route))))
+                .thenReturn(Boolean.TRUE)
+                .onErrorReturn(Boolean.FALSE)
+                ;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Mono<RStatus> deleteRoute(String id) {
         return Mono.defer(() -> {
-            SysRoute route = this.getOne(new LambdaQueryWrapper<SysRoute>().eq(SysRoute::getRouteId, id));
-            if (route == null) {
-                return Mono.just(RStatus.NOT_FIND_ROUTE);
-            }
-            dynamicRouteService.delete(Mono.just(id));
-            if (this.removeById(route.getId())) {
-                // 不能在redisTemplate删除key后直接删除,会导致删除失败.暂时不明白为什么
-                publisher.publishEvent(new RefreshRoutesEvent(this));
-                return Mono.just(RStatus.SUCCESS);
-            } else {
-                return Mono.just(RStatus.FAILURE_DELETE);
-            }
-        });
+                    SysRoute route = this.getOne(new LambdaQueryWrapper<SysRoute>().eq(SysRoute::getRouteId, id));
+                    if (route == null || !this.removeById(route.getId())) {
+                        return Mono.error(new RuntimeException(RStatus.NOT_FIND_ROUTE.getMsg()));
+                    }
+                    return Mono.empty();
+                })
+                .and(dynamicRouteService.delete(Mono.just(id)))
+                .thenReturn(RStatus.SUCCESS)
+                .onErrorReturn(RStatus.NOT_FIND_ROUTE)
+                ;
     }
 
     @Override
@@ -72,6 +68,14 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
             }
             this.updateById(route);
             dynamicRouteService.update(Mono.just(RouteUtil.assembleRouteDefinition(route)));
+            return Mono.just(RStatus.SUCCESS);
+        });
+    }
+
+    @Override
+    public Mono<RStatus> refresh() {
+        return Mono.defer(() -> {
+            dynamicRouteService.refresh();
             return Mono.just(RStatus.SUCCESS);
         });
     }

@@ -1,13 +1,17 @@
 package io.github.yangxj96.server.gateway.service.impl;
 
+import io.github.yangxj96.constant.SystemRedisKey;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.route.RouteDefinition;
+import org.springframework.cloud.gateway.route.RouteDefinitionWriter;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.core.ReactiveHashOperations;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -20,28 +24,81 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Primary
 @Service
-public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware {
+public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware, RouteDefinitionWriter {
 
     @Resource
     private ApplicationEventPublisher publisher;
 
-    @Resource
-    private DBRouteServiceImpl routeService;
+    //@Resource
+    //private DBRouteServiceImpl routeService;
+
+    @Resource(name = "reactiveRedisRouteDefinitionTemplate")
+    private ReactiveRedisTemplate<String, RouteDefinition> redisTemplate;
 
     @Override
     public void setApplicationEventPublisher(@NotNull ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
     }
 
-    public void save(Mono<RouteDefinition> route) {
-        routeService.save(route).subscribe(r -> this.publisher.publishEvent(new RefreshRoutesEvent(this)));
+    /**
+     * 添加一个路由信息
+     *
+     * @param route 路由信息
+     */
+    public Mono<Void> save(Mono<RouteDefinition> route) {
+        return route.flatMap(definition -> {
+            ReactiveHashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
+            return ops.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), definition).flatMap(r -> {
+                if (r.equals(Boolean.TRUE)) {
+                    this.publisher.publishEvent(new RefreshRoutesEvent(route));
+                    return Mono.empty();
+                } else {
+                    return Mono.error(new RuntimeException("插入redis失败"));
+                }
+            });
+        });
+
     }
 
-    public void delete(Mono<String> routeId) {
-        routeService.delete(routeId).subscribe(r -> this.publisher.publishEvent(new RefreshRoutesEvent(this)));
+    /**
+     * 根据id删除路由
+     *
+     * @param routeId 路由id
+     * @return
+     */
+    public Mono<Void> delete(Mono<String> routeId) {
+        return routeId.flatMap(id -> {
+            ReactiveHashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+            return hash.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id)
+                    .flatMap(b -> {
+                        if (b.equals(Boolean.TRUE)) {
+                            return hash.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id).flatMap(r -> {
+                                this.publisher.publishEvent(new RefreshRoutesEvent(id));
+                                return Mono.empty();
+                            });
+                        }
+                        return Mono.error(new RuntimeException("删除失败"));
+                    });
+
+        });
     }
 
+    /**
+     * 更新一个路由状态
+     *
+     * @param route 路由信息
+     */
     public void update(Mono<RouteDefinition> route) {
-        // TODO document why this method is empty
+        // document why this method is empty
     }
+
+
+    /**
+     * 刷新路由信息
+     */
+    public void refresh() {
+        this.publisher.publishEvent(new RefreshRoutesEvent(this));
+    }
+
+
 }
