@@ -1,7 +1,9 @@
 # SAAS平台学习
 
-# 1 技术架构选型
+[![star](https://gitee.com/yangxj96/yangxj96-saas-api/badge/star.svg?theme=dark)](https://gitee.com/yangxj96/yangxj96-saas-api/stargazers) 
+[![fork](https://gitee.com/yangxj96/yangxj96-saas-api/badge/fork.svg?theme=dark)](https://gitee.com/yangxj96/yangxj96-saas-api/members)
 
+# 1 技术架构选型
 
 第二代微服务架构
 
