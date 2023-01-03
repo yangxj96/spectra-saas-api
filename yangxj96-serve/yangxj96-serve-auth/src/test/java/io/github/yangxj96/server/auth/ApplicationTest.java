@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @SpringBootTest
 class ApplicationTest {
 
@@ -30,6 +31,13 @@ class ApplicationTest {
 
     @Resource
     private AuthorityService authorityService;
+
+    @Test
+    void generatePassword() {
+        var encode = passwordEncoder.encode("sysadmin");
+        System.out.println(encode);
+        Assertions.assertNotNull(encode, "生成的秘钥串为null");
+    }
 
     @Test
     void addAdminUser() {
