@@ -20,7 +20,7 @@ public interface SysRouteService extends BasicService<SysRoute> {
      * @param route 路由实体
      * @return 是否添加成功
      */
-    Mono<Boolean> addRoute(SysRoute route);
+    boolean addRoute(SysRoute route);
 
     /**
      * 删除路由
@@ -28,7 +28,7 @@ public interface SysRouteService extends BasicService<SysRoute> {
      * @param id 路由id
      * @return 删除状态
      */
-    Mono<RStatus> deleteRoute(String id);
+    boolean deleteRoute(String id);
 
     /**
      * 根据id修改路由信息
@@ -36,21 +36,20 @@ public interface SysRouteService extends BasicService<SysRoute> {
      * @param route 路由信息
      * @return 修改状态
      */
-    Mono<RStatus> modifyById(SysRoute route);
+    boolean modifyById(SysRoute route);
 
     /**
      * 刷新路由信息
      *
      * @return 刷新结果
      */
-    Mono<RStatus> refresh();
+    boolean refresh();
 
     /**
      * 查询db中的路由信息
      *
      * @return db中的路由信息
      */
-    Mono<List<SysRoute>> select();
-
+    List<SysRoute> select();
 
 }

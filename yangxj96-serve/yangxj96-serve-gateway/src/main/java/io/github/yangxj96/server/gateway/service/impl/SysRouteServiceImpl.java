@@ -33,55 +33,42 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Mono<Boolean> addRoute(SysRoute route) {
-        return Mono
-                .defer(() -> Mono.just(this.save(route)))
-                .and(dynamicRouteService.save(Mono.just(RouteUtil.assembleRouteDefinition(route))))
-                .thenReturn(Boolean.TRUE)
-                .onErrorReturn(Boolean.FALSE)
-                ;
+    public boolean addRoute(SysRoute route) {
+        dynamicRouteService.save(Mono.just(RouteUtil.convert(route))).subscribe();
+        return this.save(route);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Mono<RStatus> deleteRoute(String id) {
-        return Mono.defer(() -> {
-                    SysRoute route = this.getOne(new LambdaQueryWrapper<SysRoute>().eq(SysRoute::getRouteId, id));
-                    if (route == null || !this.removeById(route.getId())) {
-                        return Mono.error(new RuntimeException(RStatus.NOT_FIND_ROUTE.getMsg()));
-                    }
-                    return Mono.empty();
-                })
-                .and(dynamicRouteService.delete(Mono.just(id)))
-                .thenReturn(RStatus.SUCCESS)
-                .onErrorReturn(RStatus.NOT_FIND_ROUTE)
-                ;
+    public boolean deleteRoute(String id) {
+        SysRoute route = this.getOne(new LambdaQueryWrapper<SysRoute>().eq(SysRoute::getRouteId, id));
+        if (route == null || !this.removeById(route.getId())) {
+            return Boolean.FALSE;
+        }
+        dynamicRouteService.delete(Mono.just(id)).subscribe();
+        return Boolean.TRUE;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Mono<RStatus> modifyById(SysRoute route) {
-        return Mono.defer(() -> {
-            SysRoute datum = this.getById(route.getId());
-            if (null == datum) {
-                return Mono.just(RStatus.FAILURE_DATA_NULL);
-            }
-            this.updateById(route);
-            dynamicRouteService.update(Mono.just(RouteUtil.assembleRouteDefinition(route)));
-            return Mono.just(RStatus.SUCCESS);
-        });
+    public boolean modifyById(SysRoute route) {
+        SysRoute datum = this.getById(route.getId());
+        if (null == datum) {
+            return Boolean.FALSE;
+        }
+        this.updateById(route);
+        dynamicRouteService.update(Mono.just(RouteUtil.convert(route)));
+        return Boolean.TRUE;
     }
 
     @Override
-    public Mono<RStatus> refresh() {
-        return Mono.defer(() -> {
-            dynamicRouteService.refresh();
-            return Mono.just(RStatus.SUCCESS);
-        });
+    public boolean refresh() {
+        dynamicRouteService.refresh().subscribe();
+        return true;
     }
 
     @Override
-    public Mono<List<SysRoute>> select() {
-        return Mono.just(this.list());
+    public List<SysRoute> select() {
+        return this.list();
     }
 }

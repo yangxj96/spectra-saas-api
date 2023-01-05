@@ -38,7 +38,7 @@ public class RouteDefinitionLocatorImpl implements RouteDefinitionLocator {
                 .fromIterable(routeService.list(new LambdaQueryWrapper<>()))
                 .publishOn(Schedulers.boundedElastic())
                 .flatMap(item -> {
-                    RouteDefinition definition = RouteUtil.assembleRouteDefinition(item);
+                    RouteDefinition definition = RouteUtil.convert(item);
                     log.info("route:" + definition);
                     return Flux.just(definition);
                 })

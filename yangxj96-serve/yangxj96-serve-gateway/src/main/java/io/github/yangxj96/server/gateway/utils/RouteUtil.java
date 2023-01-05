@@ -20,7 +20,7 @@ public class RouteUtil {
         // 占位
     }
 
-    public static RouteDefinition assembleRouteDefinition(SysRoute route) {
+    public static RouteDefinition convert(SysRoute route) {
         RouteDefinition definition = new RouteDefinition();
         definition.setId(route.getRouteId());
         definition.setOrder(route.getOrder());
