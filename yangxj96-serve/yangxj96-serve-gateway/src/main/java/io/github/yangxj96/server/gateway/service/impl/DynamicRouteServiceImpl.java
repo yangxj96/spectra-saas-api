@@ -29,15 +29,15 @@ public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware, 
     @Resource
     private ApplicationEventPublisher publisher;
 
-    //@Resource
-    //private DBRouteServiceImpl routeService;
-
     @Resource(name = "reactiveRedisRouteDefinitionTemplate")
     private ReactiveRedisTemplate<String, RouteDefinition> redisTemplate;
+
+    private ReactiveHashOperations<String, String, Object> hashOperations;
 
     @Override
     public void setApplicationEventPublisher(@NotNull ApplicationEventPublisher applicationEventPublisher) {
         this.publisher = applicationEventPublisher;
+        this.hashOperations = redisTemplate.opsForHash();
     }
 
     /**
@@ -46,17 +46,14 @@ public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware, 
      * @param route 路由信息
      */
     public Mono<Void> save(Mono<RouteDefinition> route) {
-        return route.flatMap(definition -> {
-            ReactiveHashOperations<String, Object, Object> ops = redisTemplate.opsForHash();
-            return ops.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), definition).flatMap(r -> {
-                if (r.equals(Boolean.TRUE)) {
-                    this.publisher.publishEvent(new RefreshRoutesEvent(route));
-                    return Mono.empty();
-                } else {
-                    return Mono.error(new RuntimeException("插入redis失败"));
-                }
-            });
-        });
+        return route.flatMap(definition -> hashOperations.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, definition.getId(), definition).flatMap(r -> {
+            if (r.equals(Boolean.TRUE)) {
+                this.publisher.publishEvent(new RefreshRoutesEvent(route));
+                return Mono.empty();
+            } else {
+                return Mono.error(new RuntimeException("插入redis失败"));
+            }
+        }));
 
     }
 
@@ -64,23 +61,18 @@ public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware, 
      * 根据id删除路由
      *
      * @param routeId 路由id
-     * @return
      */
     public Mono<Void> delete(Mono<String> routeId) {
-        return routeId.flatMap(id -> {
-            ReactiveHashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
-            return hash.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id)
-                    .flatMap(b -> {
-                        if (b.equals(Boolean.TRUE)) {
-                            return hash.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id).flatMap(r -> {
-                                this.publisher.publishEvent(new RefreshRoutesEvent(id));
-                                return Mono.empty();
-                            });
-                        }
-                        return Mono.error(new RuntimeException("删除失败"));
-                    });
-
-        });
+        return routeId.flatMap(id -> hashOperations.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id)
+                .flatMap(b -> {
+                    if (b.equals(Boolean.TRUE)) {
+                        return hashOperations.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, id).flatMap(r -> {
+                            this.publisher.publishEvent(new RefreshRoutesEvent(id));
+                            return Mono.empty();
+                        });
+                    }
+                    return Mono.error(new RuntimeException("删除失败"));
+                }));
     }
 
     /**
@@ -92,13 +84,15 @@ public class DynamicRouteServiceImpl implements ApplicationEventPublisherAware, 
         // document why this method is empty
     }
 
-
     /**
      * 刷新路由信息
      */
-    public void refresh() {
-        this.publisher.publishEvent(new RefreshRoutesEvent(this));
-    }
+    public Mono<Void> refresh() {
+        return Mono.defer(()-> {
+            this.publisher.publishEvent(new RefreshRoutesEvent(this));
+            return Mono.empty();
+        });
 
+    }
 
 }
