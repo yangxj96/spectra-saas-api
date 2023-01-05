@@ -50,6 +50,7 @@ public class WebSecurityConfiguration {
     @Resource(name = "securityRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
+
     @Resource(name = "securityBytesRedisTemplate")
     private RedisTemplate<String, byte[]> bytesRedisTemplate;
 
@@ -71,7 +72,7 @@ public class WebSecurityConfiguration {
      */
     @Bean
     public TokenStore tokenStore() {
-        log.info("{}载入token认证策略", LOG_PREFIX);
+        log.info("{}载入token认证策略2", LOG_PREFIX);
         return new RedisTokenStore(redisTemplate,bytesRedisTemplate);
     }
 
