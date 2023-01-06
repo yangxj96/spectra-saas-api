@@ -6,6 +6,7 @@ import io.github.yangxj96.common.base.BasicEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -21,6 +22,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @TableName(value = "db_user.t_authority")
 public class Authority extends BasicEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 名称

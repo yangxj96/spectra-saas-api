@@ -1,6 +1,7 @@
 package io.github.yangxj96.enums.system;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 /**
@@ -17,6 +18,7 @@ public enum DictionariesType {
     @EnumValue
     private final int code;
 
+    @JsonValue
     private final String name;
 
     DictionariesType(int code, String name) {
