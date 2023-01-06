@@ -12,11 +12,13 @@ import io.github.yangxj96.starter.remote.fallback.DemoFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "DemoFeignClient", url = "http://www.123212qwdas.com/", fallback = DemoFeignClientFallback.class)
+@FeignClient(name = "yangxj96-serve-system", fallbackFactory = DemoFeignClientFallback.class)
 public interface DemoFeignClient {
-
 
     @GetMapping("/")
     String get();
 
+
+    @GetMapping("/")
+    String get2();
 }

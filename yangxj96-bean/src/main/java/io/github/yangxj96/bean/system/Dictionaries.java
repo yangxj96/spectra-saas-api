@@ -1,22 +1,8 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:07:12
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.bean.system;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.yangxj96.common.base.BasicEntity;
-import io.github.yangxj96.common.base.ValidationGroups;
-import io.github.yangxj96.enums.system.DictionariesType;
-import jakarta.validation.constraints.AssertFalse;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,13 +14,9 @@ import java.io.Serializable;
 
 /**
  * 字典表
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023-01-07 00:14
  */
-@Data
 @EqualsAndHashCode(callSuper = true)
+@Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,13 +30,11 @@ public class Dictionaries extends BasicEntity implements Serializable {
      * code
      */
     @TableField(value = "code")
-    @Size(message = "不能自定义code", max = 0, groups = {ValidationGroups.Insert.class, ValidationGroups.Update.class})
     private String code;
 
     /**
      * 说明
      */
-    @NotEmpty(message = "名称不能为空", groups = {ValidationGroups.Insert.class, ValidationGroups.Update.class})
     @TableField(value = "\"name\"")
     private String name;
 
@@ -67,20 +47,19 @@ public class Dictionaries extends BasicEntity implements Serializable {
     /**
      * 是否内置
      */
-    @AssertFalse(message = "是否内置只能为false")
     @TableField(value = "internal")
     private Boolean internal;
 
     /**
      * 字典类型,1 = 字典组 2 = 字典项
      */
-    @NotNull(message = "字典类型不能为空", groups = {ValidationGroups.Insert.class, ValidationGroups.Update.class})
     @TableField(value = "\"type\"")
-    private DictionariesType type;
+    private Integer type;
 
     /**
      * 如果为字典组则可能会有父ID
      */
     @TableField(value = "pid")
     private Long pid;
+
 }

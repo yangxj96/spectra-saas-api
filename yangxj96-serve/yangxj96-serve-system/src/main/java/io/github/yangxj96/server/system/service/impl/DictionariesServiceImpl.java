@@ -38,3 +38,4 @@ public class DictionariesServiceImpl extends BasicServiceImpl<DictionariesMapper
         return this.list(wrapper);
     }
 }
+

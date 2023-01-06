@@ -8,27 +8,24 @@
 
 package io.github.yangxj96.server.system.service;
 
-import io.github.yangxj96.bean.system.Dictionaries;
+import io.github.yangxj96.bean.gateway.SysRoute;
 import io.github.yangxj96.common.base.BasicService;
 
 import java.util.List;
 
 /**
- * 数据字典service层
+ * 路由表定义service层
  *
  * @author yangxj96
  * @version 1.0
  * @date 2023-01-07 00:14
  */
-public interface DictionariesService extends BasicService<Dictionaries> {
-
+public interface SysRouteService extends BasicService<SysRoute> {
 
     /**
-     * 查询字典
+     * 查询db中的路由信息
      *
-     * @param params 查询条件
-     * @return 符合条件的数据
+     * @return db中的路由信息
      */
-    List<Dictionaries> select(Dictionaries params);
+    List<SysRoute> select();
 }
-

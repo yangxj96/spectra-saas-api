@@ -47,7 +47,7 @@ public class AuthController {
      * @param password 密码
      * @return 登录结果
      */
-    @PostMapping("/login")
+    @PostMapping(value = "/login")
     public Token login(String username, String password) {
         Token token = null;
         // 构建后认证
