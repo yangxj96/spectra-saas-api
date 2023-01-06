@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:06
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.starter.security.store.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -21,29 +29,28 @@ import java.util.ArrayList;
 
 /**
  * jdbc 存储token的实现
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Slf4j
 public class JdbcTokenStore implements TokenStore {
-
-    public final JdbcTemplate jdbcTemplate;
 
     private static final String QUERY_ACCESS_SQL = """
             SELECT
             id, token, username, authentication, expiration_time, created_by, created_time, updated_by, updated_time
             FROM db_user.t_token_access
             """;
-
     private static final String QUERY_REFRESH_SQL = """
             SELECT
             id, access_id, token, expiration_time, created_by, created_time, updated_by, updated_time
             FROM db_user.t_token_refresh
             """;
-
     private static final String DELETE_ACCESS_SQL = "DELETE FROM db_user.t_token_access WHERE ";
-
     private static final String DELETE_REFRESH_SQL = "DELETE FROM db_user.t_token_refresh WHERE ";
-
     private static final String COUNT_ACCESS_SQL = "SELECT count(*) FROM db_user.t_token_access WHERE username = ?";
+    public final JdbcTemplate jdbcTemplate;
 
 
     public JdbcTokenStore(JdbcTemplate jdbcTemplate) {

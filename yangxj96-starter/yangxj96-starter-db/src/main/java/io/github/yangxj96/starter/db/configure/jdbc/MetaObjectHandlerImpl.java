@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:06
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.starter.db.configure.jdbc;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
@@ -15,6 +23,8 @@ import java.time.LocalDateTime;
  * 元对象字段填充控制器
  *
  * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Slf4j
 public class MetaObjectHandlerImpl implements MetaObjectHandler {
@@ -48,7 +58,8 @@ public class MetaObjectHandlerImpl implements MetaObjectHandler {
 
     /**
      * 获取当前用户ID
-     * @return 当前用户ID,如果没有获取到则为0
+     *
+     * @return 当前用户ID, 如果没有获取到则为0
      */
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

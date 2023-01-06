@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:07:12
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.bean.gateway;
 
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -14,13 +22,15 @@ import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 路由表定义
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

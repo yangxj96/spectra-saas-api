@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:06
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.starter.security.autoconfigure;
 
 import cn.hutool.extra.spring.SpringUtil;
@@ -34,6 +42,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * security配置
  *
  * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Slf4j
 @EnableWebSecurity
@@ -43,10 +53,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityAutoConfiguration {
 
     private static final String LOG_PREFIX = "[autoconfig-security] ";
+    private final SecurityProperties properties;
     @Resource
     private AuthenticationConfiguration authenticationConfiguration;
-
-    private final SecurityProperties properties;
 
     public SecurityAutoConfiguration(@Autowired SecurityProperties properties) {
         this.properties = properties;

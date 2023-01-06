@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:06
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.starter.security.store.impl;
 
 import cn.hutool.core.convert.Convert;
@@ -15,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * redis 存储token的实现
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 public class RedisTokenStore implements TokenStore {
-
-    private final RedisTemplate<String, Object> redisTemplate;
-
-    private final RedisTemplate<String, byte[]> bytesRedisTemplate;
 
     private static final String ACCESS_PREFIX = "access:";
     private static final String ACCESS_TO_USER_PREFIX = "access_to_user:";
@@ -28,9 +36,11 @@ public class RedisTokenStore implements TokenStore {
     private static final String ACCESS_TO_REFRESH_PREFIX = "access_to_refresh:";
     private static final String REFRESH_TO_ACCESS_PREFIX = "refresh_to_access:";
     private static final String AUTHORITY_PREFIX = "authority_token:";
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, byte[]> bytesRedisTemplate;
 
-    public RedisTokenStore(RedisTemplate<String, Object> redisTemplate,RedisTemplate<String, byte[]> bytesRedisTemplate){
-        this.redisTemplate      = redisTemplate;
+    public RedisTokenStore(RedisTemplate<String, Object> redisTemplate, RedisTemplate<String, byte[]> bytesRedisTemplate) {
+        this.redisTemplate = redisTemplate;
         this.bytesRedisTemplate = bytesRedisTemplate;
     }
 

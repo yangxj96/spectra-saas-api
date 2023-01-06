@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:39
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.server.auth.configuration;
 
 import io.github.yangxj96.starter.security.exception.handle.AccessDeniedHandlerImpl;
@@ -31,6 +39,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  * Security 相关配置
  *
  * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Slf4j
 @Configuration
@@ -73,7 +83,7 @@ public class WebSecurityConfiguration {
     @Bean
     public TokenStore tokenStore() {
         log.info("{}载入token认证策略2", LOG_PREFIX);
-        return new RedisTokenStore(redisTemplate,bytesRedisTemplate);
+        return new RedisTokenStore(redisTemplate, bytesRedisTemplate);
     }
 
     /**

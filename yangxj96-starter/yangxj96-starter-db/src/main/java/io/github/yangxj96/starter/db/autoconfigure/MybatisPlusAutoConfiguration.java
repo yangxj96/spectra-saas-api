@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:06
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.starter.db.autoconfigure;
 
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -16,15 +24,16 @@ import org.springframework.context.annotation.Bean;
  * mybatis的自动配置类
  *
  * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Slf4j
 @ConditionalOnProperty(name = "yangxj96.db.jdbc-enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties.class)
 public class MybatisPlusAutoConfiguration {
 
-    private final DBProperties properties;
-
     private static final String LOG_PREFIX = "[autoconfig-mybatis plus] ";
+    private final DBProperties properties;
 
     public MybatisPlusAutoConfiguration(DBProperties properties) {
         this.properties = properties;

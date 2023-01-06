@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:39
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.server.gateway.controller;
 
 import io.github.yangxj96.bean.gateway.SysRoute;
@@ -7,8 +15,15 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
+
+/**
+ * 路由相关操作
+ *
+ * @author yangx96
+ * @version 1.0
+ * @date 2023-01-06 23:54:00
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/route")
