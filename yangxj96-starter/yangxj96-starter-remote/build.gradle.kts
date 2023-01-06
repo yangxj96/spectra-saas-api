@@ -14,6 +14,7 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     // RPC调用
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
     // 负载均衡
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
     // 负载均衡的缓存
@@ -22,7 +23,5 @@ dependencies {
     implementation("io.github.openfeign:feign-okhttp")
     // okhttp 日志拦截器
     implementation("com.squareup.okhttp3:logging-interceptor")
-    // 重试机制
-    implementation("org.springframework.retry:spring-retry")
 
 }

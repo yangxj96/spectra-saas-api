@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2021 - 2023
+  ~ author:yangxj96
+  ~ email :yangxj96@gmail.com
+  ~ date  :2023-01-07 00:08:39
+  ~ Copyright (c) 2021 - 2023
+  ~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.yangxj96.server.system.mapper.SysRouteMapper">
+    <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.gateway.SysRoute">
+        <!-- @formatter:off -->
+        <!--@mbg.generated-->
+        <!--@Table db_system.t_sys_route-->
+        <id column="id"               jdbcType="BIGINT"    property="id" />
+        <result column="uri"          jdbcType="VARCHAR"   property="uri" />
+        <result column="order"        jdbcType="INTEGER"   property="order" />
+        <result column="predicates"   jdbcType="VARCHAR"   property="predicates" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+        <result column="filters"      jdbcType="VARCHAR"   property="filters"    typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+        <result column="metadata"     jdbcType="VARCHAR"   property="metadata"   typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+        <result column="created_by"   jdbcType="BIGINT"    property="createdBy" />
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+        <result column="updated_by"   jdbcType="BIGINT"    property="updatedBy" />
+        <result column="updated_time" jdbcType="BIGINT"    property="updatedTime" />
+        <result column="deleted"      jdbcType="BOOLEAN"   property="deleted" />
+        <result column="route_id"     jdbcType="BOOLEAN"   property="routeId" />
+        <!-- @formatter:on -->
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        uri,
+        "order",
+        predicates,
+        filters,
+        metadata,
+        created_by,
+        created_time,
+        updated_by,
+        updated_time,
+        deleted,
+        route_id
+    </sql>
+
+
+</mapper>

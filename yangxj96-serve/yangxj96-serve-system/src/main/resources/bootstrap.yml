@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8080
 spring:
   application:
     name: yangxj96-serve-system
@@ -21,6 +21,9 @@ spring:
           max-idle: 8
           max-wait: -1
   cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
     polaris:
       address: grpc://49.235.101.106:8091
       namespace: default
@@ -28,7 +31,7 @@ spring:
 # mybatis plus 删除
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: io.github.yangxj96.bean.user
+  type-aliases-package: io.github.yangxj96.bean.system
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     local-cache-scope: statement

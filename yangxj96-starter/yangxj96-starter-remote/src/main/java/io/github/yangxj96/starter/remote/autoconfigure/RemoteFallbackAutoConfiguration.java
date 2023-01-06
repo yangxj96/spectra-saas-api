@@ -24,6 +24,7 @@ public class RemoteFallbackAutoConfiguration {
 
     @Bean
     public DemoFeignClientFallback demoFeignClientFallback() {
+        log.info("加载DemoFeignClientFallback");
         return new DemoFeignClientFallback();
     }
 
