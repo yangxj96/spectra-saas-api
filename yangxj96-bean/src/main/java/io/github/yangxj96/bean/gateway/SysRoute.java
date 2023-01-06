@@ -59,19 +59,19 @@ public class SysRoute extends BasicEntity implements Serializable {
      * 断言
      */
     @TableField(value = "predicates", typeHandler = JacksonTypeHandler.class)
-    private transient List<PredicateDefinition> predicates;
+    private List<PredicateDefinition> predicates;
 
     /**
      * 过滤器
      */
     @TableField(value = "filters", typeHandler = JacksonTypeHandler.class)
-    private transient List<FilterDefinition> filters;
+    private List<FilterDefinition> filters;
 
     /**
      * 元数据
      */
     @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
-    private transient Map<String, Object> metadata;
+    private Map<String, Object> metadata;
 
     /**
      * 路由id
