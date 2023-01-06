@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:06
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.starter.security.task;
 
 import io.github.yangxj96.starter.security.store.TokenStore;
@@ -15,6 +23,14 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * 自动清理过期token
+ * <br/> 暂时主要是针对jdbc的,redis会自己过期
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
+ */
 @Slf4j
 @Component
 @EnableScheduling

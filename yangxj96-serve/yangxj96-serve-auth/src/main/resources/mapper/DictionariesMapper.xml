@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ Copyright (c) 2021 - 2023
+  ~ author:yangxj96
+  ~ email :yangxj96@gmail.com
+  ~ date  :2023-01-07 00:08:39
+  ~ Copyright (c) 2021 - 2023
+  ~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.github.yangxj96.server.system.mapper.DictionariesMapper">
-  <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.system.Dictionaries">
-    <!--@mbg.generated-->
-    <!--@Table db_system.t_dictionaries-->
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="enable" jdbcType="BOOLEAN" property="enable" />
-    <result column="internal" jdbcType="BOOLEAN" property="internal" />
-    <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="pid" jdbcType="BIGINT" property="pid" />
-    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
-    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-    <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
-    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
-    <result column="deleted" jdbcType="BOOLEAN" property="deleted" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    <!--@mbg.generated-->
-    id, code, "name", "enable", internal, "type", pid, created_by, created_time, updated_by, 
-    updated_time, deleted
-  </sql>
+    <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.system.Dictionaries">
+        <!--@mbg.generated-->
+        <!--@Table db_system.t_dictionaries-->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="enable" jdbcType="BOOLEAN" property="enable"/>
+        <result column="internal" jdbcType="BOOLEAN" property="internal"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="pid" jdbcType="BIGINT" property="pid"/>
+        <result column="created_by" jdbcType="BIGINT" property="createdBy"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="deleted" jdbcType="BOOLEAN" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id, code, "name", "enable", internal, "type", pid, created_by, created_time, updated_by,
+        updated_time, deleted
+    </sql>
 </mapper>

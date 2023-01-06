@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:39
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.server.auth.service;
 
 import cn.hutool.core.util.IdUtil;

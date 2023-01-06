@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:39
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.server.gateway.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,7 +28,9 @@ import java.nio.charset.StandardCharsets;
  * 网关异常通用处理器，只作用在webflux 环境下 ,
  * <p>优先级低于 {@link org.springframework.web.server.handler.ResponseStatusExceptionHandler} 执行</p>
  *
- * @author 杨新杰
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Slf4j
 @RequiredArgsConstructor

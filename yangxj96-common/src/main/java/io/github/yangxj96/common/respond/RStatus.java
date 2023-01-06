@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:21
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.common.respond;
 
 import lombok.Getter;
@@ -7,6 +15,10 @@ import java.util.Objects;
 /**
  * 通用响应的状态,<br/>
  * 进行主要是进行标准化响应内容,也许以后如果增加国际化相关内容可能会有用
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @Getter
 public enum RStatus {

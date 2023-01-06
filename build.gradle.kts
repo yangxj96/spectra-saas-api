@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:11:38
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
@@ -45,7 +53,7 @@ subprojects {
     // 定义的变量,可以再全局使用
     extra["springCloudVersion"] = "2022.0.0-RC2"
     extra["mybatisVersion"] = "3.0.0"
-    extra["mybatisPlusVersion"] = "3.5.3"
+    extra["mybatisPlusVersion"] = "3.5.3.1"
 
     // 等同于dependencyManagement {}
     configure<DependencyManagementExtension> {
@@ -73,10 +81,10 @@ subprojects {
         publish.set(false)
         imageName.set("${project.name}:${project.version}")
         environment.set(
-            mapOf(
-                "HTTP_PROXY" to "http://192.168.2.29:8889",
-                "HTTPS_PROXY" to "http://192.168.2.29:8889"
-            )
+                mapOf(
+                        "HTTP_PROXY" to "http://192.168.2.29:8889",
+                        "HTTPS_PROXY" to "http://192.168.2.29:8889"
+                )
         )
         docker {
             host.set("tcp://localhost:2375")

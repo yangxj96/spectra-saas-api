@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:39
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.server.gateway.service.impl;
 
 import cn.hutool.json.JSONUtil;
@@ -15,12 +23,17 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Hooks;
-import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 路由locator实现
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
+ */
 @Slf4j
 @Service
 public class RouteDefinitionLocatorImpl implements RouteDefinitionLocator {

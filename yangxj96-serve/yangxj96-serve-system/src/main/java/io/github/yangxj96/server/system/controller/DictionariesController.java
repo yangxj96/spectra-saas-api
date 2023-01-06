@@ -1,3 +1,11 @@
+/*****************************
+ * Copyright (c) 2021 - 2023
+ * author:yangxj96
+ * email :yangxj96@gmail.com
+ * date  :2023-01-07 00:08:39
+ * Copyright (c) 2021 - 2023
+ ****************************/
+
 package io.github.yangxj96.server.system.controller;
 
 import cn.hutool.core.util.IdUtil;
@@ -14,6 +22,10 @@ import java.util.Locale;
 
 /**
  * 字典相关操作
+ *
+ * @author yangxj96
+ * @version 1.0
+ * @date 2023-01-07 00:14
  */
 @RestController
 @RequestMapping("/dictionaries")
@@ -55,7 +67,7 @@ public class DictionariesController extends BasicController<Dictionaries, Dictio
 
     @PreAuthorize("hasAuthority('DICT_SELECT') or hasRole('ROLE_SYSADMIN')")
     @GetMapping
-    public List<Dictionaries> select(Dictionaries params){
+    public List<Dictionaries> select(Dictionaries params) {
         return bindService.select(params);
     }
 
