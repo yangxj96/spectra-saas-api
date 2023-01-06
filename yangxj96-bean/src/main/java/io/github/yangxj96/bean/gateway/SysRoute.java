@@ -14,6 +14,7 @@ import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,19 +49,19 @@ public class SysRoute extends BasicEntity implements Serializable {
      * 断言
      */
     @TableField(value = "predicates", typeHandler = JacksonTypeHandler.class)
-    private LinkedList<PredicateDefinition> predicates;
+    private transient List<PredicateDefinition> predicates;
 
     /**
      * 过滤器
      */
     @TableField(value = "filters", typeHandler = JacksonTypeHandler.class)
-    private List<FilterDefinition> filters;
+    private transient List<FilterDefinition> filters;
 
     /**
      * 元数据
      */
     @TableField(value = "metadata", typeHandler = JacksonTypeHandler.class)
-    private Map<String, Object> metadata;
+    private transient Map<String, Object> metadata;
 
     /**
      * 路由id
