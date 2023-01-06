@@ -12,7 +12,9 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,9 @@ import java.util.Map;
 @NoArgsConstructor
 @TableName(value = "db_system.t_sys_route", autoResultMap = true)
 public class SysRoute extends BasicEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 路由地址
@@ -43,7 +48,7 @@ public class SysRoute extends BasicEntity implements Serializable {
      * 断言
      */
     @TableField(value = "predicates", typeHandler = JacksonTypeHandler.class)
-    private List<PredicateDefinition> predicates;
+    private LinkedList<PredicateDefinition> predicates;
 
     /**
      * 过滤器

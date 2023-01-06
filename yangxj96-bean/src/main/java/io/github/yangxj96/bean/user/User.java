@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import java.util.List;
 @NoArgsConstructor
 @TableName(value = "db_user.t_user")
 public class User extends BasicEntity implements Serializable, UserDetails {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * 用户名

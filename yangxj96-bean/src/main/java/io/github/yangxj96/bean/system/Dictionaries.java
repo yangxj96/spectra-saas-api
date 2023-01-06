@@ -1,6 +1,5 @@
 package io.github.yangxj96.bean.system;
 
-import com.baomidou.mybatisplus.annotation.SqlCondition;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.yangxj96.common.base.BasicEntity;
@@ -16,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -30,6 +30,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @TableName(value = "db_system.t_dictionaries")
 public class Dictionaries extends BasicEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     /**
      * code
