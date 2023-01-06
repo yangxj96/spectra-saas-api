@@ -26,7 +26,6 @@ public class CleanTask {
     @Resource
     private ScheduledAnnotationBeanPostProcessor postProcessor;
 
-
     @Scheduled(fixedRate = (60 * 1000))
     public void tokenAutoClean() {
         if (tokenStore instanceof RedisTokenStore) {

@@ -44,8 +44,8 @@ class ApplicationTest {
         User user = User
                 .builder()
                 .id(IdWorker.getId())
-                .username("sysadmin")
-                .password(passwordEncoder.encode("sysadmin"))
+                .username("admin")
+                .password(passwordEncoder.encode("admin"))
                 .createdBy(0L)
                 .createdTime(LocalDateTime.now())
                 .updatedBy(0L)

@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RestController
 @RequestMapping("/api/route")
-@PreAuthorize("hasRole('ROLE_SYSADMIN')")
 public class RouteController {
 
     @Resource
@@ -23,7 +22,7 @@ public class RouteController {
      *
      * @param route route实体
      */
-    @PreAuthorize("hasAuthority('GATEWAY_INSERT')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_INSERT')")
     @PostMapping
     public R create(@RequestBody SysRoute route) {
         return bindService.addRoute(route) ? R.success() : R.failure();
@@ -36,7 +35,7 @@ public class RouteController {
      * @param id 路由id
      * @return void
      */
-    @PreAuthorize("hasAuthority('GATEWAY_DELETE')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_DELETE')")
     @DeleteMapping("/{id}")
     public R delete(@PathVariable String id) {
         return bindService.deleteRoute(id) ? R.success() : R.failure();
@@ -48,7 +47,7 @@ public class RouteController {
      * @param route 路由信息
      * @return 修改结果
      */
-    @PreAuthorize("hasAuthority('GATEWAY_UPDATE')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_UPDATE')")
     @PutMapping
     public R update(@RequestBody SysRoute route) {
         return bindService.modifyById(route) ? R.success() : R.failure();
@@ -59,7 +58,7 @@ public class RouteController {
      *
      * @return 路由列表(db中的, 不是redis中的)
      */
-    @PreAuthorize("hasAuthority('GATEWAY_SELECT')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_SELECT')")
     @GetMapping
     public R select() {
         return R.success(bindService.select());
@@ -71,7 +70,7 @@ public class RouteController {
      *
      * @return 刷新结果
      */
-    @PreAuthorize("hasAuthority('GATEWAY_REFRESH')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_REFRESH')")
     @GetMapping("/refresh")
     public R refresh() {
         return bindService.refresh() ? R.success() : R.failure();
