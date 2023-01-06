@@ -9,9 +9,11 @@
 package io.github.yangxj96.server.gateway.filters;
 
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -30,6 +32,10 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("[全局过滤器-全局解密过滤器]:进入过滤器");
+        var request = exchange.getRequest();
+        log.info("请求:{}",request.getMethod());
+        var response = exchange.getResponse();
+        log.info("响应:{}",response.getStatusCode());
         return chain.filter(exchange);
     }
 
