@@ -52,7 +52,7 @@ public class MetaObjectHandlerImpl implements MetaObjectHandler {
      */
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             return ((User) authentication.getPrincipal()).getId();
         }
         return 0L;
