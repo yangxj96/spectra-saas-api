@@ -9,6 +9,7 @@ services:
     volumes:
       - "/docker/RabbitMQ/config/enabled_plugins:/etc/rabbitmq/enabled_plugins"
       - "/docker/RabbitMQ/config/:/etc/rabbitmq/conf.d/"
+      - "/docker/RabbitMQ/data:/var/lib/rabbitmq"
     restart: always
     privileged: true
     network_mode: "host"
