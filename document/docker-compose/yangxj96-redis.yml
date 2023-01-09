@@ -7,4 +7,6 @@ services:
     privileged: true
     network_mode: "host"
     command: redis-server --port 6379 --requirepass QuVsKppcWvwwX2Vv  --appendonly yes
+    volumes:
+      - "/docker/Redis/data:/data"
 
