@@ -9,6 +9,7 @@
 package io.github.yangxj96.starter.remote.autoconfigure;
 
 import feign.*;
+import feign.auth.BasicAuthRequestInterceptor;
 import feign.okhttp.OkHttpClient;
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor;
 import io.github.yangxj96.starter.remote.properties.RemoteProperties;
@@ -61,7 +62,36 @@ public class RemoteAutoConfiguration {
     }
 
     /**
-     * feign 请求重试配置
+     * feign 日志级别
+     *
+     * @return feign 日志
+     */
+    @Bean
+    public Logger.Level level() {
+        return properties.getLevel();
+    }
+
+    /**
+     * 契约配置
+     *
+     * @return 契约
+     */
+    @Bean
+    public Contract contract() {
+        // 默认契约
+        // return new Contract.Default();
+        // spring 包装好的契约
+        return new SpringMvcContract();
+    }
+
+    // basic认证
+    //@Bean
+    //public BasicAuthRequestInterceptor authRequestInterceptor() {
+    //    return new BasicAuthRequestInterceptor("user", "psswrod");
+    //}
+
+    /**
+     * feign超时时间
      *
      * @return Options
      */
@@ -73,34 +103,6 @@ public class RemoteAutoConfiguration {
                 properties.getReadTimeOut()   , TimeUnit.MILLISECONDS,
                 true);
                 // @formatter:on
-    }
-
-    /**
-     * feign 重试机制
-     *
-     * @return 重试机制
-     */
-    @Bean
-    public feign.Retryer retryer() {
-        return new Retryer.Default(100, SECONDS.toMillis(1), 2);
-    }
-
-    /**
-     * @return SpringMvcContract
-     */
-    @Bean
-    public Contract contract() {
-        return new SpringMvcContract();
-    }
-
-    /**
-     * feign 日志管理
-     *
-     * @return feign 日志
-     */
-    @Bean
-    public Logger.Level level() {
-        return properties.getLevel();
     }
 
     /**
@@ -121,6 +123,8 @@ public class RemoteAutoConfiguration {
                 .addInterceptor(new OkHttpLogInterceptor())
                 .build();
     }
+
+
 
 //    @Bean
 //    public Client feignRetryClient(
