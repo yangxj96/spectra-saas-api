@@ -12,7 +12,7 @@ import io.github.yangxj96.starter.remote.fallback.DemoFeignClientFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "yangxj96-serve-system", fallbackFactory = DemoFeignClientFallback.class)
+@FeignClient(name = "yangxj96-serve-system",url = "https://www.google.com", fallbackFactory = DemoFeignClientFallback.class)
 public interface DemoFeignClient {
 
     @GetMapping("/")
