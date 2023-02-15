@@ -21,21 +21,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date 2023-01-07 00:14
  */
 @Data
-@ConfigurationProperties(prefix = "it100000.remote")
+@ConfigurationProperties(prefix = "yangxj96.remote")
 public class RemoteProperties {
 
     /**
-     * 连接超时时间
+     * 连接超时时间,单位毫秒.
      **/
     private Integer connectTimeOut = 1000;
 
     /**
-     * 读取超时时间
+     * 读取超时时间,单位毫秒.
      **/
     private Integer readTimeOut = 1000;
 
     /**
-     * 写出超时时间
+     * 写出超时时间,单位毫秒.
      **/
     private Integer writeTimeout = 1000;
 

@@ -9,7 +9,6 @@
 package io.github.yangxj96.starter.remote.autoconfigure;
 
 import feign.*;
-import feign.auth.BasicAuthRequestInterceptor;
 import feign.okhttp.OkHttpClient;
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor;
 import io.github.yangxj96.starter.remote.properties.RemoteProperties;
@@ -62,6 +61,7 @@ public class RemoteAutoConfiguration {
     }
 
     /**
+     * feign 请求超时时间配置
      * feign 日志级别
      *
      * @return feign 日志
@@ -79,16 +79,11 @@ public class RemoteAutoConfiguration {
     @Bean
     public Contract contract() {
         // 默认契约
-        // return new Contract.Default();
+        // return new Contract.Default()
         // spring 包装好的契约
         return new SpringMvcContract();
     }
 
-    // basic认证
-    //@Bean
-    //public BasicAuthRequestInterceptor authRequestInterceptor() {
-    //    return new BasicAuthRequestInterceptor("user", "psswrod");
-    //}
 
     /**
      * feign超时时间
@@ -104,6 +99,19 @@ public class RemoteAutoConfiguration {
                 true);
                 // @formatter:on
     }
+
+
+    /**
+     * feign 重试机制
+     *
+     * @return 重试机制
+     */
+    @Bean
+    public feign.Retryer retryer() {
+        return new Retryer.Default(100, SECONDS.toMillis(1), 2);
+    }
+
+
 
     /**
      * 定义okhttp3客户端
@@ -123,7 +131,6 @@ public class RemoteAutoConfiguration {
                 .addInterceptor(new OkHttpLogInterceptor())
                 .build();
     }
-
 
 
 //    @Bean
@@ -151,7 +158,6 @@ public class RemoteAutoConfiguration {
     public Client feignClient(okhttp3.OkHttpClient okHttpClient,
                               LoadBalancerClient loadBalancerClient,
                               LoadBalancerClientFactory loadBalancerClientFactory) {
-
         log.debug(LOG_PREFIX + "使用okhttp3作为底层");
         OkHttpClient delegate = new OkHttpClient(okHttpClient);
         return new FeignBlockingLoadBalancerClient(delegate, loadBalancerClient, loadBalancerClientFactory, Collections.emptyList());
@@ -159,9 +165,7 @@ public class RemoteAutoConfiguration {
 
     @Bean
     public RequestInterceptor requestInterceptor() {
-        return template -> {
-            template.header("feign", "true");
-        };
+        return template -> template.header("feign", "true");
     }
 
 }
