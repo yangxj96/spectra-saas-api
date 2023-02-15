@@ -55,6 +55,7 @@ subprojects {
     extra["mybatisVersion"] = "3.0.0"
     extra["mybatisPlusVersion"] = "3.5.3.1"
 
+
     // 等同于dependencyManagement {}
     configure<DependencyManagementExtension> {
         imports {

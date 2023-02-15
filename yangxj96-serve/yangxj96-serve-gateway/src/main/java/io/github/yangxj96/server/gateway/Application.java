@@ -8,9 +8,11 @@
 
 package io.github.yangxj96.server.gateway;
 
+import jakarta.annotation.Resource;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.gateway.route.RouteLocator;
 
 /**
  * 前端网关的主启动类

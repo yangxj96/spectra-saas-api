@@ -40,7 +40,8 @@ public class RouteController {
     @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_INSERT')")
     @PostMapping
     public R create(@RequestBody SysRoute route) {
-        return bindService.addRoute(route) ? R.success() : R.failure();
+        SysRoute result = bindService.create(route);
+        return result != null ? R.success(result) : R.failure();
     }
 
 
@@ -53,7 +54,7 @@ public class RouteController {
     @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_DELETE')")
     @DeleteMapping("/{id}")
     public R delete(@PathVariable String id) {
-        return bindService.deleteRoute(id) ? R.success() : R.failure();
+        return bindService.delete(id) ? R.success() : R.failure();
     }
 
     /**
@@ -65,7 +66,8 @@ public class RouteController {
     @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAuthority('GATEWAY_UPDATE')")
     @PutMapping
     public R update(@RequestBody SysRoute route) {
-        return bindService.modifyById(route) ? R.success() : R.failure();
+        SysRoute modify = bindService.modify(route);
+        return modify != null ? R.success(modify) : R.failure();
     }
 
     /**

@@ -8,7 +8,6 @@
 
 package io.github.yangxj96.server.gateway.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.github.yangxj96.bean.gateway.SysRoute;
 import io.github.yangxj96.common.base.BasicServiceImpl;
 import io.github.yangxj96.server.gateway.mapper.SysRouteMapper;
@@ -41,33 +40,35 @@ public class SysRouteServiceImpl extends BasicServiceImpl<SysRouteMapper, SysRou
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean addRoute(SysRoute route) {
-        dynamicRouteService.save(Mono.just(RouteUtil.convert(route))).subscribe();
-        return this.save(route);
+    public SysRoute create(SysRoute datum) {
+        SysRoute route = super.create(datum);
+        if (null != route) {
+            dynamicRouteService.save(Mono.just(RouteUtil.convert(route))).subscribe();
+        }
+        return route;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean deleteRoute(String id) {
-        SysRoute route = this.getOne(new LambdaQueryWrapper<SysRoute>().eq(SysRoute::getRouteId, id));
-        if (route == null || !this.removeById(route.getId())) {
-            return Boolean.FALSE;
+    public boolean delete(String id) {
+        SysRoute route = this.getById(Long.valueOf(id));
+        if (null != route) {
+            throw new RuntimeException("路由信息不存在");
+        }
+        if (!this.removeById(route.getId())) {
+            throw new RuntimeException("删除路由失败");
         }
         dynamicRouteService.delete(Mono.just(id)).subscribe();
-        return Boolean.TRUE;
+        return true;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean modifyById(SysRoute route) {
-        SysRoute datum = this.getById(route.getId());
-        if (null == datum) {
-            return Boolean.FALSE;
+    public SysRoute modify(SysRoute datum) {
+        SysRoute route = super.modify(datum);
+        if (null != route) {
+            throw new RuntimeException("路由信息修改失败");
         }
-        this.updateById(route);
-        dynamicRouteService.update(Mono.just(RouteUtil.convert(route)));
-        return Boolean.TRUE;
+        dynamicRouteService.update(Mono.just(RouteUtil.convert(datum)));
+        return datum;
     }
 
     @Override
