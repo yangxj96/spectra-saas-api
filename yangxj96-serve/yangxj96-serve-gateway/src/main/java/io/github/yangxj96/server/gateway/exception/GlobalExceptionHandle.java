@@ -15,6 +15,7 @@ import io.github.yangxj96.common.respond.RStatus;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +41,7 @@ public class GlobalExceptionHandle implements ErrorWebExceptionHandler {
     private ObjectMapper om;
 
     @Override
-    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+    public @NotNull Mono<Void> handle(ServerWebExchange exchange, @NotNull Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
         if (response.isCommitted()) {
             return Mono.error(ex);

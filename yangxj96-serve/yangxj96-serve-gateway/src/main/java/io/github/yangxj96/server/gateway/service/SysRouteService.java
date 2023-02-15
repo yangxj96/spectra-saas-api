@@ -23,30 +23,6 @@ import java.util.List;
 public interface SysRouteService extends BasicService<SysRoute> {
 
     /**
-     * 添加路由
-     *
-     * @param route 路由实体
-     * @return 是否添加成功
-     */
-    boolean addRoute(SysRoute route);
-
-    /**
-     * 删除路由
-     *
-     * @param id 路由id
-     * @return 删除状态
-     */
-    boolean deleteRoute(String id);
-
-    /**
-     * 根据id修改路由信息
-     *
-     * @param route 路由信息
-     * @return 修改状态
-     */
-    boolean modifyById(SysRoute route);
-
-    /**
      * 刷新路由信息
      *
      * @return 刷新结果

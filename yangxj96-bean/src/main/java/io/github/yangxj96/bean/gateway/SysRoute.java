@@ -22,6 +22,7 @@ import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,13 +60,13 @@ public class SysRoute extends BasicEntity implements Serializable {
      * 断言
      */
     @TableField(value = "predicates", typeHandler = JacksonTypeHandler.class)
-    private List<Object> predicates;
+    private List<PredicateDefinition> predicates;
 
     /**
      * 过滤器
      */
     @TableField(value = "filters", typeHandler = JacksonTypeHandler.class)
-    private List<Object> filters;
+    private List<FilterDefinition> filters;
 
     /**
      * 元数据

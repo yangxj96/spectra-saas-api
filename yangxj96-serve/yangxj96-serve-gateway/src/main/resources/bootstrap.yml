@@ -24,6 +24,8 @@ spring:
     polaris:
       address: grpc://49.235.101.106:8091
       namespace: default
+      discovery:
+        enabled: false
 
 # mybatis plus 删除
 mybatis-plus:
