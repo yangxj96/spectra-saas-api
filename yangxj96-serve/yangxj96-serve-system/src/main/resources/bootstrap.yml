@@ -45,6 +45,8 @@ mybatis-plus:
       logic-delete-value: true
 
 yangxj96:
+  remote:
+    connect-time-out: 10000
   security:
     enable: true
     store-type: redis
