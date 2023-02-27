@@ -12,7 +12,8 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.cloud:spring-cloud-starter-bootstrap")
     // 服务发现
-    api("com.tencent.cloud:spring-cloud-starter-tencent-polaris-discovery")
+    // api("com.tencent.cloud:spring-cloud-starter-tencent-polaris-discovery")
+    api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
     // 数据库
     // api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")

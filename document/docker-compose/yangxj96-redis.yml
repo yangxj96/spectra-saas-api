@@ -6,7 +6,7 @@ services:
     restart: always
     privileged: true
     network_mode: "host"
-    command: redis-server --port 6379 --requirepass QuVsKppcWvwwX2Vv  --appendonly yes
+    command: redis-server /etc/redis/redis.conf
     volumes:
       - "/docker/Redis/data:/data"
-
+      - "/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
