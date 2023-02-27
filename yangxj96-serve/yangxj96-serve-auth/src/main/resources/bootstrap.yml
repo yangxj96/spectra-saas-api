@@ -23,9 +23,10 @@ spring:
           max-idle: 8
           max-wait: -1
   cloud:
-    polaris:
-      address: grpc://49.235.101.106:8091
-      namespace: default
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
 
 # mybatis plus 删除
 mybatis-plus:

@@ -60,7 +60,8 @@ subprojects {
     configure<DependencyManagementExtension> {
         imports {
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-            mavenBom("com.tencent.cloud:spring-cloud-tencent-dependencies:1.8.2-2022.0.0-RC2")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:2022.0.0.0-RC1")
+            // mavenBom("com.tencent.cloud:spring-cloud-tencent-dependencies:1.8.2-2022.0.0-RC2")
         }
     }
 
