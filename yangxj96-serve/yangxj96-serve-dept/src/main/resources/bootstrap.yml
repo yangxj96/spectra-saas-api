@@ -26,9 +26,10 @@ spring:
         enabled: true
         caffeine:
           spec: initialCapacity=500,expireAfterWrite=5s
-    polaris:
-      address: grpc://49.235.101.106:8091
-      namespace: default
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
 
 # mybatis plus 删除
 mybatis-plus:
