@@ -27,27 +27,27 @@ public class ConfigureController extends BasicController<Configure, ConfigureSer
 
     @Override
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_SYSADMIN')")
+    @PreAuthorize("hasAuthority('SYS_CONFIGURE_INSERT')")
     public Configure create(@Validated Configure obj) {
         return super.create(obj);
     }
 
     @Override
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_SYSADMIN')")
+    @PreAuthorize("hasAuthority('SYS_CONFIGURE_DELETE')")
     public void delete(@NotBlank(message = "需要删除的资源id不能为空") @PathVariable String id) {
         super.delete(id);
     }
 
     @Override
     @PutMapping
-    @PreAuthorize("hasRole('ROLE_SYSADMIN')")
+    @PreAuthorize("hasAuthority('SYS_CONFIGURE_MODIFY')")
     public Configure modify(@Validated Configure obj) {
         return super.modify(obj);
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_SYSADMIN')")
+    @PreAuthorize("hasAuthority('SYS_CONFIGURE_SELECT')")
     public List<Configure> select(){
         return bindService.select();
     }

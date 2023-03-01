@@ -91,7 +91,7 @@ public class AuthController {
      * @param token token
      */
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/logout")
+    @PostMapping("/logoff")
     public void logout(String token) {
         try {
             tokenStore.remove(token);
@@ -109,7 +109,7 @@ public class AuthController {
      * @return token信息
      */
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/checkToken")
+    @PostMapping("/check_token")
     public Token checkToken(String token) {
         return null;
     }

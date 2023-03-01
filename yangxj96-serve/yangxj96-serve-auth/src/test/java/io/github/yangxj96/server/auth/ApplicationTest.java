@@ -81,7 +81,8 @@ class ApplicationTest {
 
     @Test
     void addAuthority() {
-        String[] authority = {"USER_INSERT", "USER_DELETE", "USER_UPDATE", "USER_SELECT"};
+        // String[] authority = {"USER_INSERT", "USER_DELETE", "USER_UPDATE", "USER_SELECT"};
+        String[] authority = {"SYS_CONFIGURE_INSERT", "SYS_CONFIGURE_DELETE", "SYS_CONFIGURE_UPDATE", "SYS_CONFIGURE_SELECT"};
         int count = 0;
         for (String role : authority) {
             Authority datum = Authority

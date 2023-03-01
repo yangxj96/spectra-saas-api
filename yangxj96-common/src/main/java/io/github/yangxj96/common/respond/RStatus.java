@@ -43,8 +43,10 @@ public enum RStatus {
     FAILURE_DELETE(200005, "删除失败"),
     FAILURE_UPDATE(200006, "更新失败"),
     FAILURE_SELECT(200007, "查询失败"),
-    FAILURE_DATA_NULL(200008, "查询不到数据"),
-    NOT_FIND_ROUTE(200009, "未找到路由");
+    FAILURE_REPEAT(200008, "数据重复"),
+    FAILURE_FORMAT(200009, "字段格式错误,请检查"),
+    FAILURE_DATA_NULL(200010, "查询不到数据"),
+    NOT_FIND_ROUTE(200011, "未找到路由");
 
     private final Integer code;
 

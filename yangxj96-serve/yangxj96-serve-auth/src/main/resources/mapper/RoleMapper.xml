@@ -16,6 +16,8 @@
         <!--@Table db_user.t_role-->
         <id column="id"               jdbcType="BIGINT"    property="id"/>
         <result column="name"         jdbcType="VARCHAR"   property="name"/>
+        <result column="code"         jdbcType="VARCHAR"   property="code"/>
+        <result column="pid"          jdbcType="VARCHAR"   property="pid"/>
         <result column="description"  jdbcType="VARCHAR"   property="description"/>
         <result column="created_by"   jdbcType="BIGINT"    property="createdBy"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
@@ -29,11 +31,14 @@
         <!--@mbg.generated-->
         id,
         "name",
+        code,
+        pid,
         description,
         created_by,
         created_time,
         updated_by,
-        updated_time
+        updated_time,
+        deleted
     </sql>
 
     <insert id="relevance">
