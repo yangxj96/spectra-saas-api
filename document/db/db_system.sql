@@ -12,9 +12,39 @@
  Target Server Version : 150001 (150001)
  File Encoding         : 65001
 
- Date: 30/12/2022 09:50:37
+ Date: 01/03/2023 14:21:40
 */
 
+
+-- ----------------------------
+-- Table structure for t_configure
+-- ----------------------------
+DROP TABLE IF EXISTS "db_system"."t_configure";
+CREATE TABLE "db_system"."t_configure" (
+  "id" int8 NOT NULL,
+  "key" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "value" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "created_by" int8,
+  "created_time" timestamp(6),
+  "updated_by" int8,
+  "updated_time" timestamp(6),
+  "deleted" bool DEFAULT false
+)
+;
+COMMENT ON COLUMN "db_system"."t_configure"."id" IS '主键id';
+COMMENT ON COLUMN "db_system"."t_configure"."key" IS 'key';
+COMMENT ON COLUMN "db_system"."t_configure"."value" IS 'value';
+COMMENT ON COLUMN "db_system"."t_configure"."created_by" IS '创建人';
+COMMENT ON COLUMN "db_system"."t_configure"."created_time" IS '创建时间';
+COMMENT ON COLUMN "db_system"."t_configure"."updated_by" IS '最后更新人';
+COMMENT ON COLUMN "db_system"."t_configure"."updated_time" IS '最后更新时间';
+COMMENT ON COLUMN "db_system"."t_configure"."deleted" IS '是否删除';
+COMMENT ON TABLE "db_system"."t_configure" IS '系统配置表';
+
+-- ----------------------------
+-- Records of t_configure
+-- ----------------------------
+INSERT INTO "db_system"."t_configure" VALUES (1628283509519011841, 'sys.fileload.type', 'file', 0, '2023-02-22 14:40:15.372752', 1600691095698763778, '2023-02-22 14:43:37.511645', 'f');
 
 -- ----------------------------
 -- Table structure for t_dictionaries
@@ -52,6 +82,9 @@ COMMENT ON TABLE "db_system"."t_dictionaries" IS '字典表';
 -- ----------------------------
 -- Records of t_dictionaries
 -- ----------------------------
+INSERT INTO "db_system"."t_dictionaries" VALUES (1603273714231717890, 'xxxxx', '分组1', 't', 'f', 2, NULL, 0, '2022-12-15 14:20:15.516919', NULL, '2022-12-15 14:32:58.73625', 't');
+INSERT INTO "db_system"."t_dictionaries" VALUES (1603276627540729857, '0aafb3ccd124408daf2d5b31dc5f310c', '分组1', 't', 'f', 2, NULL, 0, '2022-12-15 14:31:50.104166', NULL, '2022-12-15 14:33:42.175229', 't');
+INSERT INTO "db_system"."t_dictionaries" VALUES (1603276811024752641, 'BE7836CB8FB244AAA6E0C1910464243D', '分组1-修改2', 't', 'f', 1, 0, 0, '2022-12-15 14:32:33.849562', NULL, '2022-12-15 14:36:22.601956', 'f');
 
 -- ----------------------------
 -- Table structure for t_sys_route
@@ -61,9 +94,9 @@ CREATE TABLE "db_system"."t_sys_route" (
   "id" int8 NOT NULL,
   "uri" varchar(255) COLLATE "pg_catalog"."default",
   "order" int4,
-  "predicates" text COLLATE "pg_catalog"."default",
-  "filters" text COLLATE "pg_catalog"."default",
-  "metadata" text COLLATE "pg_catalog"."default",
+  "predicates" json,
+  "filters" json,
+  "metadata" json,
   "created_by" int8,
   "created_time" timestamp(6),
   "updated_by" int8,
@@ -88,7 +121,14 @@ COMMENT ON TABLE "db_system"."t_sys_route" IS '路由表定义';
 -- ----------------------------
 -- Records of t_sys_route
 -- ----------------------------
-INSERT INTO "db_system"."t_sys_route" VALUES (1605384063818977282, 'lb://yangxj96-serve-system', 0, '[{"name":"Path","args":{"pattern":"/sgca/**"}}]', '[{"name":"StripPrefix","args":{"pattern":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-21 10:06:02.066912', 0, 'f', 'yangxj96-serve-system', '2022-12-21 10:06:02.066912');
+INSERT INTO "db_system"."t_sys_route" VALUES (1608657520283365378, 'lb://yangxj96-serve-system', 0, '[{"name":"Path","args":{"_genkey_0":"/api/system/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-30 10:53:34.916635', 0, 'f', 'yangxj96-serve-system', '2022-12-30 10:53:34.916635');
+INSERT INTO "db_system"."t_sys_route" VALUES (1608657444500680706, 'lb://yangxj96-serve-dept', 0, '[{"name":"Path","args":{"_genkey_0":"/api/dept/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-30 10:53:16.837596', 0, 'f', 'yangxj96-serve-dept', '2022-12-30 10:53:16.837596');
+INSERT INTO "db_system"."t_sys_route" VALUES (1608657486418554881, 'lb://yangxj96-serve-auth', 0, '[{"name":"Path","args":{"_genkey_0":"/api/auth/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-30 10:53:26.840623', 0, 'f', 'yangxj96-serve-auth', '2022-12-30 10:53:26.840623');
+
+-- ----------------------------
+-- Primary Key structure for table t_configure
+-- ----------------------------
+ALTER TABLE "db_system"."t_configure" ADD CONSTRAINT "t_configure_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Primary Key structure for table t_dictionaries
