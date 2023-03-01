@@ -24,10 +24,6 @@ spring:
     nacos:
       discovery:
         server-addr: http://localhost:8848
-#    gateway:
-#      discovery:
-#        locator:
-#          enabled: true
 
 # mybatis plus 删除
 mybatis-plus:
