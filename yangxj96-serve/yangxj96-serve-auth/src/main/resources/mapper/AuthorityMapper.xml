@@ -32,6 +32,7 @@
         created_by,
         created_time,
         updated_by,
-        updated_time
+        updated_time,
+        deleted
     </sql>
 </mapper>

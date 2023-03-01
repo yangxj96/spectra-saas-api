@@ -60,6 +60,11 @@ public class R implements Serializable {
         return R.builder().code(RStatus.FAILURE.getCode()).msg(RStatus.FAILURE.getMsg()).build();
     }
 
+    public static R failure(RStatus status) {
+        setHeader(status);
+        return R.builder().code(status.getCode()).msg(status.getMsg()).build();
+    }
+
     public static R specify(RStatus status) {
         setHeader(status);
         return R.builder().code(status.getCode()).msg(status.getMsg()).build();
