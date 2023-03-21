@@ -1,0 +1,89 @@
+version: "3.8"
+
+services:
+  yangxj96-mysql:
+    image: mysql:8.0.32
+    container_name: yangxj96-mysql
+    restart: always
+    privileged: true
+    networks:
+      - default
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    environment:
+      TZ: "Asia/Shanghai"
+      MYSQL_ROOT_PASSWORD: "QuVsKppcWvwwX2Vv"
+    volumes:
+      - "/docker/MySQL/data:/var/lib/mysql"
+  yangxj96-pgsql:
+    image: postgis/postgis:15-master
+    container_name: yangxj96-pgsql
+    restart: always
+    privileged: true
+    environment:
+      POSTGRES_PASSWORD: QuVsKppcWvwwX2Vv
+    networks:
+      - default
+    ports:
+      - "5432:5432"
+    volumes:
+      - "/docker/PostgreSQL/data:/var/lib/postgresql/data"
+      - "/docker/PostgreSQL/config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
+  yangxj96-rabbitmq:
+    image: rabbitmq:3.11.5
+    container_name: yangxj96-rabbitmq
+    restart: always
+    privileged: true
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: QuVsKppcWvwwX2Vv
+    networks:
+      - default
+    ports:
+      - "5672:5672"
+      - "25672:25672"
+      - "15670:15670"
+      - "15672:15672"
+      - "15674:15674"
+      - "1883:1883"
+      - "61613:61613"
+    volumes:
+      - "/docker/RabbitMQ/config/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+      - "/docker/RabbitMQ/config/:/etc/rabbitmq/conf.d/"
+      - "/docker/RabbitMQ/data:/var/lib/rabbitmq"
+  yangxj96-redis:
+    image: redis:7.0.5-alpine
+    container_name: yangxj96-redis
+    restart: always
+    privileged: true
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - default
+    ports:
+      - "6379:6379"
+    volumes:
+      - "/docker/Redis/data:/data"
+      - "/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
+  yangxj96-nacos:
+    image: nacos/nacos-server:v2.2.0
+    container_name: yangxj96-nacos
+    restart: always
+    privileged: true
+    env_file: "/docker/Nacos/env/mysql.env"
+    networks:
+      - default
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    volumes:
+      - "/docker/Nacos/logs/:/home/nacos/logs"
+    depends_on:
+      - yangxj96-mysql
+    links:
+      - yangxj96-mysql
+
+networks:
+  default:
+    external: true
+    name: yangxj96

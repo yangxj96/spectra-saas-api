@@ -3,6 +3,8 @@ services:
   yangxj96-nacos:
     image: nacos/nacos-server:v2.2.0
     container_name: yangxj96-nacos
+    env_file:
+      - "/docker/Nacos/env/mysql.env"
     environment:
       - MODE=standalone
     network_mode: host
