@@ -55,20 +55,20 @@ public class RouteUtil {
         definition.setUri(uri);
         try {
             // 设置元数据
-            if (!route.getMetadata().isBlank()) {
+            if (route.getMetadata() != null && !route.getMetadata().isBlank()) {
                 // convertValue
                 Map<String, Object> metadata = mapper.readValue(route.getMetadata(), new TypeReference<>() {
                 });
                 definition.setMetadata(metadata);
             }
             // 设置断言
-            if (!route.getPredicates().isBlank()) {
+            if (route.getPredicates() != null && !route.getPredicates().isBlank()) {
                 List<PredicateDefinition> predicates = mapper.readValue(route.getPredicates(), new TypeReference<>() {
                 });
                 definition.setPredicates(predicates);
             }
             // 设置过滤器
-            if (!route.getFilters().isBlank()) {
+            if (route.getFilters() != null && !route.getFilters().isBlank()) {
                 List<FilterDefinition> filters = mapper.readValue(route.getFilters(), new TypeReference<>() {
                 });
                 definition.setFilters(filters);
