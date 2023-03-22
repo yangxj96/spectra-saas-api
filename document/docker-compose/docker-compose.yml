@@ -16,17 +16,22 @@ services:
       MYSQL_ROOT_PASSWORD: "QuVsKppcWvwwX2Vv"
     volumes:
       - "/docker/MySQL/data:/var/lib/mysql"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
   yangxj96-pgsql:
     image: postgis/postgis:15-master
     container_name: yangxj96-pgsql
     restart: always
     privileged: true
-    environment:
-      POSTGRES_PASSWORD: QuVsKppcWvwwX2Vv
     networks:
       - default
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: QuVsKppcWvwwX2Vv
     volumes:
       - "/docker/PostgreSQL/data:/var/lib/postgresql/data"
       - "/docker/PostgreSQL/config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
@@ -35,9 +40,6 @@ services:
     container_name: yangxj96-rabbitmq
     restart: always
     privileged: true
-    environment:
-      RABBITMQ_DEFAULT_USER: root
-      RABBITMQ_DEFAULT_PASS: QuVsKppcWvwwX2Vv
     networks:
       - default
     ports:
@@ -48,6 +50,9 @@ services:
       - "15674:15674"
       - "1883:1883"
       - "61613:61613"
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: QuVsKppcWvwwX2Vv
     volumes:
       - "/docker/RabbitMQ/config/enabled_plugins:/etc/rabbitmq/enabled_plugins"
       - "/docker/RabbitMQ/config/:/etc/rabbitmq/conf.d/"
@@ -57,11 +62,11 @@ services:
     container_name: yangxj96-redis
     restart: always
     privileged: true
-    command: redis-server /etc/redis/redis.conf
     networks:
       - default
     ports:
       - "6379:6379"
+    command: redis-server /etc/redis/redis.conf
     volumes:
       - "/docker/Redis/data:/data"
       - "/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
@@ -70,7 +75,8 @@ services:
     container_name: yangxj96-nacos
     restart: always
     privileged: true
-    env_file: "/docker/Nacos/env/mysql.env"
+    env_file:
+      - "/docker/Nacos/env/mysql.env"
     networks:
       - default
     ports:
@@ -79,7 +85,8 @@ services:
     volumes:
       - "/docker/Nacos/logs/:/home/nacos/logs"
     depends_on:
-      - yangxj96-mysql
+      yangxj96-mysql:
+        condition: service_healthy
     links:
       - yangxj96-mysql
 
