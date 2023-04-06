@@ -8,7 +8,7 @@
 
 package io.github.yangxj96.common.utils;
 
-import cn.hutool.core.util.HexUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * AES加解密
@@ -30,53 +30,65 @@ import java.util.Arrays;
  * @version 1.0
  * @date 2023/3/28 22:27
  */
-//@Slf4j
+@Slf4j
 public class AesUtil {
+
+    private AesUtil() {
+    }
 
     /**
      * 加密
      *
      * @param origin 源
-     * @param secret 密钥
-     * @param iv     偏移
      * @return 加密结果的hex值
      */
-    public static byte[] encrypt(String origin, SecretKey secret, byte[] iv) {
+    public static String encrypt(String origin) {
         if (StringUtils.isBlank(origin)) {
-            //log.info("加密字符串为空");
-            return new byte[0];
+            log.info("加密字符串为空");
+            return null;
         }
         try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            // @formatter:off
+            byte[] iv        = getRandomIv();
+            SecretKey secret = getRandomKey();
+            Cipher cipher    = Cipher.getInstance("AES/GCM/NoPadding");
+            // @formatter:on
             cipher.init(Cipher.ENCRYPT_MODE, secret, new GCMParameterSpec(128, iv));
             byte[] ciphertext = cipher.doFinal(origin.getBytes(StandardCharsets.UTF_8));
-            // 把
-            return ByteBuffer.allocate(secret.getEncoded().length + iv.length  + ciphertext.length)
+            // 把key iv ciphertext按照顺序压入字节数组
+            byte[] bytes = ByteBuffer.allocate(secret.getEncoded().length + iv.length  + ciphertext.length)
                     .put(secret.getEncoded())
                     .put(iv)
                     .put(ciphertext)
                     .array();
+            return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
 
-    // , SecretKey secret
-
-    public static String decrypt(byte[] ciphertext) {
+    /**
+     * 解码
+     *
+     * @param ciphertext 密文
+     * @return 解码后的结果
+     */
+    public static String decrypt(String ciphertext) {
         try {
-            ByteBuffer wrap = ByteBuffer.wrap(ciphertext);
-
+            // BASE64解码
+            byte[] decode = Base64.getDecoder().decode(ciphertext);
+            ByteBuffer wrap = ByteBuffer.wrap(decode);
+            // 获取key
             byte[] key = new byte[32];
             wrap.get(key);
-
+            // 获取向量
             byte[] iv = new byte[16];
             wrap.get(iv);
-
+            // 获取具体的内容
             byte[] plain = new byte[wrap.remaining()];
             wrap.get(plain);
-
+            // 进行解码
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv));
             byte[] bytes = cipher.doFinal(plain);
@@ -91,7 +103,7 @@ public class AesUtil {
      *
      * @return 偏移量
      */
-    public static byte @NotNull [] getRandomIv() {
+    private static byte @NotNull [] getRandomIv() {
         byte[] nonce = new byte[16];
         new SecureRandom().nextBytes(nonce);
         return nonce;
@@ -103,34 +115,10 @@ public class AesUtil {
      * @return key
      * @throws NoSuchAlgorithmException 没找到加密算法
      */
-    public static SecretKey getRandomKey() throws NoSuchAlgorithmException {
+    private static SecretKey getRandomKey() throws NoSuchAlgorithmException {
         KeyGenerator kg = KeyGenerator.getInstance("AES");
         kg.init(256, SecureRandom.getInstanceStrong());
         return kg.generateKey();
-    }
-
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        String OUTPUT_FORMAT = "%-30s:%s";
-
-        byte[] nonce = getRandomIv();
-        SecretKey secret = getRandomKey();
-
-        String origin = "Hello World! AES GCM!";
-
-        byte[] encrypt = encrypt(origin, secret, nonce);
-
-        System.out.println("\n------ AES GCM Encryption ------");
-        System.out.println(String.format(OUTPUT_FORMAT, "Input (plain text)", origin));
-        System.out.println(String.format(OUTPUT_FORMAT, "Key (hex)", HexUtil.encodeHexStr(secret.getEncoded())));
-        System.out.println(String.format(OUTPUT_FORMAT, "IV  (hex)", HexUtil.encodeHexStr(nonce)));
-        System.out.println(String.format(OUTPUT_FORMAT, "Encrypted (hex) ", HexUtil.encodeHexStr(encrypt)));
-
-        System.out.println("\n------ AES GCM Decryption ------");
-        System.out.println(String.format(OUTPUT_FORMAT, "Input (hex)", HexUtil.encodeHexStr(encrypt)));
-        System.out.println(String.format(OUTPUT_FORMAT, "Key (hex)", HexUtil.encodeHexStr(secret.getEncoded())));
-
-        String decryptedText = decrypt(encrypt);
-        System.out.println(String.format(OUTPUT_FORMAT, "Decrypted (plain text)", decryptedText));
     }
 
 }
