@@ -11,7 +11,6 @@ package io.github.yangxj96.common.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.util.encoders.UTF8;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Cipher;
@@ -77,9 +76,6 @@ public class AesUtil {
                     .put(iv)
                     .put(ciphertext)
                     .array();
-            log.info("key:{}",Base64.getEncoder().encodeToString(secret.getEncoded()));
-            log.info("iv:{}",Base64.getEncoder().encodeToString(iv));
-            log.info("ciphertext:{}",Base64.getEncoder().encodeToString(ciphertext));
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
             throw new RuntimeException(e);
