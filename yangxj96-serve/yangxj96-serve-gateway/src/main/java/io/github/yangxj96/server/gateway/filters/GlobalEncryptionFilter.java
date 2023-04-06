@@ -8,9 +8,15 @@
 
 package io.github.yangxj96.server.gateway.filters;
 
-import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import io.github.yangxj96.common.utils.AesUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -24,14 +30,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Iterator;
 
 /**
  * 全局加解密过滤器
@@ -44,37 +52,106 @@ import java.util.Objects;
 @Component
 public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
 
+    @Resource
+    private ObjectMapper om;
+
+
+    @Override
+    public int getOrder() {
+        return Integer.MIN_VALUE;
+    }
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("[全局过滤器-请求参数解密过滤器]:进入过滤器");
         Mono<Void> mono = chain.filter(exchange);
 
         ServerHttpRequest request = exchange.getRequest();
-        MediaType contentType = request.getHeaders().getContentType();
 
-        if (Objects.nonNull(contentType) && Objects.nonNull(request.getMethod())) {
+        if (request.getMethod().matches("OPTIONS")) {
+            return mono;
+        }
+        if (request.getMethod().matches("POST")) {
+            MediaType contentType = request.getHeaders().getContentType();
             if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
                 log.info("Content-type = application/json");
+                mono = this.modifyJson(exchange, chain);
             } else if (MediaType.MULTIPART_FORM_DATA.isCompatibleWith(contentType)) {
                 log.info("Content-type = multipart/form-data");
-                mono = this.fileRequest(contentType, exchange, chain);
+                mono = this.modifyFormData(contentType, exchange, chain);
             } else {
                 throw new RuntimeException("不支持的请求头");
             }
+        }
+        if (request.getMethod().matches("GET")) {
+            return chain.filter(this.modifyGet(exchange, chain));
+        }
+        if (request.getMethod().matches("PUI")) {
+            mono = this.modifyPut(exchange, chain);
+        }
+        if (request.getMethod().matches("DELETE")) {
+            mono = this.modifyDelete(exchange, chain);
         }
 
         return mono;
     }
 
-    private Mono<Void> fileRequest(MediaType contentType, ServerWebExchange exchange, GatewayFilterChain chain) {
+    @Contract(pure = true)
+    private @NotNull Mono<Void> modifyDelete(ServerWebExchange exchange, GatewayFilterChain chain) {
+        return Mono.empty();
+    }
+
+    @Contract(pure = true)
+    private @NotNull Mono<Void> modifyPut(ServerWebExchange exchange, GatewayFilterChain chain) {
+        return Mono.empty();
+    }
+
+    @Contract(pure = true)
+    private @NotNull ServerWebExchange modifyGet(ServerWebExchange exchange, GatewayFilterChain chain) {
+        try {
+            URI uri = exchange.getRequest().getURI();
+            var query = new StringBuilder();
+            String originalQuery = uri.getRawQuery();
+            if (StringUtils.isNotBlank(originalQuery) && originalQuery.startsWith("args")) {
+                String[] split = originalQuery.split("=");
+                String decrypt = AesUtil.decrypt(URLDecoder.decode(split[1],StandardCharsets.UTF_8));
+                JsonNode node = om.readTree(decrypt);
+                Iterator<String> names = node.fieldNames();
+                while (names.hasNext()) {
+                    String next = names.next();
+                    if (!node.get(next).isValueNode()) {
+                        throw new Exception("GET请求不能传对象");
+                    }
+                    query
+                            .append(next)
+                            .append("=")
+                            .append(URLEncoder.encode(node.get(next).asText(),StandardCharsets.UTF_8))
+                            .append("&");
+                }
+                query = new StringBuilder(query.substring(0, query.length() - 1));
+                URI newUri = UriComponentsBuilder.fromUri(uri).replaceQuery(query.toString()).build(true).toUri();
+                ServerHttpRequest request = exchange.getRequest().mutate().uri(newUri).build();
+                return exchange.mutate().request(request).build();
+
+            }
+        } catch (Exception e) {
+            return exchange;
+        }
+        return exchange;
+    }
+
+    @Contract(pure = true)
+    private @NotNull Mono<Void> modifyJson(ServerWebExchange exchange, GatewayFilterChain chain) {
+        return Mono.empty();
+    }
+
+    private @NotNull Mono<Void> modifyFormData(MediaType contentType, ServerWebExchange exchange, GatewayFilterChain chain) {
         return DataBufferUtils.join(exchange.getRequest().getBody())
                 .flatMap(buffer -> {
                     byte[] bytes = new byte[buffer.readableByteCount()];
                     buffer.read(bytes);
 
                     DataBufferUtils.release(buffer);
-
-                    addPara(contentType.toString(), new String(bytes));
 
                     var ciphertext = String.valueOf(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(bytes)));
                     String decrypt = AesUtil.decrypt(ciphertext);
@@ -85,6 +162,7 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                         DataBufferUtils.retain(wrap);
                         return Mono.just(wrap);
                     });
+                    // ModifyRequestBodyGatewayFilterFactory
 
                     ServerHttpRequestDecorator mutatedRequest = newDecorator(exchange, newBodyBytes.length, newBody);
 
@@ -95,13 +173,9 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 });
     }
 
-    @Override
-    public int getOrder() {
-        return Integer.MIN_VALUE;
-    }
 
-
-    private ServerHttpRequestDecorator newDecorator(ServerWebExchange exchange, long dataLength, Flux<DataBuffer> body) {
+    @Contract("_, _, _ -> new")
+    private @NotNull ServerHttpRequestDecorator newDecorator(@NotNull ServerWebExchange exchange, long dataLength, Flux<DataBuffer> body) {
         return new ServerHttpRequestDecorator(exchange.getRequest()) {
             @Override
             public HttpHeaders getHeaders() {
@@ -118,17 +192,6 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 return body;
             }
         };
-    }
-
-    private String addPara(String contentType, String body) {
-        StringBuffer buffer = new StringBuffer();
-
-        // 获取随机字符串
-        String boundary = contentType.substring(contentType.lastIndexOf("boundary=") + 9);
-        String boundaryEnd = StrUtil.format("--{}--\r\n", boundary);
-        Map<String, Objects> formMap = new HashMap<>();
-
-        return buffer.toString();
     }
 
 }
