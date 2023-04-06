@@ -55,6 +55,7 @@ class ApplicationTest {
 
         log.info("解码后:{}", decrypt);
 
+        log.info("解码:{}", AesUtil.decrypt("WUosBCZbAi85ZBBiGVAHDwsoIx9dOC0uEwJHRD9SWkMqWkEvEBICU0RIWSsoM2A1bgMv9wkRuZeKlfWivza9OA=="));
     }
 
     @Test

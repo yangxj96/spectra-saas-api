@@ -10,17 +10,20 @@ package io.github.yangxj96.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.UTF8;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.util.Base64;
 
 /**
@@ -33,7 +36,18 @@ import java.util.Base64;
 @Slf4j
 public class AesUtil {
 
+    /**
+     * 算法规则<br/>
+     * 最安全的算法应该是AES/GCM/NoPadding,但是前端无法解密
+     */
+    private static final String ALGORITHM = "AES/CBC/PKCS7Padding";
+
     private AesUtil() {
+    }
+
+    static  {
+        // 使其支持PKCS7Padding
+        Security.addProvider(new BouncyCastleProvider());
     }
 
     /**
@@ -51,16 +65,21 @@ public class AesUtil {
             // @formatter:off
             byte[] iv        = getRandomIv();
             SecretKey secret = getRandomKey();
-            Cipher cipher    = Cipher.getInstance("AES/GCM/NoPadding");
+            Cipher cipher    = Cipher.getInstance(ALGORITHM);
             // @formatter:on
-            cipher.init(Cipher.ENCRYPT_MODE, secret, new GCMParameterSpec(128, iv));
+            // GCM加密方式
+            //cipher.init(Cipher.ENCRYPT_MODE, secret, new GCMParameterSpec(128, iv))
+            cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
             byte[] ciphertext = cipher.doFinal(origin.getBytes(StandardCharsets.UTF_8));
             // 把key iv ciphertext按照顺序压入字节数组
-            byte[] bytes = ByteBuffer.allocate(secret.getEncoded().length + iv.length  + ciphertext.length)
+            byte[] bytes = ByteBuffer.allocate(secret.getEncoded().length + iv.length + ciphertext.length)
                     .put(secret.getEncoded())
                     .put(iv)
                     .put(ciphertext)
                     .array();
+            log.info("key:{}",Base64.getEncoder().encodeToString(secret.getEncoded()));
+            log.info("iv:{}",Base64.getEncoder().encodeToString(iv));
+            log.info("ciphertext:{}",Base64.getEncoder().encodeToString(ciphertext));
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -89,8 +108,10 @@ public class AesUtil {
             byte[] plain = new byte[wrap.remaining()];
             wrap.get(plain);
             // 进行解码
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv));
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            // GCM解密方式
+            //cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv))
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
             byte[] bytes = cipher.doFinal(plain);
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
