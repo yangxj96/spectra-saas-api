@@ -52,6 +52,7 @@ subprojects {
 
     // 定义的变量,可以再全局使用
     extra["springCloudVersion"] = "2022.0.0-RC2"
+    extra["springCloudAlibabaVersion"] = "2022.0.0.0-RC1"
     extra["mybatisVersion"] = "3.0.0"
     extra["mybatisPlusVersion"] = "3.5.3.1"
 
@@ -60,7 +61,7 @@ subprojects {
     configure<DependencyManagementExtension> {
         imports {
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:2022.0.0.0-RC1")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${property("springCloudAlibabaVersion")}")
             // mavenBom("com.tencent.cloud:spring-cloud-tencent-dependencies:1.8.2-2022.0.0-RC2")
         }
     }
@@ -72,6 +73,8 @@ subprojects {
         compileOnly("org.projectlombok:lombok")
         compileOnly("org.jetbrains:annotations:23.1.0")
         annotationProcessor("org.projectlombok:lombok")
+        testCompileOnly("org.projectlombok:lombok")
+        testAnnotationProcessor("org.projectlombok:lombok")
     }
 
     tasks.getByName<Test>("test") {

@@ -12,10 +12,12 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import io.github.yangxj96.bean.user.Authority;
 import io.github.yangxj96.bean.user.Role;
 import io.github.yangxj96.bean.user.User;
+import io.github.yangxj96.common.utils.AesUtil;
 import io.github.yangxj96.server.auth.service.AuthorityService;
 import io.github.yangxj96.server.auth.service.RoleService;
 import io.github.yangxj96.server.auth.service.UserService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@Slf4j
 @SpringBootTest
 class ApplicationTest {
 
@@ -39,6 +41,21 @@ class ApplicationTest {
 
     @Resource
     private AuthorityService authorityService;
+
+    @Test
+    void aesTest() {
+
+        var str = "hello world";
+
+        String encrypt = AesUtil.encrypt(str);
+
+        log.info("编码后:{}", encrypt);
+
+        String decrypt = AesUtil.decrypt(encrypt);
+
+        log.info("解码后:{}", decrypt);
+
+    }
 
     @Test
     void generatePassword() {
