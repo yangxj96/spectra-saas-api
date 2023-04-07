@@ -2,7 +2,7 @@
   <configuration default="false" name="前端网关" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ALTERNATIVE_JRE_PATH" value="17" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <module name="io.github.yangxj96.commonsaas.yangxj96-saas-api.yangxj96-serve.yangxj96-serve-gateway.main" />
+    <module name="yangxj96-serve-gateway.yangxj96-saas-api.yangxj96-serve.yangxj96-serve-gateway.main" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.gateway.Application" />
     <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m" />

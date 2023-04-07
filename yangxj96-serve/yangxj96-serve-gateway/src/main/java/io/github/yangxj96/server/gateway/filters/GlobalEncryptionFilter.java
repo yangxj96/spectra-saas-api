@@ -23,6 +23,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
@@ -68,10 +69,14 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
 
         ServerHttpRequest request = exchange.getRequest();
 
-        if (request.getMethod().matches("OPTIONS")) {
+        if (HttpMethod.OPTIONS.equals(request.getMethod())) {
             return mono;
         }
-        if (request.getMethod().matches("POST")) {
+        // get和delete基本是同样的操作
+        if (HttpMethod.GET.equals(request.getMethod()) || HttpMethod.DELETE.equals(request.getMethod())) {
+            return chain.filter(this.modifyGet(exchange, chain));
+        }
+        if (HttpMethod.POST.equals(request.getMethod())) {
             MediaType contentType = request.getHeaders().getContentType();
             if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
                 log.info("Content-type = application/json");
@@ -83,23 +88,14 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 throw new RuntimeException("不支持的请求头");
             }
         }
-        if (request.getMethod().matches("GET")) {
-            return chain.filter(this.modifyGet(exchange, chain));
-        }
-        if (request.getMethod().matches("PUI")) {
+        if (HttpMethod.PUT.equals(request.getMethod())) {
             mono = this.modifyPut(exchange, chain);
         }
-        if (request.getMethod().matches("DELETE")) {
-            mono = this.modifyDelete(exchange, chain);
-        }
+
 
         return mono;
     }
 
-    @Contract(pure = true)
-    private @NotNull Mono<Void> modifyDelete(ServerWebExchange exchange, GatewayFilterChain chain) {
-        return Mono.empty();
-    }
 
     @Contract(pure = true)
     private @NotNull Mono<Void> modifyPut(ServerWebExchange exchange, GatewayFilterChain chain) {

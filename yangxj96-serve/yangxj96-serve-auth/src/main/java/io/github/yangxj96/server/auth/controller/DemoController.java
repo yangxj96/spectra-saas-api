@@ -9,6 +9,7 @@
 package io.github.yangxj96.server.auth.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,11 @@ public class DemoController {
     @GetMapping
     public void get(String k1, String k2, Integer k3) {
         log.info("k1:{},k2:{},k3:{}", k1, k2, k3);
+    }
+
+    @DeleteMapping
+    public void delete(String id1, String id2, Integer id3) {
+        log.info("id1:{},id2:{},id3:{}", id1, id2, id3);
     }
 
 }
