@@ -10,7 +10,6 @@ package io.github.yangxj96.server.gateway.filters;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeType;
 import io.github.yangxj96.common.utils.AesUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -19,15 +18,20 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
+import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserter;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
@@ -76,7 +80,7 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
         if (HttpMethod.GET.equals(request.getMethod()) || HttpMethod.DELETE.equals(request.getMethod())) {
             return chain.filter(this.modifyGet(exchange, chain));
         }
-        if (HttpMethod.POST.equals(request.getMethod())) {
+        if (HttpMethod.POST.equals(request.getMethod()) || HttpMethod.PUT.equals(request.getMethod())) {
             MediaType contentType = request.getHeaders().getContentType();
             if (MediaType.APPLICATION_JSON.isCompatibleWith(contentType)) {
                 log.info("Content-type = application/json");
@@ -88,19 +92,9 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 throw new RuntimeException("不支持的请求头");
             }
         }
-        if (HttpMethod.PUT.equals(request.getMethod())) {
-            mono = this.modifyPut(exchange, chain);
-        }
-
-
         return mono;
     }
 
-
-    @Contract(pure = true)
-    private @NotNull Mono<Void> modifyPut(ServerWebExchange exchange, GatewayFilterChain chain) {
-        return Mono.empty();
-    }
 
     @Contract(pure = true)
     private @NotNull ServerWebExchange modifyGet(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -110,7 +104,7 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
             String originalQuery = uri.getRawQuery();
             if (StringUtils.isNotBlank(originalQuery) && originalQuery.startsWith("args")) {
                 String[] split = originalQuery.split("=");
-                String decrypt = AesUtil.decrypt(URLDecoder.decode(split[1],StandardCharsets.UTF_8));
+                String decrypt = AesUtil.decrypt(URLDecoder.decode(split[1], StandardCharsets.UTF_8));
                 JsonNode node = om.readTree(decrypt);
                 Iterator<String> names = node.fieldNames();
                 while (names.hasNext()) {
@@ -121,7 +115,7 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                     query
                             .append(next)
                             .append("=")
-                            .append(URLEncoder.encode(node.get(next).asText(),StandardCharsets.UTF_8))
+                            .append(URLEncoder.encode(node.get(next).asText(), StandardCharsets.UTF_8))
                             .append("&");
                 }
                 query = new StringBuilder(query.substring(0, query.length() - 1));
@@ -138,7 +132,33 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
 
     @Contract(pure = true)
     private @NotNull Mono<Void> modifyJson(ServerWebExchange exchange, GatewayFilterChain chain) {
-        return Mono.empty();
+        return DataBufferUtils
+                .join(exchange.getRequest().getBody())
+                .flatMap(buffer -> {
+                    byte[] bytes = new byte[buffer.readableByteCount()];
+                    // 把数据放到bytes中
+                    buffer.read(bytes);
+                    // 释放源流
+                    DataBufferUtils.release(buffer);
+                    var ciphertext = String.valueOf(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(bytes)));
+                    // 因为参数前后带了"号 需要去掉
+                    String decrypt = AesUtil.decrypt(ciphertext.substring(1, ciphertext.length() - 1));
+                    // 解码后再构建成字节数组
+                    var newBodyBytes = decrypt.getBytes(StandardCharsets.UTF_8);
+                    // 创建新的body
+                    var newBody = Flux.defer(() -> {
+                        var wrap = exchange.getResponse().bufferFactory().wrap(newBodyBytes);
+                        DataBufferUtils.retain(wrap);
+                        return Mono.just(wrap);
+                    });
+                    // 构建新的request和exchange,因为每个request和exchange只能读取一次
+                    var newRequest = newDecorator(exchange, newBodyBytes.length, newBody);
+                    var newExchange = exchange.mutate().request(newRequest).build();
+                    return ServerRequest
+                            .create(newExchange, HandlerStrategies.withDefaults().messageReaders())
+                            .bodyToMono(byte[].class)
+                            .then(chain.filter(newExchange));
+                });
     }
 
     private @NotNull Mono<Void> modifyFormData(MediaType contentType, ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -174,17 +194,18 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
     private @NotNull ServerHttpRequestDecorator newDecorator(@NotNull ServerWebExchange exchange, long dataLength, Flux<DataBuffer> body) {
         return new ServerHttpRequestDecorator(exchange.getRequest()) {
             @Override
-            public HttpHeaders getHeaders() {
+            public @NotNull HttpHeaders getHeaders() {
                 //数据长度变了以后 需要修改header里的数据，不然接收数据时会异常
                 //我看别人说删除会自动补充数据长度，但我这个版本不太行
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.putAll(super.getHeaders());
+                httpHeaders.remove(HttpHeaders.CONTENT_LENGTH);
                 httpHeaders.setContentLength(dataLength);
                 return httpHeaders;
             }
 
             @Override
-            public Flux<DataBuffer> getBody() {
+            public @NotNull Flux<DataBuffer> getBody() {
                 return body;
             }
         };
