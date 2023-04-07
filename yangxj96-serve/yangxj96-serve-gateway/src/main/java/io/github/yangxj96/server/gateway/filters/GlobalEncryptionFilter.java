@@ -86,7 +86,7 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 mono = this.modifyFormData(contentType, exchange, chain);
             } else {
                 //throw new HttpMediaTypeNotSupportedException("不支持的请求类型");
-                throw new RuntimeException("不支持的请求类型");
+                return Mono.error(new HttpMediaTypeNotSupportedException("不支持的请求类型"));
             }
         }
         return mono;
