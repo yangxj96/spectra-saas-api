@@ -18,20 +18,16 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.cloud.gateway.filter.factory.rewrite.CachedBodyOutputMessage;
-import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ReactiveHttpOutputMessage;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserter;
-import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
@@ -89,7 +85,8 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 log.info("Content-type = multipart/form-data");
                 mono = this.modifyFormData(contentType, exchange, chain);
             } else {
-                throw new RuntimeException("不支持的请求头");
+                //throw new HttpMediaTypeNotSupportedException("不支持的请求类型");
+                throw new RuntimeException("不支持的请求类型");
             }
         }
         return mono;
@@ -162,30 +159,33 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
     }
 
     private @NotNull Mono<Void> modifyFormData(MediaType contentType, ServerWebExchange exchange, GatewayFilterChain chain) {
-        return DataBufferUtils.join(exchange.getRequest().getBody())
+        return DataBufferUtils
+                .join(exchange.getRequest().getBody())
                 .flatMap(buffer -> {
                     byte[] bytes = new byte[buffer.readableByteCount()];
+                    // 把数据放到bytes中
                     buffer.read(bytes);
-
+                    // 释放源流
                     DataBufferUtils.release(buffer);
 
                     var ciphertext = String.valueOf(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(bytes)));
+                    // 因为参数前后带了"号 需要去掉
                     String decrypt = AesUtil.decrypt(ciphertext);
-                    byte[] newBodyBytes = decrypt.getBytes(StandardCharsets.UTF_8);
-
-                    Flux<DataBuffer> newBody = Flux.defer(() -> {
-                        DataBuffer wrap = exchange.getResponse().bufferFactory().wrap(newBodyBytes);
+                    // 解码后再构建成字节数组
+                    var newBodyBytes = decrypt.getBytes(StandardCharsets.UTF_8);
+                    // 创建新的body
+                    var newBody = Flux.defer(() -> {
+                        var wrap = exchange.getResponse().bufferFactory().wrap(newBodyBytes);
                         DataBufferUtils.retain(wrap);
                         return Mono.just(wrap);
                     });
-                    // ModifyRequestBodyGatewayFilterFactory
-
-                    ServerHttpRequestDecorator mutatedRequest = newDecorator(exchange, newBodyBytes.length, newBody);
-
-                    ServerWebExchange mutateExchange = exchange.mutate().request(mutatedRequest).build();
-                    return ServerRequest.create(mutateExchange, HandlerStrategies.withDefaults().messageReaders())
+                    // 构建新的request和exchange,因为每个request和exchange只能读取一次
+                    var newRequest = newDecorator(exchange, newBodyBytes.length, newBody);
+                    var newExchange = exchange.mutate().request(newRequest).build();
+                    return ServerRequest
+                            .create(newExchange, HandlerStrategies.withDefaults().messageReaders())
                             .bodyToMono(byte[].class)
-                            .then(chain.filter(mutateExchange));
+                            .then(chain.filter(newExchange));
                 });
     }
 

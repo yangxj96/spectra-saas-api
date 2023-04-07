@@ -10,6 +10,7 @@ package io.github.yangxj96.server.auth.controller;
 
 import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.common.respond.R;
+import io.github.yangxj96.server.auth.domain.Login;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,15 +45,14 @@ public class AuthController {
     /**
      * 用户名密码方式登录
      *
-     * @param username 用户名
-     * @param password 密码
+     * @param param 登录参数
      * @return 登录结果
      */
     @PostMapping(value = "/login")
-    public Token login(String username, String password) {
+    public Token login(@RequestBody Login param) {
         Token token = null;
         // 构建后认证
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(param.getUsername(), param.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
         // 判断是否登录成功,进行创建token且响应
         try {
