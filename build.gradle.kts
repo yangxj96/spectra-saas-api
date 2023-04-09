@@ -21,6 +21,7 @@ allprojects {
     group = "io.github.yangxj96.commonsaas"
     version = "1.0.0-SNAPSHOT"
 
+
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
         maven { url = uri("https://repo.spring.io/milestone") }
