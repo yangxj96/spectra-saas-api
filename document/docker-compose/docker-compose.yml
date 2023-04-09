@@ -13,7 +13,7 @@ services:
     volumes:
       - "/docker/MySQL/data:/var/lib/mysql"
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 5s
       timeout: 10s
       retries: 10
@@ -64,3 +64,15 @@ services:
     depends_on:
       yangxj96-mysql:
         condition: service_healthy
+  yangxj-minio:
+    image: bitnami/minio:2023.3.24
+    container_name: yangxj-minio
+    restart: always
+    privileged: true
+    network_mode: host
+    environment:
+      - MINIO_ROOT_USER=root
+      - MINIO_ROOT_PASSWORD=QuVsKppcWvwwX2Vv
+    volumes:
+      - "/docker/Minio/data:/data"
+      - "/docker/Minio/config:/root/.minio"
