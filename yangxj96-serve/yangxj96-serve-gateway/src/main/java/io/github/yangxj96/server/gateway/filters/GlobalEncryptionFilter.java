@@ -27,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
@@ -86,7 +85,8 @@ public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
                 mono = this.modifyFormData(contentType, exchange, chain);
             } else {
                 //throw new HttpMediaTypeNotSupportedException("不支持的请求类型");
-                return Mono.error(new HttpMediaTypeNotSupportedException("不支持的请求类型"));
+                //return Mono.error(new HttpMediaTypeNotSupportedException("不支持的请求类型"));
+                return Mono.error(new Exception("不支持的请求类型"));
             }
         }
         return mono;

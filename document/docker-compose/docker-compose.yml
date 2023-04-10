@@ -64,9 +64,9 @@ services:
     depends_on:
       yangxj96-mysql:
         condition: service_healthy
-  yangxj-minio:
+  yangxj96-minio:
     image: bitnami/minio:2023.3.24
-    container_name: yangxj-minio
+    container_name: yangxj96-minio
     restart: always
     privileged: true
     network_mode: host
