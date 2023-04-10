@@ -28,7 +28,7 @@ spring:
           spec: initialCapacity=500,expireAfterWrite=5s
     nacos:
       discovery:
-        server-addr: localhost:8848
+        server-addr: 192.168.2.165:8848
         namespace: public
 
 # mybatis plus 删除

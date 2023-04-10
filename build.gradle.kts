@@ -52,7 +52,7 @@ subprojects {
     }
 
     // 定义的变量,可以再全局使用
-    extra["springCloudVersion"] = "2022.0.0-RC2"
+    extra["springCloudVersion"] = "2022.0.2"
     extra["springCloudAlibabaVersion"] = "2022.0.0.0-RC1"
     extra["mybatisVersion"] = "3.0.0"
     extra["mybatisPlusVersion"] = "3.5.3.1"
