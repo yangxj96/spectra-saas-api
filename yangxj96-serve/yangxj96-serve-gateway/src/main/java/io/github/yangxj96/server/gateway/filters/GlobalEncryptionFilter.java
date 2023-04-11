@@ -49,7 +49,7 @@ import java.util.Iterator;
  * @date 2023-01-07 00:14
  */
 @Slf4j
-@Component
+//@Component
 public class GlobalEncryptionFilter implements GlobalFilter, Ordered {
 
     @Resource
