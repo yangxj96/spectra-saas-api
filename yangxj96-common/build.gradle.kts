@@ -6,6 +6,23 @@
  * Copyright (c) 2021 - 2023
  ****************************/
 
+plugins {
+    `maven-publish`
+}
+
+publishing{
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = "yangxj96-common"
+            version = project.version.toString()
+
+            from(components["java"])
+        }
+
+    }
+}
+
 dependencies {
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")

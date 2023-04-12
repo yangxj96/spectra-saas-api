@@ -12,6 +12,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 plugins {
     java
     id("java-library")
+    id("maven-publish")
     id("org.springframework.boot") version "3.0.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
     id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
@@ -23,6 +24,7 @@ allprojects {
 
 
     repositories {
+        mavenLocal()
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
         maven { url = uri("https://repo.spring.io/milestone") }
         maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
@@ -63,7 +65,6 @@ subprojects {
         imports {
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
             mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${property("springCloudAlibabaVersion")}")
-            // mavenBom("com.tencent.cloud:spring-cloud-tencent-dependencies:1.8.2-2022.0.0-RC2")
         }
     }
 
