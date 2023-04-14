@@ -4,13 +4,13 @@ spring:
   application:
     name: yangxj96-serve-dept
   datasource:
-    url: jdbc:postgresql://127.0.0.1:5432/postgres
+    url: jdbc:postgresql://${yangxj96.wsl}:5432/postgres
     username: postgres
     password: QuVsKppcWvwwX2Vv
     driver-class-name: org.postgresql.Driver
   data:
     redis:
-      host: 127.0.0.1
+      host: ${yangxj96.wsl}
       password: QuVsKppcWvwwX2Vv
       port: 6379
       database: 10
@@ -28,8 +28,8 @@ spring:
           spec: initialCapacity=500,expireAfterWrite=5s
     nacos:
       discovery:
-        server-addr: 192.168.2.165:8848
-        namespace: public
+        server-addr: ${yangxj96.wsl}:8848
+        ip: 192.168.31.6
 
 # mybatis plus 删除
 mybatis-plus:
@@ -50,6 +50,7 @@ yangxj96:
   security:
     enable: true
     store-type: redis
+  wsl: 192.168.31.100
 
 # 端点检查放开所有
 management:
