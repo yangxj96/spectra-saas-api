@@ -1,18 +1,18 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : PostgresSQL@127.0.0.1
+ Source Server         : PostgreSQL@WSL
  Source Server Type    : PostgreSQL
- Source Server Version : 150001 (150001)
- Source Host           : localhost:5432
+ Source Server Version : 150002 (150002)
+ Source Host           : 192.168.31.100:5432
  Source Catalog        : yangxj96_saas_db
  Source Schema         : db_system
 
  Target Server Type    : PostgreSQL
- Target Server Version : 150001 (150001)
+ Target Server Version : 150002 (150002)
  File Encoding         : 65001
 
- Date: 01/03/2023 14:21:40
+ Date: 14/04/2023 23:43:46
 */
 
 
@@ -121,9 +121,9 @@ COMMENT ON TABLE "db_system"."t_sys_route" IS '路由表定义';
 -- ----------------------------
 -- Records of t_sys_route
 -- ----------------------------
-INSERT INTO "db_system"."t_sys_route" VALUES (1608657520283365378, 'lb://yangxj96-serve-system', 0, '[{"name":"Path","args":{"_genkey_0":"/api/system/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-30 10:53:34.916635', 0, 'f', 'yangxj96-serve-system', '2022-12-30 10:53:34.916635');
-INSERT INTO "db_system"."t_sys_route" VALUES (1608657444500680706, 'lb://yangxj96-serve-dept', 0, '[{"name":"Path","args":{"_genkey_0":"/api/dept/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-30 10:53:16.837596', 0, 'f', 'yangxj96-serve-dept', '2022-12-30 10:53:16.837596');
-INSERT INTO "db_system"."t_sys_route" VALUES (1608657486418554881, 'lb://yangxj96-serve-auth', 0, '[{"name":"Path","args":{"_genkey_0":"/api/auth/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-30 10:53:26.840623', 0, 'f', 'yangxj96-serve-auth', '2022-12-30 10:53:26.840623');
+INSERT INTO "db_system"."t_sys_route" VALUES (1606320786226655234, 'lb://yangxj96-serve-system', 0, '[{"name":"Path","args":{"pattern":"/api/system/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-24 00:08:14.091501', NULL, 'f', 'yangxj96-serve-system', '2022-12-24 02:46:19.500485');
+INSERT INTO "db_system"."t_sys_route" VALUES (1606321053034721282, 'lb://yangxj96-serve-auth', 0, '[{"name":"Path","args":{"pattern":"/api/auth/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-24 00:09:17.704698', NULL, 'f', 'yangxj96-serve-auth', '2022-12-24 02:46:30.127621');
+INSERT INTO "db_system"."t_sys_route" VALUES (1606321142734106626, 'lb://yangxj96-serve-dept', 0, '[{"name":"Path","args":{"pattern":"/api/auth/**"}}]', '[{"name":"StripPrefix","args":{"_genkey_0":"2"}}]', '{"key1":"v1","key2":"v2"}', 0, '2022-12-24 00:09:39.097851', NULL, 'f', 'yangxj96-serve-dept', '2022-12-24 02:46:24.632602');
 
 -- ----------------------------
 -- Primary Key structure for table t_configure

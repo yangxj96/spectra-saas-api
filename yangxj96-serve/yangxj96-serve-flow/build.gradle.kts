@@ -1,5 +1,3 @@
-import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-
 plugins {
     java
     id("org.springframework.boot") version "2.7.10"
@@ -67,6 +65,8 @@ dependencies {
     // utils
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
