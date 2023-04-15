@@ -52,12 +52,12 @@ services:
       - "/docker/Redis/data:/data"
       - "/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
   yangxj96-nacos:
-    image: nacos/nacos-server:v2.2.0
+    image: yangxj96/nacos-service-pgsql:v2.2.2-1
     container_name: yangxj96-nacos
     restart: always
     privileged: true
     env_file:
-      - "/docker/Nacos/env/mysql.env"
+      - "/docker/Nacos/env/pgsql.env"
     network_mode: host
     volumes:
       - "/docker/Nacos/logs/:/home/nacos/logs"

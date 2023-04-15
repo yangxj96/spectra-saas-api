@@ -1,7 +1,7 @@
 version: "3"
 services:
   yangxj96-nacos2:
-    image: nacos-pgsql:1.0.0
+    image: yangxj96/nacos-service-pgsql:v2.2.2
     container_name: yangxj96-nacos2
     privileged: true
     env_file:

@@ -55,7 +55,7 @@ class ApplicationTests {
     void deploy() {
         Deployment deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("bpmn/Demo.bpmn20.xml")
+                .addClasspathResource("bpmn/Demo2.bpmn20.xml")
                 .name("测试流程")
                 .deploy();
 
