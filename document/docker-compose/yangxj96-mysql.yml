@@ -1,0 +1,13 @@
+version: '3'
+services:
+  yangxj96-mysql:
+    image: mysql:8.0.32
+    container_name: yangxj96-mysql
+    restart: always
+    network_mode: host
+    environment:
+      TZ: "Asia/Shanghai"
+      MYSQL_ROOT_PASSWORD: "QuVsKppcWvwwX2Vv"
+    volumes:
+      - "/docker/MySQL/data:/var/lib/mysql"
+    privileged: true
