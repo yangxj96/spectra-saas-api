@@ -1,11 +1,12 @@
 version: "3"
 services:
-  yangxj96-nacos2:
-    image: yangxj96/nacos-service-pgsql:v2.2.2
-    container_name: yangxj96-nacos2
+  yangxj96-nacos:
+    image: yangxj96/nacos-service-pgsql:v2.2.2-1
+    container_name: yangxj96-nacos
+    restart: always
     privileged: true
     env_file:
-      - "/docker/Nacos2/env/pgsql.env"
+      - "/docker/Nacos/env/pgsql.env"
     network_mode: host
     volumes:
-      - "/docker/Nacos2/logs/:/home/nacos/logs"
+      - "/docker/Nacos/logs/:/home/nacos/logs"
