@@ -23,7 +23,10 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        var application = new SpringApplication(Application.class);
+        application.setAllowBeanDefinitionOverriding(true);
+        // SpringApplication.run(Application.class, args);
+        application.run(args);
     }
 
 }

@@ -1,7 +1,7 @@
 version: "3"
 services:
   yangxj96-nacos:
-    image: yangxj96/nacos-service-pgsql:v2.2.2-1
+    image: yangxj96/nacos-service-pgsql:v2.2.2-2
     container_name: yangxj96-nacos
     restart: always
     privileged: true

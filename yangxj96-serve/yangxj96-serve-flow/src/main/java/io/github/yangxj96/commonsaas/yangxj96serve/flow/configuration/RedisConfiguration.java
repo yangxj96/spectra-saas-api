@@ -28,6 +28,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import javax.annotation.Resource;
 
+
 /**
  * Redis配置
  *
@@ -39,7 +40,7 @@ import javax.annotation.Resource;
 @Configuration
 public class RedisConfiguration {
 
-    private static final String LOG_PREFIX = "[autoconfig-redis] ";
+    private static final String LOG_PREFIX = "[redis] ";
 
     @Resource
     private DBProperties properties;

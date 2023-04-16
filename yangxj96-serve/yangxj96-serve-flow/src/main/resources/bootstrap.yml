@@ -1,0 +1,32 @@
+server:
+  port: 0
+spring:
+  datasource:
+    url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db?currentSchema=db_flow&nullCatalogMeansCurrent=true
+  redis:
+    host: ${yangxj96.wsl}
+    password: QuVsKppcWvwwX2Vv
+    port: 6379
+    database: 10
+    lettuce:
+      pool:
+        max-active: 8
+        min-idle: 0
+        max-idle: 8
+        max-wait: -1
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    history-level: full
+    deployment-mode: never-fail
+
+mybatis-plus:
+  type-aliases-package: io.github.yangxj96.bean.flow
+yangxj96:
+  security:
+    enable: false
+    store-type: redis
+  db:
+    security-db: 9
+    # 当前项目版本低于3.0.0 导致自动配置包不适用
+    redis-enable: false

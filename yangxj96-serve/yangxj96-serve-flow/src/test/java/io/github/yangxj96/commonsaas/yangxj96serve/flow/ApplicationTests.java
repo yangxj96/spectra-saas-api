@@ -9,7 +9,6 @@
 package io.github.yangxj96.commonsaas.yangxj96serve.flow;
 
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.api.task.runtime.TaskRuntime;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -38,14 +37,10 @@ class ApplicationTests {
     @Resource
     private HistoryService historyService;
 
-    @Resource
-    private TaskRuntime taskRuntime;
 
     @Resource
     private TaskService taskService;
 
-    private static final String PROCESS_ID = "demo_id";
-    private static final String PROCESS_NAME = "demo";
 
     /**
      * 流程ID :80d3f3db-daea-11ed-8a24-088e90e01c12
@@ -55,7 +50,7 @@ class ApplicationTests {
     void deploy() {
         Deployment deploy = repositoryService
                 .createDeployment()
-                .addClasspathResource("bpmn/Demo2.bpmn20.xml")
+                .addClasspathResource("bpmn/Demo.bpmn20.xml")
                 .name("测试流程")
                 .deploy();
 

@@ -17,7 +17,6 @@ import io.github.yangxj96.starter.security.properties.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -54,8 +53,16 @@ public class SecurityAutoConfiguration {
 
     private static final String LOG_PREFIX = "[autoconfig-security] ";
     private final SecurityProperties properties;
-    @Resource
+
+    /**
+     * 注入认证管理配置 <br/>
+     *
+     * 不使用@Resource的原因是,flow服务低于3.0版本 无法使用jakarta,会导致启动错误,蛋疼
+     *
+     */
+    @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
+
 
     public SecurityAutoConfiguration(@Autowired SecurityProperties properties) {
         this.properties = properties;

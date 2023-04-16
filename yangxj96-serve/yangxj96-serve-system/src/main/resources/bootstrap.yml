@@ -1,73 +1,17 @@
 server:
   port: 0
 spring:
-  application:
-    name: yangxj96-serve-system
   datasource:
     url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db
-    username: postgres
-    password: QuVsKppcWvwwX2Vv
-    driver-class-name: org.postgresql.Driver
-  data:
-    redis:
-      host: ${yangxj96.wsl}
-      password: QuVsKppcWvwwX2Vv
-      port: 6379
-      database: 10
-      lettuce:
-        pool:
-          max-active: 8
-          min-idle: 0
-          max-idle: 8
-          max-wait: -1
   cloud:
     openfeign:
       circuitbreaker:
         enabled: true
-    nacos:
-      discovery:
-        server-addr: ${yangxj96.wsl}:8848
-        ip: 192.168.31.6
-
-# mybatis plus 删除
 mybatis-plus:
-  mapper-locations: classpath*:/mapper/**/*.xml
   type-aliases-package: io.github.yangxj96.bean.system
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    local-cache-scope: statement
-  global-config:
-    banner: false
-    db-config:
-      id-type: assign_id
-      logic-delete-field: deleted
-      logic-not-delete-value: false
-      logic-delete-value: true
-
 yangxj96:
   remote:
     connect-time-out: 10000
   security:
     enable: true
     store-type: redis
-  wsl: 192.168.31.100
-
-# 端点检查放开所有
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-# 日志
-logging:
-  level:
-    root: info
-    yangxj96: debug
-  group:
-    yangxj96:
-      - io.github.yangxj96.starter.common.autoconfigure
-      - io.github.yangxj96.starter.db.autoconfigure
-      - io.github.yangxj96.starter.remote.autoconfigure
-      - io.github.yangxj96.starter.security.autoconfigure
-
