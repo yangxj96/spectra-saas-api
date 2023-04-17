@@ -17,7 +17,6 @@ services:
       interval: 5s
       timeout: 10s
       retries: 120
-
   yangxj96-rabbitmq:
     image: rabbitmq:3.11.5
     container_name: yangxj96-rabbitmq
@@ -42,7 +41,7 @@ services:
       - "/docker/Redis/data:/data"
       - "/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
   yangxj96-nacos:
-    image: yangxj96/nacos-service-pgsql:v2.2.2-1
+    image: yangxj96/nacos-service-pgsql:v2.2.2-2
     container_name: yangxj96-nacos
     restart: always
     privileged: true
@@ -66,21 +65,3 @@ services:
     volumes:
       - "/docker/Minio/data:/data"
       - "/docker/Minio/config:/root/.minio"
-
-
-#  yangxj96-mysql:
-#    image: mysql:8.0.32
-#    container_name: yangxj96-mysql
-#    restart: always
-#    privileged: true
-#    network_mode: host
-#    environment:
-#      TZ: "Asia/Shanghai"
-#      MYSQL_ROOT_PASSWORD: "QuVsKppcWvwwX2Vv"
-#    volumes:
-#      - "/docker/MySQL/data:/var/lib/mysql"
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-#      interval: 5s
-#      timeout: 10s
-#      retries: 10
