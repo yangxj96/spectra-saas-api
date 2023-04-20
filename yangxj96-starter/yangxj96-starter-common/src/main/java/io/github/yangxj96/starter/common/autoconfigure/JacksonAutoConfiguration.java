@@ -46,7 +46,7 @@ import java.util.Date;
  */
 @Slf4j
 @AutoConfiguration(before = org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration.class)
-@ConditionalOnProperty(name = "it100000.jackson.enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "yangxj96.jackson.enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(JacksonProperties.class)
 public class JacksonAutoConfiguration {
 

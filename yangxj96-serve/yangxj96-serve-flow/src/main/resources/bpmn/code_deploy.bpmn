@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+<bpmn2:definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:activiti="http://activiti.org/bpmn"
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                   typeLanguage="http://www.w3.org/2001/XMLSchema"
+                   expressionLanguage="http://www.w3.org/1999/XPath"
+                   targetNamespace="http://www.activiti.org/test">
+-->
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                   targetNamespace="http://bpmn.io/schema/bpmn"
+                   xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+
+    <bpmn2:process id="code_deploy" name="代码创建的流程" isExecutable="true">
+        <bpmn2:startEvent id="start" name="开始"/>
+        <bpmn2:userTask id="audit" name="审核版本" activiti:assignee="王总"/>
+        <bpmn2:endEvent id="end" name="结束"/>
+        <bpmn2:sequenceFlow sourceRef="start" targetRef="audit"/>
+        <bpmn2:sequenceFlow sourceRef="audit" targetRef="end"/>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_code_deploy">
+        <bpmndi:BPMNPlane bpmnElement="code_deploy" id="BPMNPlane_code_deploy"/>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

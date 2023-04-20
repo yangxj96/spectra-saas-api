@@ -5,11 +5,6 @@ spring:
     name: yangxj96-serve-gateway
   datasource:
     url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${yangxj96.wsl}:8848
-        ip: 192.168.31.6
 mybatis-plus:
   type-aliases-package: io.github.yangxj96.bean.gateway
 yangxj96:
@@ -19,4 +14,3 @@ yangxj96:
     enable: false
     # 因为要重写security,所以在关闭了自动配置的前提下,还需要设置下store-type
     store-type: redis
-  wsl: 192.168.31.100

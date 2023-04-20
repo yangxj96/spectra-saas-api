@@ -49,23 +49,31 @@ dependencies {
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
     // 配置中心
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
+    // 流
+    implementation("org.springframework.cloud:spring-cloud-stream")
 
     // activiti
     implementation("org.activiti:activiti-spring-boot-starter:7.1.0.M6") {
         exclude(group = "commons-io", module = "commons-io")
     }
     implementation("commons-io:commons-io:2.11.0")
+    // activiti 转图片
+    implementation("org.activiti:activiti-image-generator:7.1.0.M6") {
+        exclude(group = "org.apache.xmlgraphics", module = "xmlgraphics-commons")
+    }
+    implementation("org.apache.xmlgraphics:xmlgraphics-commons:2.8")
+
 
     // datasource
     runtimeOnly("org.postgresql:postgresql")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.0")
-    implementation("com.baomidou:mybatis-plus-boot-starter:3.5.3")
+    implementation("com.baomidou:mybatis-plus-boot-starter:3.5.3.1")
 
     // 自己的模块,但是因为activiti适配的问题,没法直接用spring boot 3.0的版本,退而求其次,只能先独立
     implementation("io.github.yangxj96.commonsaas:yangxj96-bean:${property("yangxj96SaasVersion")}")
     implementation("io.github.yangxj96.commonsaas:yangxj96-starter-common:${property("yangxj96SaasVersion")}")
-     implementation("io.github.yangxj96.commonsaas:yangxj96-starter-db:${property("yangxj96SaasVersion")}")
-     implementation("io.github.yangxj96.commonsaas:yangxj96-starter-security:${property("yangxj96SaasVersion")}")
+    implementation("io.github.yangxj96.commonsaas:yangxj96-starter-db:${property("yangxj96SaasVersion")}")
+    implementation("io.github.yangxj96.commonsaas:yangxj96-starter-security:${property("yangxj96SaasVersion")}")
 
     // utils
     compileOnly("org.projectlombok:lombok")

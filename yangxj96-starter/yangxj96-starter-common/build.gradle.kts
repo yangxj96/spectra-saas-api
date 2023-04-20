@@ -10,7 +10,7 @@ plugins {
     `maven-publish`
 }
 
-publishing{
+publishing {
     publications {
         create<MavenPublication>("maven") {
             groupId = project.group.toString()
@@ -30,4 +30,9 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
+
+    // 流
+    api("org.springframework.cloud:spring-cloud-stream")
+    api("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
+    api("org.springframework.cloud:spring-cloud-starter-stream-rabbit")
 }

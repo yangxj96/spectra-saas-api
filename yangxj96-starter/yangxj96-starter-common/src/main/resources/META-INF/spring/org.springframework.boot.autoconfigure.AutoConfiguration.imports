@@ -1,1 +1,2 @@
 io.github.yangxj96.starter.common.autoconfigure.JacksonAutoConfiguration
+io.github.yangxj96.starter.common.autoconfigure.StreamAutoConfiguration
