@@ -19,4 +19,8 @@ dependencies {
     // api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     runtimeOnly("org.postgresql:postgresql")
+
+    // 流
+    api("org.springframework.cloud:spring-cloud-stream")
+    api("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
 }

@@ -19,7 +19,6 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,29 +223,6 @@ class ApplicationTests {
         var resource = repositoryService.getResourceAsStream("68d21eab-df28-11ed-9645-e45e373be23c", PROCESS_ID + ".bpmn");
         Assertions.assertNotNull(resource);
         FileUtils.copyInputStreamToFile(resource, new File("src/main/resources/bpmn/" + PROCESS_ID + ".bpmn"));
-    }
-
-    /**
-     * 转换成svg图片
-     * @throws IOException io
-     */
-    @Test
-    void convertSvg() throws IOException {
-        var instance = runtimeService
-                .createProcessInstanceQuery()
-                .processDefinitionKey(PROCESS_ID)
-                .singleResult();
-        Assertions.assertNotNull(instance);
-        var bpmnModel = repositoryService.getBpmnModel(instance.getProcessDefinitionId());
-        if (bpmnModel != null && bpmnModel.getLocationMap().size() > 0) {
-            DefaultProcessDiagramGenerator ge = new DefaultProcessDiagramGenerator();
-
-            InputStream inputStream = ge.generateDiagram(bpmnModel, runtimeService.getActiveActivityIds(instance.getId()), new ArrayList<>(), "宋体", "宋体", null, false);
-
-            FileUtils.copyInputStreamToFile(inputStream, new File("src/main/resources/bpmn/" + PROCESS_ID + ".svg"));
-        } else {
-            System.out.println("bpmnModel 为空！");
-        }
     }
 
 }

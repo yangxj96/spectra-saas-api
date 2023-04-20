@@ -3,10 +3,33 @@ server:
 spring:
   datasource:
     url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db
+  rabbitmq:
+    host: ${yangxj96.wsl}
+    username: root
+    password: QuVsKppcWvwwX2Vv
+    virtual-host: /
   cloud:
-    openfeign:
-      circuitbreaker:
-        enabled: true
+    stream:
+      function:
+        definition: ok
+      rabbit:
+        bindings:
+          tenant-in-0:
+            consumer:
+              acknowledge-mode: MANUAL
+          tenant-out-0:
+            producer:
+              routing-key: saas.tenant
+      binders:
+        default:
+          type: rabbit
+      bindings:
+        tenant-in-0:
+          destination: saas.tenant
+          group: ${spring.application.name}
+        tenant-out-0:
+          destination: saas.tenant
+
 mybatis-plus:
   type-aliases-package: io.github.yangxj96.bean.system
 yangxj96:

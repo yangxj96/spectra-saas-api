@@ -15,7 +15,6 @@ spring:
           tenant-in-0:
             consumer:
               acknowledge-mode: MANUAL
-              anonymous-group-prefix: yangxj96.serve.auth.
       binders:
         default:
           type: rabbit

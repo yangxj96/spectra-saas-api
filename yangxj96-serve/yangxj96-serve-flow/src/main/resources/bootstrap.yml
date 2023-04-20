@@ -19,6 +19,25 @@ spring:
     db-history-used: true
     history-level: full
     deployment-mode: never-fail
+  rabbitmq:
+    host: ${yangxj96.wsl}
+    username: root
+    password: QuVsKppcWvwwX2Vv
+    virtual-host: /
+  cloud:
+    stream:
+      rabbit:
+        bindings:
+          tenant-in-0:
+            consumer:
+              acknowledge-mode: MANUAL
+      binders:
+        default:
+          type: rabbit
+      bindings:
+        tenant-in-0:
+          destination: saas.tenant
+          group: ${spring.application.name}
 
 mybatis-plus:
   type-aliases-package: io.github.yangxj96.bean.flow

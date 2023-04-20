@@ -51,18 +51,13 @@ dependencies {
     implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
     // 流
     implementation("org.springframework.cloud:spring-cloud-stream")
+    implementation("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
 
     // activiti
     implementation("org.activiti:activiti-spring-boot-starter:7.1.0.M6") {
         exclude(group = "commons-io", module = "commons-io")
     }
     implementation("commons-io:commons-io:2.11.0")
-    // activiti 转图片
-    implementation("org.activiti:activiti-image-generator:7.1.0.M6") {
-        exclude(group = "org.apache.xmlgraphics", module = "xmlgraphics-commons")
-    }
-    implementation("org.apache.xmlgraphics:xmlgraphics-commons:2.8")
-
 
     // datasource
     runtimeOnly("org.postgresql:postgresql")
