@@ -6,81 +6,92 @@ services:
     container_name: yangxj96-pgsql
     restart: always
     privileged: true
-    network_mode: host
+    user: postgres
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: QuVsKppcWvwwX2Vv
     volumes:
-      - "/docker/PostgreSQL/data:/var/lib/postgresql/data"
-      - "/docker/PostgreSQL/config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
+      - "D:/Data/docker/PostgreSQL/data:/var/lib/postgresql/data"
+      - "D:/Data/docker/PostgreSQL/config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf"
+    ports:
+      - "5432:5432"
     healthcheck:
       test: /usr/bin/pg_isready
       interval: 5s
       timeout: 10s
       retries: 120
-
   yangxj96-rabbitmq:
-    image: rabbitmq:3.11.5
+    image: rabbitmq:3.11.13
     container_name: yangxj96-rabbitmq
     restart: always
     privileged: true
-    network_mode: host
     environment:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: QuVsKppcWvwwX2Vv
     volumes:
-      - "/docker/RabbitMQ/config/enabled_plugins:/etc/rabbitmq/enabled_plugins"
-      - "/docker/RabbitMQ/config/:/etc/rabbitmq/conf.d/"
-      - "/docker/RabbitMQ/data:/var/lib/rabbitmq"
+      - "D:/Data/docker/RabbitMQ/config/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+      - "D:/Data/docker/RabbitMQ/config/:/etc/rabbitmq/conf.d/"
+      - "D:/Data/docker/RabbitMQ/data:/var/lib/rabbitmq"
+    ports:
+      - "15672:15672"
+      - "15670:15670"
+      - "15674:15674"
+      - "25672:25672"
+      - "61613:61613"
+      - "1883:1883"
+      - "5672:5672"
   yangxj96-redis:
-    image: redis:7.0.5-alpine
+    image: redis:7.0.11-alpine
     container_name: yangxj96-redis
     restart: always
     privileged: true
-    network_mode: host
     command: redis-server /etc/redis/redis.conf
     volumes:
-      - "/docker/Redis/data:/data"
-      - "/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
+      - "D:/Data/docker/Redis/data:/data"
+      - "D:/Data/docker/Redis/config/redis.conf:/etc/redis/redis.conf"
+    ports:
+      - "6379:6379"
   yangxj96-nacos:
-    image: yangxj96/nacos-service-pgsql:v2.2.2-1
+    image: yangxj96/nacos-server-pgsql:v2.2.2-2
     container_name: yangxj96-nacos
     restart: always
     privileged: true
     env_file:
-      - "/docker/Nacos/env/pgsql.env"
-    network_mode: host
+      - "D:/Data/docker/Nacos/env/pgsql.env"
     volumes:
-      - "/docker/Nacos/logs/:/home/nacos/logs"
+      - "D:/Data/docker/Nacos/logs/:/home/nacos/logs"
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9868:9868"
     depends_on:
       yangxj96-pgsql:
         condition: service_healthy
+    links:
+      - yangxj96-pgsql
   yangxj96-minio:
-    image: bitnami/minio:2023.3.24
+    image: bitnami/minio:2023.4.20
     container_name: yangxj96-minio
     restart: always
     privileged: true
-    network_mode: host
     environment:
       - MINIO_ROOT_USER=root
       - MINIO_ROOT_PASSWORD=QuVsKppcWvwwX2Vv
     volumes:
-      - "/docker/Minio/data:/data"
-      - "/docker/Minio/config:/root/.minio"
-
-
-#  yangxj96-mysql:
-#    image: mysql:8.0.32
-#    container_name: yangxj96-mysql
-#    restart: always
-#    privileged: true
-#    network_mode: host
-#    environment:
-#      TZ: "Asia/Shanghai"
-#      MYSQL_ROOT_PASSWORD: "QuVsKppcWvwwX2Vv"
-#    volumes:
-#      - "/docker/MySQL/data:/var/lib/mysql"
-#    healthcheck:
-#      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-#      interval: 5s
-#      timeout: 10s
-#      retries: 10
+      - "D:/Data/docker/Minio/data:/data"
+      - "D:/Data/docker/Minio/certs:/certs"
+      - "D:/Data/docker/Minio/config:/root/.minio"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+  yangxj96-nginx:
+    image: nginx:1.24.0-perl
+    container_name: yangxj96-nginx
+    restart: always
+    privileged: true
+    volumes:
+      - "D:/Data/docker/Nginx/html:/usr/share/nginx/html"
+      - "D:/Data/docker/Nginx/config/nginx.conf:/etc/nginx/nginx.conf"
+      - "D:/Data/docker/Nginx/config/nginx.d:/etc/nginx/nginx.d"
+    ports:
+      - "80:80"
