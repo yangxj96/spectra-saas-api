@@ -1,6 +1,6 @@
 # SAAS平台学习
 
-[![star](https://gitee.com/yangxj96/yangxj96-saas-api/badge/star.svg?theme=dark)](https://gitee.com/yangxj96/yangxj96-saas-api/stargazers) 
+[![star](https://gitee.com/yangxj96/yangxj96-saas-api/badge/star.svg?theme=dark)](https://gitee.com/yangxj96/yangxj96-saas-api/stargazers)
 [![fork](https://gitee.com/yangxj96/yangxj96-saas-api/badge/fork.svg?theme=dark)](https://gitee.com/yangxj96/yangxj96-saas-api/members)
 
 # 1 技术架构选型
@@ -20,7 +20,6 @@
 - ...
 
 # 2 IDEA环境`JVM`参数配置
-
 
 > tips: 主要目的减少web服务的的内存占用
 

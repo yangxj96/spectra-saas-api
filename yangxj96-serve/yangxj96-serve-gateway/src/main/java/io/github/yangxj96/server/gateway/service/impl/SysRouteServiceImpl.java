@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:08:39
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.server.gateway.service.impl;
 
 import io.github.yangxj96.bean.gateway.SysRoute;
@@ -16,17 +8,12 @@ import io.github.yangxj96.server.gateway.utils.RouteUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 /**
  * 路由表定义service实现层
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023-01-07 00:14
  */
 @Slf4j
 @Service

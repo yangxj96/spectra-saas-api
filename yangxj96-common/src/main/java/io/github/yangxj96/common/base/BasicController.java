@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:08:21
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.common.base;
 
 
@@ -22,9 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
  *
  * @param <O> 入参对象,可以为数据库po对象或者是自定义的dto对象
  * @param <S> 相关的service层,需要继承BasicService
- * @author yangxj96
- * @version 1.0
- * @date 2023-01-07 00:14
  */
 @Validated
 public abstract class BasicController<O extends BasicEntity, S extends BasicService<O>> {

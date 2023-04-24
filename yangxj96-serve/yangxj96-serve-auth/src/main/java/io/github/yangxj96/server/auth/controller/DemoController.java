@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-04-07 00:30:10
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.server.auth.controller;
 
 import lombok.Data;
@@ -16,10 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * demo
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023/4/7 0:30
  */
 @Slf4j
 @RestController

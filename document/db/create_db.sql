@@ -1,6 +1,8 @@
 -- 基础数据库
-DROP DATABASE IF EXISTS yangxj96_saas_db;
-CREATE DATABASE yangxj96_saas_db;
+DROP
+DATABASE IF EXISTS yangxj96_saas_db;
+CREATE
+DATABASE yangxj96_saas_db;
 
 -- 创建子库
 CREATE SCHEMA db_flow;
