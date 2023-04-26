@@ -1,42 +1,16 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:08:39
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.server.gateway;
 
 
-import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import reactor.core.publisher.Mono;
 
-import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 
 @SpringBootTest
 class ApplicationTest {
-
-    @Resource
-    private RouteDefinitionLocator locator;
-
-    public static void main(String[] args) {
-        LocalDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Shanghai")).toLocalDateTime();
-        var newYork = now.atZone(ZoneId.of("America/New_York"));
-        var shangHai = now.atZone(ZoneId.of("Asia/Shanghai"));
-        System.out.println("当前时间:" + now);
-        System.out.println("Zone:" + newYork + " Timestamp = " + Timestamp.from(newYork.toInstant()));
-        System.out.println("Zone:" + shangHai + " Timestamp = " + Timestamp.from(shangHai.toInstant()));
-    }
 
     @Test
     void test01() {
@@ -46,13 +20,6 @@ class ApplicationTest {
                 .subscribe()
         ;
         Assertions.assertTrue(true);
-    }
-
-    @Test
-    void test02(){
-        locator.getRouteDefinitions().subscribe(item -> {
-            System.out.println(item.toString());
-        });
     }
 
 }

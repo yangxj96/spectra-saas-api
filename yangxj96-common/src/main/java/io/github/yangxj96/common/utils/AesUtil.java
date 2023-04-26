@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-03-28 22:27:27
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +19,6 @@ import java.util.Base64;
 
 /**
  * AES加解密
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023/3/28 22:27
  */
 @Slf4j
 public class AesUtil {

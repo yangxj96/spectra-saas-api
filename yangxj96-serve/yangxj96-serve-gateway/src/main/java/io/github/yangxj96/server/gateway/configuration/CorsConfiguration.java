@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-03-01 23:39:38
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.server.gateway.configuration;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +11,6 @@ import org.springframework.web.server.WebFilter;
 
 /**
  * 跨域配置
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023/3/1 23:39
  */
 @Slf4j
 @Configuration

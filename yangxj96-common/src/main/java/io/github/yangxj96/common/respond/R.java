@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:08:21
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.common.respond;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,10 +14,6 @@ import java.io.Serializable;
 
 /**
  * 通用响应
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023-01-07 00:14
  */
 @Data
 @Builder
@@ -58,11 +46,6 @@ public class R implements Serializable {
     public static R failure() {
         setHeader(RStatus.FAILURE);
         return R.builder().code(RStatus.FAILURE.getCode()).msg(RStatus.FAILURE.getMsg()).build();
-    }
-
-    public static R failure(RStatus status) {
-        setHeader(status);
-        return R.builder().code(status.getCode()).msg(status.getMsg()).build();
     }
 
     public static R specify(RStatus status) {

@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8080
 spring:
   datasource:
     url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db
@@ -38,3 +38,8 @@ yangxj96:
   security:
     enable: true
     store-type: redis
+
+logging:
+  level:
+    com:
+      alibaba: error

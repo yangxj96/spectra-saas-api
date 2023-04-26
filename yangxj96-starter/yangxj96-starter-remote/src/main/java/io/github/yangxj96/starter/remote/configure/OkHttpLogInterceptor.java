@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:11:06
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.starter.remote.configure;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +11,6 @@ import java.io.IOException;
 
 /**
  * okhttp的拦截器
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023-01-07 00:14
  */
 @Slf4j
 public class OkHttpLogInterceptor implements Interceptor {

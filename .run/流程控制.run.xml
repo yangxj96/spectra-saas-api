@@ -1,17 +1,10 @@
-<!--
-  ~  Copyright (c) 2021 - 2023
-  ~  作者：杨新杰(Jack Young)
-  ~  邮箱：yangxj96@gmail.com
-  ~  日期：2023-04-12 13:54:26
-  ~  Copyright (c) 2021 - 2023
-  -->
-
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="流程控制" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="yangxj96-serve-flow.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.commonsaas.yangxj96serve.flow.Application" />
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
+    <configuration default="false" name="流程控制" type="SpringBootApplicationConfigurationType"
+                   factoryName="Spring Boot">
+        <module name="yangxj96-serve-flow.main"/>
+        <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.commonsaas.yangxj96serve.flow.Application"/>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
 </component>

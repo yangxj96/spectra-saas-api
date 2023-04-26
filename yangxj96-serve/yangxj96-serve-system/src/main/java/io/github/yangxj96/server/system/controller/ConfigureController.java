@@ -12,10 +12,6 @@ import java.util.List;
 
 /**
  * 系统配置相关接口
- *
- * @author yangxj96
- * @version 1.0.0
- * @date 2023-2-22 14:19:43
  */
 @RestController
 @RequestMapping(value = "/configure", headers = "remote=true")

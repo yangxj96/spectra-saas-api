@@ -1,29 +1,19 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-03-01 23:10:32
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.server.auth.controller;
 
 import cn.hutool.core.lang.tree.Tree;
 import io.github.yangxj96.bean.user.Role;
 import io.github.yangxj96.common.base.BasicController;
 import io.github.yangxj96.server.auth.service.RoleService;
-import io.github.yangxj96.vo.RoleTree;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
  * 角色操作控制器
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023/3/1 23:10
  */
 @RestController
 @RequestMapping("/role")
@@ -36,8 +26,8 @@ public class RoleController extends BasicController<Role, RoleService> {
 
     @Override
     @PostMapping
-    public Role create(@Validated Role obj) {
-        return bindService.create(obj);
+    public Role create(@Validated io.github.yangxj96.bean.user.Role obj) {
+        return super.create(obj);
     }
 
     @GetMapping

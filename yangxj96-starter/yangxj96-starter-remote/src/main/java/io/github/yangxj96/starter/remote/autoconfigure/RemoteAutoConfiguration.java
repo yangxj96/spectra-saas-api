@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:11:06
- * Copyright (c) 2021 - 2023
- ****************************/
-
 package io.github.yangxj96.starter.remote.autoconfigure;
 
 import feign.*;
@@ -37,10 +29,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * 远程请求的openfeign配置
- *
- * @author yangxj96
- * @version 1.0
- * @date 2023-01-07 00:14
  */
 @Slf4j
 @Import(value = {FeignLoadBalancerAutoConfiguration.class})
@@ -131,7 +119,6 @@ public class RemoteAutoConfiguration {
                 .addInterceptor(new OkHttpLogInterceptor())
                 .build();
     }
-
 
 //    @Bean
 //    public Client feignRetryClient(

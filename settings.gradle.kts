@@ -1,11 +1,3 @@
-/*****************************
- * Copyright (c) 2021 - 2023
- * author:yangxj96
- * email :yangxj96@gmail.com
- * date  :2023-01-07 00:11:48
- * Copyright (c) 2021 - 2023
- ****************************/
-
 rootProject.name = "yangxj96-saas-api"
 
 include("yangxj96-bean")
