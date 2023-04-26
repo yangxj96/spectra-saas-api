@@ -1,4 +1,4 @@
-package io.github.yangxj96.starter.db.configure.dynamic;
+package io.github.yangxj96.starter.db.holder;
 
 import lombok.extern.slf4j.Slf4j;
 

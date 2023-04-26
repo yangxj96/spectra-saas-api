@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.github.yangxj96.starter.db.configure.dynamic.DynamicDataSourceRegister;
-import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource;
 import io.github.yangxj96.starter.db.filters.DynamicDatasourceFilter;
 import io.github.yangxj96.starter.db.properties.DBProperties;
 import jakarta.servlet.Filter;
@@ -30,8 +29,9 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -47,14 +47,13 @@ import java.util.function.Consumer;
  * 动态数据源配置
  */
 @Slf4j
+@EnableTransactionManagement
 @EnableConfigurationProperties(DBProperties.class)
 public class DynamicDatasourceAutoConfiguration {
 
     private static final String LOG_PREFIX = "[自动配置-动态数据源]:";
 
-    private final DBProperties properties;
-
-    private final MybatisPlusProperties mybatisPlusProperties;
+    private final MybatisPlusProperties properties;
 
     private final ResourceLoader resourceLoader;
 
@@ -72,8 +71,7 @@ public class DynamicDatasourceAutoConfiguration {
 
     private final List<SqlSessionFactoryBeanCustomizer> sqlSessionFactoryBeanCustomizers;
 
-    public DynamicDatasourceAutoConfiguration(DBProperties properties,
-                                              MybatisPlusProperties mybatisPlusProperties,
+    public DynamicDatasourceAutoConfiguration(MybatisPlusProperties properties,
                                               ResourceLoader resourceLoader,
                                               ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider,
                                               ObjectProvider<Interceptor[]> interceptorsProvider,
@@ -85,7 +83,6 @@ public class DynamicDatasourceAutoConfiguration {
     ) {
         log.info("{}开始自动装配动态数据源", LOG_PREFIX);
         this.properties = properties;
-        this.mybatisPlusProperties = mybatisPlusProperties;
         this.resourceLoader = resourceLoader;
         this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
         this.interceptors = interceptorsProvider.getIfAvailable();
@@ -97,34 +94,25 @@ public class DynamicDatasourceAutoConfiguration {
     }
 
     /**
-     * 动态数据源
-     *
-     * @return 数据源
+     * 数据源注册<br/>
+     * 需要在前面进行注册,不然后面启动的bean会循环查找
+     * @return 注册后的数据源
      */
     @Bean
-    @Primary
-    public DataSource dataSource(DynamicDataSourceRegister register) {
-        log.info("{}初始化动态数据源", LOG_PREFIX);
-        var dataSource = new DynamicDataSource();
-        dataSource.setDefaultTargetDataSource(register.defaultDataSource);
-        dataSource.setTargetDataSources(register.customDataSources);
-        return dataSource;
+    @Order(Integer.MIN_VALUE)
+    public DynamicDataSourceRegister dataSourceRegister(){
+        return new DynamicDataSourceRegister();
     }
 
     /**
-     * 载入动态数据源的过滤器设置数据源
+     * 载入动态数据源的拦截器设置数据源
      *
      * @return 动态数据源过滤器
      */
     @Bean
-    public Filter dynamicDatasourceFilter() {
+    public Filter dynamicDatasourceInterceptor() {
         log.info("{}载入动态数据源", LOG_PREFIX);
         return new DynamicDatasourceFilter();
-    }
-
-    @Bean
-    public DynamicDataSourceRegister dataSourceRegister(){
-        return new DynamicDataSourceRegister();
     }
 
     @Bean
@@ -134,12 +122,12 @@ public class DynamicDatasourceAutoConfiguration {
         MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
         factory.setDataSource(dataSource);
         factory.setVfs(SpringBootVFS.class);
-        if (StringUtils.hasText(mybatisPlusProperties.getConfigLocation())) {
-            factory.setConfigLocation(resourceLoader.getResource(mybatisPlusProperties.getConfigLocation()));
+        if (StringUtils.hasText(properties.getConfigLocation())) {
+            factory.setConfigLocation(resourceLoader.getResource(properties.getConfigLocation()));
         }
         applyConfiguration(factory);
-        if (mybatisPlusProperties.getConfigurationProperties() != null) {
-            factory.setConfigurationProperties(mybatisPlusProperties.getConfigurationProperties());
+        if (properties.getConfigurationProperties() != null) {
+            factory.setConfigurationProperties(properties.getConfigurationProperties());
         }
         if (!ObjectUtils.isEmpty(this.interceptors)) {
             factory.setPlugins(this.interceptors);
@@ -147,26 +135,26 @@ public class DynamicDatasourceAutoConfiguration {
         if (this.databaseIdProvider != null) {
             factory.setDatabaseIdProvider(this.databaseIdProvider);
         }
-        if (StringUtils.hasLength(mybatisPlusProperties.getTypeAliasesPackage())) {
-            factory.setTypeAliasesPackage(mybatisPlusProperties.getTypeAliasesPackage());
+        if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
+            factory.setTypeAliasesPackage(properties.getTypeAliasesPackage());
         }
-        if (mybatisPlusProperties.getTypeAliasesSuperType() != null) {
-            factory.setTypeAliasesSuperType(mybatisPlusProperties.getTypeAliasesSuperType());
+        if (properties.getTypeAliasesSuperType() != null) {
+            factory.setTypeAliasesSuperType(properties.getTypeAliasesSuperType());
         }
-        if (StringUtils.hasLength(mybatisPlusProperties.getTypeHandlersPackage())) {
-            factory.setTypeHandlersPackage(mybatisPlusProperties.getTypeHandlersPackage());
+        if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
+            factory.setTypeHandlersPackage(properties.getTypeHandlersPackage());
         }
         if (!ObjectUtils.isEmpty(this.typeHandlers)) {
             factory.setTypeHandlers(this.typeHandlers);
         }
-        if (!ObjectUtils.isEmpty(mybatisPlusProperties.resolveMapperLocations())) {
-            factory.setMapperLocations(mybatisPlusProperties.resolveMapperLocations());
+        if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
+            factory.setMapperLocations(properties.resolveMapperLocations());
         }
         //  修改源码支持定义 TransactionFactory
         this.getBeanThen(TransactionFactory.class, factory::setTransactionFactory);
 
         //  对源码做了一定的修改(因为源码适配了老旧的mybatis版本,但我们不需要适配)
-        Class<? extends LanguageDriver> defaultLanguageDriver = mybatisPlusProperties.getDefaultScriptingLanguageDriver();
+        Class<? extends LanguageDriver> defaultLanguageDriver = properties.getDefaultScriptingLanguageDriver();
         if (!ObjectUtils.isEmpty(this.languageDrivers)) {
             factory.setScriptingLanguageDrivers(this.languageDrivers);
         }
@@ -175,7 +163,7 @@ public class DynamicDatasourceAutoConfiguration {
         applySqlSessionFactoryBeanCustomizers(factory);
 
         //  此处必为非 NULL
-        GlobalConfig globalConfig = mybatisPlusProperties.getGlobalConfig();
+        GlobalConfig globalConfig = properties.getGlobalConfig();
         //  注入填充器
         this.getBeanThen(MetaObjectHandler.class, globalConfig::setMetaObjectHandler);
         //  注入参与器
@@ -198,8 +186,8 @@ public class DynamicDatasourceAutoConfiguration {
      */
     private void applyConfiguration(MybatisSqlSessionFactoryBean factory) {
         // 使用 MybatisConfiguration
-        MybatisConfiguration configuration = this.mybatisPlusProperties.getConfiguration();
-        if (configuration == null && !StringUtils.hasText(this.mybatisPlusProperties.getConfigLocation())) {
+        MybatisConfiguration configuration = this.properties.getConfiguration();
+        if (configuration == null && !StringUtils.hasText(this.properties.getConfigLocation())) {
             configuration = new MybatisConfiguration();
         }
         if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
@@ -249,7 +237,7 @@ public class DynamicDatasourceAutoConfiguration {
 
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        ExecutorType executorType = mybatisPlusProperties.getExecutorType();
+        ExecutorType executorType = properties.getExecutorType();
         if (executorType != null) {
             return new SqlSessionTemplate(sqlSessionFactory, executorType);
         } else {

@@ -1,6 +1,8 @@
 package io.github.yangxj96.starter.db.configure.dynamic;
 
 import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource;
+import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.MutablePropertyValues;
@@ -30,26 +32,35 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
     /**
      * 默认数据源
      **/
+    @Getter
     public DataSource defaultDataSource;
 
     /**
      * 用户自定义数据源
      **/
-    public final Map<Object, Object> customDataSources = new HashMap<>();
+    @Getter
+    public Map<Object, Object> customDataSources = new HashMap<>();
 
     @Override
     public void setEnvironment(@NotNull Environment environment) {
+        // 初始化数据源注册
         initDefaultDataSource(environment);
-        initCustomDataSources();
+        initCustomDataSources(environment);
     }
 
     /**
      * 在这里读取远程数据源进行配置
-     *
      */
-    private void initCustomDataSources() {
+    private void initCustomDataSources(Environment env) {
         // 读取配置文件获取更多数据源
-
+        for (int i = 0; i < 10; i++) {
+            var ds = new HashMap<String, Object>();
+            ds.put("driver", env.getProperty("spring.datasource.driver-class-name"));
+            ds.put("url", env.getProperty("spring.datasource.url"));
+            ds.put("username", env.getProperty("spring.datasource.username"));
+            ds.put("password", env.getProperty("spring.datasource.password"));
+            customDataSources.put("tenant-" + i, buildDataSource(ds));
+        }
     }
 
     private void initDefaultDataSource(Environment env) {
@@ -79,7 +90,7 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
         Map<Object, Object> targetDataSources = new HashMap<>();
         // 将主数据源添加到更多数据源中
         targetDataSources.put("default", defaultDataSource);
-        DynamicDataSourceContextHolder.dataSourceIds.add("dataSource");
+        DynamicDataSourceContextHolder.dataSourceIds.add("default");
         // 添加更多数据源
         targetDataSources.putAll(customDataSources);
 
@@ -98,7 +109,7 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
         mpv.addPropertyValue("targetDataSources", targetDataSources);
         registry.registerBeanDefinition("dataSource", beanDefinition); // 注册到Spring容器中
 
-        log.info("动态数据源注册");
+        log.info("registerBeanDefinitions.动态数据源注册");
     }
 
     /**

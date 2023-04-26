@@ -6,6 +6,7 @@ import io.github.yangxj96.common.base.BasicServiceImpl;
 import io.github.yangxj96.server.system.mapper.DictionariesMapper;
 import io.github.yangxj96.server.system.service.DictionariesService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class DictionariesServiceImpl extends BasicServiceImpl<DictionariesMapper
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<Dictionaries> select(Dictionaries params) {
         LambdaQueryWrapper<Dictionaries> wrapper = new LambdaQueryWrapper<>();
         wrapper.setEntity(params);

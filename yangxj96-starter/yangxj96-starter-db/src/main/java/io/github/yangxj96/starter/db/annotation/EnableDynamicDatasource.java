@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface DynamicDatasource {
+public @interface EnableDynamicDatasource {
 
 
 

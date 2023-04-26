@@ -1,11 +1,8 @@
 package io.github.yangxj96.starter.db.configure.jdbc;
 
-import io.github.yangxj96.starter.db.configure.dynamic.DynamicDataSourceContextHolder;
+import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-
-import javax.sql.DataSource;
 
 /**
  * 动态数据源实现
@@ -22,13 +19,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
      */
     @Override
     protected Object determineCurrentLookupKey() {
-        log.info("{}determineCurrentLookupKey - {}",LOG_PREFIX,DynamicDataSourceContextHolder.get());
-        return DynamicDataSourceContextHolder.get();
+        log.info("{}determineCurrentLookupKey - {}", LOG_PREFIX, DynamicDataSourceContextHolder.get());
+        return DynamicDataSourceContextHolder.get() == null ? "default" : DynamicDataSourceContextHolder.get();
     }
 
-    @Override
-    protected @NotNull DataSource determineTargetDataSource() {
-        log.info("{}determineTargetDataSource",LOG_PREFIX);
-        return super.determineTargetDataSource();
-    }
 }
