@@ -53,7 +53,7 @@ public class DynamicDataSourceRegister implements EnvironmentAware {
      */
     private void initCustomDataSources(Environment env) {
         // 读取配置文件获取更多数据源
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             var datum = new DataSourceEntity();
             datum.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
             datum.setUrl("jdbc:postgresql://localhost:5432/VJVDQIWBMEJSMYAJX");
