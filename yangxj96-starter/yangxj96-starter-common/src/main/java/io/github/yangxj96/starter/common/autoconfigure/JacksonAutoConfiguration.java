@@ -11,7 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import io.github.yangxj96.starter.common.properties.JacksonProperties;
+import io.github.yangxj96.starter.common.props.JacksonProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -38,7 +38,7 @@ import java.util.Date;
 @EnableConfigurationProperties(JacksonProperties.class)
 public class JacksonAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[autoconfig-jackson] ";
+    private static final String LOG_PREFIX = "[自动配置-jackson]:";
     private final JacksonProperties properties;
 
     public JacksonAutoConfiguration(JacksonProperties properties) {

@@ -1,7 +1,7 @@
 package io.github.yangxj96.starter.db.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.yangxj96.starter.db.properties.DBProperties;
+import io.github.yangxj96.starter.db.props.DBProperties;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,7 +34,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @AutoConfiguration(before = org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class)
 public class RedisAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[autoconfig-redis] ";
+    private static final String LOG_PREFIX = "[自动配置-redis]:";
 
     private final DBProperties properties;
 

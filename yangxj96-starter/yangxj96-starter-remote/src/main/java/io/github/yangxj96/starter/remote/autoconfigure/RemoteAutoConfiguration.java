@@ -3,7 +3,7 @@ package io.github.yangxj96.starter.remote.autoconfigure;
 import feign.*;
 import feign.okhttp.OkHttpClient;
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor;
-import io.github.yangxj96.starter.remote.properties.RemoteProperties;
+import io.github.yangxj96.starter.remote.props.RemoteProperties;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @EnableConfigurationProperties(RemoteProperties.class)
 public class RemoteAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[autoconfig-remote] ";
+    private static final String LOG_PREFIX = "[自动配置-远程调用]:";
 
     /**
      * 项目配置文件

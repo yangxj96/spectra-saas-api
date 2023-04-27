@@ -1,5 +1,7 @@
 package io.github.yangxj96.starter.db.holder;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -19,7 +21,9 @@ public class DynamicDataSourceContextHolder {
     /**
      * 存放数据源id
      */
-    public static List<String> dataSourceIds = new ArrayList<>();
+    @Getter
+    @Setter
+    private static List<String> dataSourceIds = new ArrayList<>();
 
     private DynamicDataSourceContextHolder() {
     }

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import io.github.yangxj96.starter.db.configure.jdbc.MetaObjectHandlerImpl;
-import io.github.yangxj96.starter.db.properties.DBProperties;
+import io.github.yangxj96.starter.db.props.DBProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,12 +20,7 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties(DBProperties.class)
 public class MybatisPlusAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[autoconfig-mybatis plus] ";
-    private final DBProperties properties;
-
-    public MybatisPlusAutoConfiguration(DBProperties properties) {
-        this.properties = properties;
-    }
+    private static final String LOG_PREFIX = "[自动配置-mybatis plus]:";
 
 
     @Bean

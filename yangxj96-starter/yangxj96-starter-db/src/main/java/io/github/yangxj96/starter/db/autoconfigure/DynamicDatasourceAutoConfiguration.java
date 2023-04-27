@@ -16,7 +16,7 @@ import io.github.yangxj96.starter.db.configure.dynamic.DynamicDataSourceRegister
 import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource;
 import io.github.yangxj96.starter.db.filters.DynamicDatasourceFilter;
 import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder;
-import io.github.yangxj96.starter.db.properties.DBProperties;
+import io.github.yangxj96.starter.db.props.DBProperties;
 import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
@@ -119,12 +119,12 @@ public class DynamicDatasourceAutoConfiguration {
         var targetDataSources = new HashMap<>();
         // 将主数据源添加到更多数据源中
         targetDataSources.put("default", register.defaultDataSource);
-        DynamicDataSourceContextHolder.dataSourceIds.add("default");
+        DynamicDataSourceContextHolder.getDataSourceIds().add("default");
         // 添加更多数据源
         targetDataSources.putAll(register.customDataSources);
 
         for (Object key : register.customDataSources.keySet()) {
-            DynamicDataSourceContextHolder.dataSourceIds.add(key.toString());
+            DynamicDataSourceContextHolder.getDataSourceIds().add(key.toString());
         }
 
         source.setTargetDataSources(targetDataSources);

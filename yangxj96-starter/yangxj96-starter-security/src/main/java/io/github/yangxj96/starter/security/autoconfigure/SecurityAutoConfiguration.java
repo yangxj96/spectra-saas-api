@@ -5,7 +5,7 @@ import io.github.yangxj96.starter.security.bean.StoreType;
 import io.github.yangxj96.starter.security.exception.handle.AccessDeniedHandlerImpl;
 import io.github.yangxj96.starter.security.exception.handle.AuthenticationEntryPointImpl;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
-import io.github.yangxj96.starter.security.properties.SecurityProperties;
+import io.github.yangxj96.starter.security.props.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
@@ -39,7 +39,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[autoconfig-security] ";
+    private static final String LOG_PREFIX = "[自动配置-security]:";
     private final SecurityProperties properties;
 
     /**
