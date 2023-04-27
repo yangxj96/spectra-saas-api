@@ -1,28 +1,25 @@
 package io.github.yangxj96.starter.db.configure.dynamic;
 
-import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource;
-import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanNameGenerator;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.annotation.AnnotationBeanNameGenerator;
-import org.springframework.context.annotation.ConfigurationClassPostProcessor;
-import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.env.Environment;
-import org.springframework.core.type.AnnotationMetadata;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * 初始化注册数据源信息
+ */
 @Slf4j
-public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar, EnvironmentAware {
+public class DynamicDataSourceRegister implements EnvironmentAware {
 
     /**
      * 指定默认数据源(springboot2.0默认数据源是hikari如何想使用其他数据源可以自己配置)
@@ -49,101 +46,76 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
     }
 
     /**
-     * 在这里读取远程数据源进行配置
+     * 初始化自定义数据源<br/>
+     * 在这里读取远程数据源信息后配置
+     *
+     * @param env 上下文环境
      */
     private void initCustomDataSources(Environment env) {
         // 读取配置文件获取更多数据源
         for (int i = 0; i < 10; i++) {
-            var ds = new HashMap<String, Object>();
-            ds.put("driver", env.getProperty("spring.datasource.driver-class-name"));
-            ds.put("url", env.getProperty("spring.datasource.url"));
-            ds.put("username", env.getProperty("spring.datasource.username"));
-            ds.put("password", env.getProperty("spring.datasource.password"));
-            customDataSources.put("tenant-" + i, buildDataSource(ds));
+            var datum = new DataSourceEntity();
+            datum.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+            datum.setUrl("jdbc:postgresql://localhost:5432/VJVDQIWBMEJSMYAJX");
+            datum.setUsername(env.getProperty("spring.datasource.username"));
+            datum.setPassword(env.getProperty("spring.datasource.password"));
+            customDataSources.put("tenant-" + i, buildDataSource(datum));
         }
-    }
-
-    private void initDefaultDataSource(Environment env) {
-        // 读取主数据源
-        Map<String, Object> dsMap = new HashMap<>();
-        dsMap.put("driver", env.getProperty("spring.datasource.driver-class-name"));
-        dsMap.put("url", env.getProperty("spring.datasource.url"));
-        dsMap.put("username", env.getProperty("spring.datasource.username"));
-        dsMap.put("password", env.getProperty("spring.datasource.password"));
-        defaultDataSource = buildDataSource(dsMap);
     }
 
     /**
-     * 自定义注册bean
-     *
-     * @param importingClassMetadata  annotation metadata of the importing class
-     * @param registry                current bean definition registry
-     * @param importBeanNameGenerator the bean name generator strategy for imported beans:
-     *                                {@link ConfigurationClassPostProcessor#IMPORT_BEAN_NAME_GENERATOR} by default, or a
-     *                                user-provided one if {@link ConfigurationClassPostProcessor#setBeanNameGenerator}
-     *                                has been set. In the latter case, the passed-in strategy will be the same used for
-     *                                component scanning in the containing application context (otherwise, the default
-     *                                component-scan naming strategy is {@link AnnotationBeanNameGenerator#INSTANCE}).
+     * 初始化默认数据源
+     * @param env 上下文环境
      */
-    @Override
-    public void registerBeanDefinitions(@NotNull AnnotationMetadata importingClassMetadata, @NotNull BeanDefinitionRegistry registry, @NotNull BeanNameGenerator importBeanNameGenerator) {
-        Map<Object, Object> targetDataSources = new HashMap<>();
-        // 将主数据源添加到更多数据源中
-        targetDataSources.put("default", defaultDataSource);
-        DynamicDataSourceContextHolder.dataSourceIds.add("default");
-        // 添加更多数据源
-        targetDataSources.putAll(customDataSources);
-
-        // DynamicDataSourceContextHolder.dataSourceIds.addAll(customDataSources.keySet());
-
-        for (Object key : customDataSources.keySet()) {
-            DynamicDataSourceContextHolder.dataSourceIds.add(key.toString());
-        }
-
-        // 创建DynamicDataSource
-        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
-        beanDefinition.setBeanClass(DynamicDataSource.class);
-        beanDefinition.setSynthetic(true);
-        MutablePropertyValues mpv = beanDefinition.getPropertyValues();
-        mpv.addPropertyValue("defaultTargetDataSource", defaultDataSource);
-        mpv.addPropertyValue("targetDataSources", targetDataSources);
-        registry.registerBeanDefinition("dataSource", beanDefinition); // 注册到Spring容器中
-
-        log.info("registerBeanDefinitions.动态数据源注册");
+    private void initDefaultDataSource(Environment env) {
+        // 读取主数据源
+        var datum = new DataSourceEntity();
+        datum.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+        datum.setUrl(env.getProperty("spring.datasource.url"));
+        datum.setUsername(env.getProperty("spring.datasource.username"));
+        datum.setPassword(env.getProperty("spring.datasource.password"));
+        defaultDataSource = buildDataSource(datum);
     }
 
     /**
      * 创建DataSource
      *
-     * @param dsMap 数据源信息
+     * @param entity 数据源信息
      * @return 创建好的数据源
      */
     @SuppressWarnings("unchecked")
-    public DataSource buildDataSource(Map<String, Object> dsMap) {
+    public DataSource buildDataSource(DataSourceEntity entity) {
         try {
-            Object type = dsMap.get("type");
+            String type = entity.getType();
             if (type == null) {
-                type = DATASOURCE_TYPE_DEFAULT;// 默认DataSource
+                type = DATASOURCE_TYPE_DEFAULT;
             }
 
-            Class<? extends DataSource> dataSourceType = (Class<? extends DataSource>) Class.forName((String) type);
-            log.info("构建数据源信息:{}", dsMap);
-            String driverClassName = dsMap.get("driver").toString();
-            String url = dsMap.get("url").toString();
-            String username = dsMap.get("username").toString();
-            String password = dsMap.get("password").toString();
-            // 自定义DataSource配置
-
+            // 构建datasource
             return DataSourceBuilder.create()
-                    .driverClassName(driverClassName)
-                    .url(url)
-                    .username(username)
-                    .password(password)
-                    .type(dataSourceType)
+                    .driverClassName(entity.getDriverClassName())
+                    .url(entity.getUrl())
+                    .username(entity.getUsername())
+                    .password(entity.getPassword())
+                    .type((Class<? extends DataSource>) Class.forName(type))
                     .build();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 数据源信息实体
+     */
+    @Data
+    @EqualsAndHashCode
+    @ToString
+    public static class DataSourceEntity {
+        private String type;
+        private String driverClassName;
+        private String url;
+        private String username;
+        private String password;
     }
 }

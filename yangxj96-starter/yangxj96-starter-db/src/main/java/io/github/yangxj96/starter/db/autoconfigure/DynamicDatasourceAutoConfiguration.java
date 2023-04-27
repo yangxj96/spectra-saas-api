@@ -13,7 +13,9 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.core.injector.ISqlInjector;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.github.yangxj96.starter.db.configure.dynamic.DynamicDataSourceRegister;
+import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource;
 import io.github.yangxj96.starter.db.filters.DynamicDatasourceFilter;
+import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder;
 import io.github.yangxj96.starter.db.properties.DBProperties;
 import jakarta.servlet.Filter;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -37,10 +40,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -96,12 +96,40 @@ public class DynamicDatasourceAutoConfiguration {
     /**
      * 数据源注册<br/>
      * 需要在前面进行注册,不然后面启动的bean会循环查找
+     *
      * @return 注册后的数据源
      */
     @Bean
     @Order(Integer.MIN_VALUE)
-    public DynamicDataSourceRegister dataSourceRegister(){
+    public DynamicDataSourceRegister dataSourceRegister() {
         return new DynamicDataSourceRegister();
+    }
+
+    /**
+     * 注册数据源<br/>
+     * 需要在这里进行注册并指定是主数据源
+     * @param register 数据源信息
+     * @return 数据源
+     */
+    @Bean
+    @Primary
+    public DataSource dataSource(DynamicDataSourceRegister register) {
+        var source = new DynamicDataSource();
+
+        var targetDataSources = new HashMap<>();
+        // 将主数据源添加到更多数据源中
+        targetDataSources.put("default", register.defaultDataSource);
+        DynamicDataSourceContextHolder.dataSourceIds.add("default");
+        // 添加更多数据源
+        targetDataSources.putAll(register.customDataSources);
+
+        for (Object key : register.customDataSources.keySet()) {
+            DynamicDataSourceContextHolder.dataSourceIds.add(key.toString());
+        }
+
+        source.setTargetDataSources(targetDataSources);
+        source.setDefaultTargetDataSource(register.defaultDataSource);
+        return source;
     }
 
     /**

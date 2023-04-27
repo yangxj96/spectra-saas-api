@@ -8,8 +8,6 @@
 
 package io.github.yangxj96.server.system.stream;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +22,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProducerStream {
 
-    @Resource
-    private ObjectMapper om;
-
+//    @Resource
+//    private ObjectMapper om;
+//
 //    @Bean
 //    public Supplier<StreamModel> tenantCreate() {
 //        return () -> {
