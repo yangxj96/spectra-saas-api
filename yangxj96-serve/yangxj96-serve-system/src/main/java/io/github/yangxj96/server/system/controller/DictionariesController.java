@@ -53,7 +53,7 @@ public class DictionariesController extends BasicController<Dictionaries, Dictio
     }
 
 
-     @PreAuthorize("hasAuthority('DICT_SELECT') or hasRole('ROLE_SYSADMIN')")
+    @PreAuthorize("hasAuthority('DICT_SELECT') or hasRole('ROLE_SYSADMIN') or hasPermission()")
     @GetMapping
     public List<Dictionaries> select(Dictionaries params) {
         return bindService.select(params);

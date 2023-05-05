@@ -35,6 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (null == user) {
             throw new UsernameNotFoundException("用户不存在");
         }
+
         user.setAuthorities(userService.getAuthoritiesByUserId(user.getId()));
         return user;
     }

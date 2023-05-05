@@ -10,13 +10,13 @@ import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,9 +46,8 @@ public class SecurityAutoConfiguration {
 
     /**
      * 注入认证管理配置 <br/>
-     *
+     * <p>
      * 不使用@Resource的原因是,flow服务低于3.0版本 无法使用jakarta,会导致启动错误,蛋疼
-     *
      */
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
@@ -69,14 +68,13 @@ public class SecurityAutoConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-
     /**
      * security的核心规则配置
      *
      * @return {@link SecurityFilterChain }
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(@NotNull HttpSecurity http) throws Exception {
         log.info("{}初始化security核心配置", LOG_PREFIX);
         http
                 .securityContext(security -> security.requireExplicitSave(true));

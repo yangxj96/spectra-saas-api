@@ -75,29 +75,42 @@ class ApplicationTest {
 
     @Test
     void addRole() {
-        String[] roles = {"ROLE_SYSADMIN", "ROLE_ADMIN", "ROLE_USER"};
+        String[] names = {"平台管理员","系统管理员","用户"};
+        String[] codes = {"ROLE_SYSADMIN", "ROLE_ADMIN", "ROLE_USER"};
+        String[] descriptions = {"平台相关内容关联", "租户最高管理员", "普通用户"};
         int count = 0;
-        for (String role : roles) {
+        for (int i = 0; i < codes.length; i++) {
             Role datum = Role
                     .builder()
-                    .name(role)
+                    .pid(0L)
+                    .name(names[i])
+                    .code(codes[i])
+                    .description(descriptions[i])
                     .build();
             if (roleService.create(datum) != null) {
                 count++;
             }
         }
-        Assertions.assertEquals(count, roles.length, "插入失败");
+        Assertions.assertEquals(count, codes.length, "插入失败");
     }
 
     @Test
     void addAuthority() {
-        // String[] authority = {"USER_INSERT", "USER_DELETE", "USER_UPDATE", "USER_SELECT"};
-        String[] authority = {"SYS_CONFIGURE_INSERT", "SYS_CONFIGURE_DELETE", "SYS_CONFIGURE_UPDATE", "SYS_CONFIGURE_SELECT"};
+        String[] authority = {
+                "SYS:CONFIGURE:INSERT", "SYS:CONFIGURE:DELETE", "SYS:CONFIGURE:UPDATE", "SYS:CONFIGURE:SELECT",
+                "USER:INSERT"         , "USER:DELETE"         , "USER:UPDATE"         , "USER:SELECT"
+        };
+
+        String[] descriptions = {
+                "系统配置:插入","系统配置:删除","系统配置:修改","系统配置:查询",
+                "用户:插入"   ,"用户:删除"   ,"用户:修改"    ,"用户:查询"
+        };
         int count = 0;
-        for (String role : authority) {
+        for (int i = 0; i < authority.length; i++) {
             Authority datum = Authority
                     .builder()
-                    .name(role)
+                    .code(authority[i])
+                    .description(descriptions[i])
                     .build();
             if (authorityService.create(datum) != null) {
                 count++;
@@ -106,6 +119,9 @@ class ApplicationTest {
         Assertions.assertEquals(count, authority.length, "插入失败");
     }
 
+    /**
+     * 关联数据
+     */
     @Test
     void relevance() {
         List<User> users = userService.list();
