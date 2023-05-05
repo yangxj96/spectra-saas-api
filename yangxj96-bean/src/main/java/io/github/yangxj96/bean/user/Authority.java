@@ -27,8 +27,8 @@ public class Authority extends BasicEntity implements Serializable {
     /**
      * 名称
      */
-    @TableField(value = "\"name\"")
-    private String name;
+    @TableField(value = "code")
+    private String code;
 
     /**
      * 描述

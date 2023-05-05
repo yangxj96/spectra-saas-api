@@ -10,6 +10,7 @@ import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,6 +38,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 @ConditionalOnProperty(name = "yangxj96.security.enable", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SecurityProperties.class)
+@MapperScan("io.github.yangxj96.starter.security.mapper")
 public class SecurityAutoConfiguration {
 
     private static final String LOG_PREFIX = "[自动配置-security]:";
@@ -103,8 +105,7 @@ public class SecurityAutoConfiguration {
         TokenStore store;
         if (properties.getStoreType() == StoreType.JDBC) {
             log.debug("{},store使用jdbc", LOG_PREFIX);
-            JdbcTemplate jdbcTemplate = SpringUtil.getBean(JdbcTemplate.class);
-            store = new JdbcTokenStore(jdbcTemplate);
+            store = new JdbcTokenStore();
         } else {
             log.debug("{},store使用redis", LOG_PREFIX);
             RedisTemplate<String, Object> redisTemplate = SpringUtil.getBean("securityRedisTemplate");

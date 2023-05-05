@@ -35,11 +35,11 @@ public class UserServiceImpl extends BasicServiceImpl<UserMapper, User> implemen
         List<GrantedAuthority> result = new ArrayList<>();
         List<Role> roles = bindMapper.getRoleByUserId(userId);
         if (!roles.isEmpty()) {
-            roles.forEach(i -> result.add(new SimpleGrantedAuthority(i.getName())));
+            roles.forEach(i -> result.add(new SimpleGrantedAuthority(i.getCode())));
             List<Long> roleIds = roles.stream().map(BasicEntity::getId).toList();
             List<Authority> authorities = bindMapper.getAuthorityByRoleIds(roleIds);
             if (!authorities.isEmpty()) {
-                authorities.forEach(i -> result.add(new SimpleGrantedAuthority(i.getName())));
+                authorities.forEach(i -> result.add(new SimpleGrantedAuthority(i.getCode())));
             }
         }
         return result;

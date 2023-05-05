@@ -5,7 +5,7 @@ import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.common.utils.ObjectUtils;
+import io.github.yangxj96.common.utils.ConvertUtil;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -65,7 +65,7 @@ public class RedisTokenStore implements TokenStore {
         redisTemplate.opsForValue().setIfAbsent(accessToUserKey, token.getAccessToken(), 1, TimeUnit.HOURS);
         redisTemplate.opsForValue().setIfAbsent(accessToRefreshKey, token.getRefreshToken(), 1, TimeUnit.HOURS);
         redisTemplate.opsForValue().setIfAbsent(refreshToAccessKey, token.getAccessToken(), 1, TimeUnit.HOURS);
-        bytesRedisTemplate.opsForValue().setIfAbsent(authorityKey, ObjectUtils.objectToByte(auth), 1, TimeUnit.HOURS);
+        bytesRedisTemplate.opsForValue().setIfAbsent(authorityKey, ConvertUtil.objectToByte(auth), 1, TimeUnit.HOURS);
 
         return token;
     }
@@ -81,7 +81,7 @@ public class RedisTokenStore implements TokenStore {
             var refresh = Convert.convert(TokenRefresh.class, redisTemplate.opsForValue().get(REFRESH_PREFIX + refreshToken));
             // 获取权限
             var authority = new ArrayList<String>();
-            var authentication = (Authentication) ObjectUtils.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + accessToken));
+            var authentication = (Authentication) ConvertUtil.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + accessToken));
             authentication.getAuthorities().forEach(item -> authority.add(item.getAuthority()));
             // 构建
             return Token
@@ -100,7 +100,7 @@ public class RedisTokenStore implements TokenStore {
     public Authentication read(String token) {
         if (Boolean.TRUE.equals(redisTemplate.hasKey(ACCESS_PREFIX + token))) {
             byte[] bytes = bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + token);
-            return (Authentication) ObjectUtils.byteToObject(bytes);
+            return (Authentication) ConvertUtil.byteToObject(bytes);
         }
         return null;
     }
@@ -125,7 +125,7 @@ public class RedisTokenStore implements TokenStore {
     public Token refresh(String refreshToken) {
         if (Boolean.TRUE.equals(redisTemplate.hasKey(REFRESH_TO_ACCESS_PREFIX + refreshToken))) {
             var access = (String) redisTemplate.opsForValue().get(REFRESH_TO_ACCESS_PREFIX + refreshToken);
-            Authentication auth = (Authentication) ObjectUtils.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + access));
+            Authentication auth = (Authentication) ConvertUtil.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + access));
             this.remove(access);
             return this.create(auth);
         }

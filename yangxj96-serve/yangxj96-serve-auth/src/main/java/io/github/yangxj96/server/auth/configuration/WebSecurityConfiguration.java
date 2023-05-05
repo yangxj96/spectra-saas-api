@@ -4,12 +4,15 @@ import io.github.yangxj96.starter.security.exception.handle.AccessDeniedHandlerI
 import io.github.yangxj96.starter.security.exception.handle.AuthenticationEntryPointImpl;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
 import io.github.yangxj96.starter.security.store.TokenStore;
+import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore;
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -34,6 +37,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@MapperScan("io.github.yangxj96.starter.security.mapper")
 public class WebSecurityConfiguration {
 
     private static final String LOG_PREFIX = "[安全配置] ";
@@ -51,6 +55,9 @@ public class WebSecurityConfiguration {
 
     @Resource(name = "securityBytesRedisTemplate")
     private RedisTemplate<String, byte[]> bytesRedisTemplate;
+
+    @Resource
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 密码管理器
@@ -71,7 +78,8 @@ public class WebSecurityConfiguration {
     @Bean
     public TokenStore tokenStore() {
         log.info("{}载入token认证策略2", LOG_PREFIX);
-        return new RedisTokenStore(redisTemplate, bytesRedisTemplate);
+        // return new RedisTokenStore(redisTemplate, bytesRedisTemplate);
+        return new JdbcTokenStore();
     }
 
     /**

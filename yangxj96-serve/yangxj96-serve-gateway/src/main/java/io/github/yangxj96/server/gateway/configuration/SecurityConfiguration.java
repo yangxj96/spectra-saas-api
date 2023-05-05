@@ -53,7 +53,7 @@ public class SecurityConfiguration {
         if (storeType == StoreType.JDBC) {
             log.debug("{},store使用jdbc", LOG_PREFIX);
             JdbcTemplate jdbcTemplate = SpringUtil.getBean(JdbcTemplate.class);
-            store = new JdbcTokenStore(jdbcTemplate);
+            store = new JdbcTokenStore();
         } else {
             log.debug("{},store使用redis", LOG_PREFIX);
             RedisTemplate<String, Object> redisTemplate = SpringUtil.getBean("securityRedisTemplate");

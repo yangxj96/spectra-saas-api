@@ -47,7 +47,7 @@ yangxj96:
     connect-time-out: 10000
   security:
     enable: true
-    store-type: redis
+    store-type: jdbc
 
 logging:
   level:
