@@ -6,6 +6,7 @@ import io.github.yangxj96.server.auth.domain.Login;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,7 @@ public class AuthController {
      * @return 登录结果
      */
     @PostMapping(value = "/login")
-    public Token login(@RequestBody Login param) {
+    public Token login(@RequestBody @NotNull Login param) {
         Token token = null;
         // 构建后认证
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(param.getUsername(), param.getPassword());
@@ -62,6 +63,7 @@ public class AuthController {
      * @param token token
      * @return 刷新后的token信息
      */
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/refresh")
     public Token refresh(String token) {
         try {
@@ -100,7 +102,13 @@ public class AuthController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/check_token")
     public Token checkToken(String token) {
-        return null;
+        try {
+            R.success();
+            return tokenStore.check(token);
+        } catch (Exception e) {
+            R.failure();
+            throw new RuntimeException("获取auth状态异常");
+        }
     }
 
 }

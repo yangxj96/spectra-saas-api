@@ -1,5 +1,6 @@
 package io.github.yangxj96.server.auth.configuration;
 
+import io.github.yangxj96.starter.security.bean.StoreType;
 import io.github.yangxj96.starter.security.exception.handle.AccessDeniedHandlerImpl;
 import io.github.yangxj96.starter.security.exception.handle.AuthenticationEntryPointImpl;
 import io.github.yangxj96.starter.security.filter.UserAuthorizationFilter;
@@ -9,10 +10,10 @@ import io.github.yangxj96.starter.security.store.impl.RedisTokenStore;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -42,22 +43,20 @@ public class WebSecurityConfiguration {
 
     private static final String LOG_PREFIX = "[安全配置] ";
 
-
     @Resource
     private UserDetailsService userDetailsService;
 
     @Resource
     private AuthenticationConfiguration authenticationConfiguration;
 
+    @Value("${yangxj96.security.store-type}")
+    private StoreType storeType;
+
     @Resource(name = "securityRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
-
     @Resource(name = "securityBytesRedisTemplate")
     private RedisTemplate<String, byte[]> bytesRedisTemplate;
-
-    @Resource
-    private JdbcTemplate jdbcTemplate;
 
     /**
      * 密码管理器
@@ -78,8 +77,11 @@ public class WebSecurityConfiguration {
     @Bean
     public TokenStore tokenStore() {
         log.info("{}载入token认证策略2", LOG_PREFIX);
-        // return new RedisTokenStore(redisTemplate, bytesRedisTemplate);
-        return new JdbcTokenStore();
+        if (storeType == StoreType.JDBC) {
+            return new JdbcTokenStore();
+        } else {
+            return new RedisTokenStore(redisTemplate, bytesRedisTemplate);
+        }
     }
 
     /**

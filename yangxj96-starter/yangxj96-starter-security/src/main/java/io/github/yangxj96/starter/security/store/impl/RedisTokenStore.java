@@ -7,6 +7,8 @@ import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.bean.user.User;
 import io.github.yangxj96.common.utils.ConvertUtil;
 import io.github.yangxj96.starter.security.store.TokenStore;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 
@@ -34,13 +36,15 @@ public class RedisTokenStore implements TokenStore {
 
     @Override
     public Token create(Authentication auth) {
-        Token token = check(auth);
-        if (null != token) {
+        // token存在则返回已存在的token信息,否则创建token
+        var token = exists(auth);
+        if (token != null) {
             return token;
+        } else {
+            token = Token.generate(auth);
         }
 
         // @formatter:off
-        token                  = Token.generate(auth);
         var accessKey          = ACCESS_PREFIX + token.getAccessToken();
         var refreshKey         = REFRESH_PREFIX + token.getRefreshToken();
         var accessToUserKey    = ACCESS_TO_USER_PREFIX + token.getUsername();
@@ -68,32 +72,6 @@ public class RedisTokenStore implements TokenStore {
         bytesRedisTemplate.opsForValue().setIfAbsent(authorityKey, ConvertUtil.objectToByte(auth), 1, TimeUnit.HOURS);
 
         return token;
-    }
-
-    public Token check(Authentication auth) {
-        var username = ((User) auth.getPrincipal()).getUsername();
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(ACCESS_TO_USER_PREFIX + username))) {
-            // access token
-            var accessToken = (String) redisTemplate.opsForValue().get(ACCESS_TO_USER_PREFIX + username);
-            var access = Convert.convert(TokenAccess.class, redisTemplate.opsForValue().get(ACCESS_PREFIX + accessToken));
-            // refresh token
-            var refreshToken = (String) redisTemplate.opsForValue().get(ACCESS_TO_REFRESH_PREFIX + accessToken);
-            var refresh = Convert.convert(TokenRefresh.class, redisTemplate.opsForValue().get(REFRESH_PREFIX + refreshToken));
-            // 获取权限
-            var authority = new ArrayList<String>();
-            var authentication = (Authentication) ConvertUtil.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + accessToken));
-            authentication.getAuthorities().forEach(item -> authority.add(item.getAuthority()));
-            // 构建
-            return Token
-                    .builder()
-                    .username(access.getUsername())
-                    .accessToken(access.getToken())
-                    .refreshToken(refresh.getToken())
-                    .authorities(authority)
-                    .expirationTime(access.getExpirationTime())
-                    .build();
-        }
-        return null;
     }
 
     @Override
@@ -133,7 +111,61 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
+    public Token check(String token) {
+        var key = ACCESS_PREFIX + token;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
+            var access = Convert.convert(TokenAccess.class, redisTemplate.opsForValue().get(key));
+            return wrap(access.getUsername());
+        }
+        return null;
+    }
+
+    @Override
     public void autoClean() {
         //  redis有自己的过期策略
+    }
+
+    /////////////////////// 私有方法区 //////////////////////////////////////
+
+    /**
+     * 根据{@link Authentication}判断token是否存在
+     *
+     * @param auth {@link Authentication}
+     * @return 存在返回token信息, 否则返回null
+     */
+    private @Nullable Token exists(@NotNull Authentication auth) {
+        var username = ((User) auth.getPrincipal()).getUsername();
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(ACCESS_TO_USER_PREFIX + username))) {
+            return wrap(username);
+        }
+        return null;
+    }
+
+    /**
+     * 根据access token包装token信息
+     *
+     * @param username 用户名
+     * @return token信息
+     */
+    private Token wrap(String username) {
+        // access token
+        var accessToken = (String) redisTemplate.opsForValue().get(ACCESS_TO_USER_PREFIX + username);
+        var access = Convert.convert(TokenAccess.class, redisTemplate.opsForValue().get(ACCESS_PREFIX + accessToken));
+        // refresh token
+        var refreshToken = (String) redisTemplate.opsForValue().get(ACCESS_TO_REFRESH_PREFIX + accessToken);
+        var refresh = Convert.convert(TokenRefresh.class, redisTemplate.opsForValue().get(REFRESH_PREFIX + refreshToken));
+        // 获取权限
+        var authority = new ArrayList<String>();
+        var authentication = (Authentication) ConvertUtil.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + accessToken));
+        authentication.getAuthorities().forEach(item -> authority.add(item.getAuthority()));
+        // 构建
+        return Token
+                .builder()
+                .username(access.getUsername())
+                .accessToken(access.getToken())
+                .refreshToken(refresh.getToken())
+                .authorities(authority)
+                .expirationTime(access.getExpirationTime())
+                .build();
     }
 }

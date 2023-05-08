@@ -6,6 +6,8 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -131,7 +133,7 @@ public class RedisAutoConfiguration {
      * @param index 哪一个库
      * @return 连接池工厂
      */
-    private RedisConnectionFactory buildRedisConnectionFactory(int index) {
+    private @NotNull RedisConnectionFactory buildRedisConnectionFactory(int index) {
         // 基础配置
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
         configuration.setHostName(redisProperties.getHost());
@@ -163,7 +165,8 @@ public class RedisAutoConfiguration {
      * @param redisTemplate redis template
      * @return redis template
      */
-    private RedisTemplate<String, Object> commonConfig(RedisTemplate<String, Object> redisTemplate) {
+    @Contract("_ -> param1")
+    private @NotNull RedisTemplate<String, Object> commonConfig(@NotNull RedisTemplate<String, Object> redisTemplate) {
         // 使用Jackson2JsonRedisSerialize 替换默认序列化
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
         // 设置value的序列化规则和 key的序列化规则

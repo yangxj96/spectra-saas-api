@@ -32,9 +32,11 @@ public class JdbcTokenStore implements TokenStore {
 
     private final TokenRefreshMapper refreshMapper;
 
-    public JdbcTokenStore(){
+    public JdbcTokenStore() {
+        // @formatter:off
         this.accessMapper  = SpringUtil.getBean(TokenAccessMapper.class);
         this.refreshMapper = SpringUtil.getBean(TokenRefreshMapper.class);
+        // @formatter:on
     }
 
     private static final String LIMIT1 = "LIMIT 1";
@@ -42,13 +44,13 @@ public class JdbcTokenStore implements TokenStore {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Token create(Authentication auth) throws SQLException {
-        Token token = check(auth);
-        if (null != token) {
+        // token存在则返回已存在的token信息,否则创建token
+        var token = exists(auth);
+        if (token != null) {
             return token;
+        } else {
+            token = Token.generate(auth);
         }
-
-        // 生成token
-        token = Token.generate(auth);
 
         var access = TokenAccess.builder()
                 .token(token.getAccessToken())
@@ -75,36 +77,19 @@ public class JdbcTokenStore implements TokenStore {
         return token;
     }
 
-    private @Nullable Token check(@NotNull Authentication auth) {
-        var username = ((User) auth.getPrincipal()).getUsername();
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Token check(String token) {
         // 先检查是否已经有token了
-        var accessTokenWrapper = new LambdaQueryWrapper<TokenAccess>();
-        accessTokenWrapper
-                .eq(TokenAccess::getUsername, username)
+        var wrapper = new LambdaQueryWrapper<TokenAccess>();
+        wrapper
+                .eq(TokenAccess::getToken, token)
                 .last(LIMIT1);
-        var access = accessMapper.selectOne(accessTokenWrapper);
+        var access = accessMapper.selectOne(wrapper);
         if (access == null) {
             return null;
         }
-
-        // 查询刷新token
-        var refreshTokenWrapper = new LambdaQueryWrapper<TokenRefresh>()
-                .eq(TokenRefresh::getAccessId, access.getId())
-                .last(LIMIT1);
-        var refresh = refreshMapper.selectOne(refreshTokenWrapper);
-
-        var authorities = new ArrayList<String>();
-        for (GrantedAuthority authority : auth.getAuthorities()) {
-            authorities.add(authority.getAuthority());
-        }
-        return Token
-                .builder()
-                .username(access.getUsername())
-                .accessToken(access.getToken())
-                .refreshToken(refresh.getToken())
-                .authorities(authorities)
-                .expirationTime(access.getExpirationTime())
-                .build();
+        return wrap(access);
     }
 
     @Override
@@ -171,9 +156,61 @@ public class JdbcTokenStore implements TokenStore {
     public void autoClean() {
         // 删除过期 token
         var now = LocalDateTime.now();
-        var accessCount  =  accessMapper.delete(new LambdaQueryWrapper<TokenAccess>().le(TokenAccess::getExpirationTime, now));
+        var accessCount = accessMapper.delete(new LambdaQueryWrapper<TokenAccess>().le(TokenAccess::getExpirationTime, now));
         var refreshCount = refreshMapper.delete(new LambdaQueryWrapper<TokenRefresh>().le(TokenRefresh::getExpirationTime, now));
-        log.debug("清除{}条access token,{}条refresh token", accessCount,refreshCount);
+        log.debug("清除{}条access token,{}条refresh token", accessCount, refreshCount);
 
+    }
+
+    /////////////////////// 私有方法区 //////////////////////////////////////
+
+    /**
+     * 根据{@link Authentication}判断token是否存在
+     *
+     * @param auth {@link Authentication}
+     * @return 存在返回token信息, 否则返回null
+     */
+    private @Nullable Token exists(@NotNull Authentication auth) {
+        // 如果token存在,则返回已经存在的token
+        var username = ((User) auth.getPrincipal()).getUsername();
+        // 先检查是否已经有token了
+        var accessTokenWrapper = new LambdaQueryWrapper<TokenAccess>();
+        accessTokenWrapper
+                .eq(TokenAccess::getUsername, username)
+                .last(LIMIT1);
+        var accessToken = accessMapper.selectOne(accessTokenWrapper);
+        if (accessToken != null) {
+            return wrap(accessToken);
+        }
+        return null;
+    }
+
+    /**
+     * 根据access token包装token信息
+     *
+     * @param access access token
+     * @return token信息
+     */
+    private Token wrap(@NotNull TokenAccess access) {
+        // 查询刷新token
+        var refreshTokenWrapper = new LambdaQueryWrapper<TokenRefresh>()
+                .eq(TokenRefresh::getAccessId, access.getId())
+                .last(LIMIT1);
+        var refresh = refreshMapper.selectOne(refreshTokenWrapper);
+        Authentication auth = (Authentication) ConvertUtil.byteToObject(access.getAuthentication());
+
+        // 组装响应
+        var authorities = new ArrayList<String>();
+        for (GrantedAuthority authority : auth.getAuthorities()) {
+            authorities.add(authority.getAuthority());
+        }
+        return Token
+                .builder()
+                .username(access.getUsername())
+                .accessToken(access.getToken())
+                .refreshToken(refresh.getToken())
+                .authorities(authorities)
+                .expirationTime(access.getExpirationTime())
+                .build();
     }
 }
