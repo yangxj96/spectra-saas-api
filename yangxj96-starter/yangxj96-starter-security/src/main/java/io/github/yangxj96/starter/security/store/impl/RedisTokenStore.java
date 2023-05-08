@@ -7,6 +7,8 @@ import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.bean.user.User;
 import io.github.yangxj96.common.utils.ConvertUtil;
 import io.github.yangxj96.starter.security.store.TokenStore;
+import io.github.yangxj96.starter.security.store.redis.JdkSerializationStrategy;
+import io.github.yangxj96.starter.security.store.redis.RedisTokenStoreSerializationStrategy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,6 +30,9 @@ public class RedisTokenStore implements TokenStore {
     private static final String AUTHORITY_PREFIX = "authority_token:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final RedisTemplate<String, byte[]> bytesRedisTemplate;
+
+    private final RedisTokenStoreSerializationStrategy serializationStrategy = new JdkSerializationStrategy();
+
 
     public RedisTokenStore(RedisTemplate<String, Object> redisTemplate, RedisTemplate<String, byte[]> bytesRedisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -168,4 +173,14 @@ public class RedisTokenStore implements TokenStore {
                 .expirationTime(access.getExpirationTime())
                 .build();
     }
+
+
+    private byte[] serialize(Object object) {
+        return serializationStrategy.serialize(object);
+    }
+
+    private Authentication deserialize(byte[] bytes) {
+        return serializationStrategy.deserialize(bytes, Authentication.class);
+    }
+
 }
