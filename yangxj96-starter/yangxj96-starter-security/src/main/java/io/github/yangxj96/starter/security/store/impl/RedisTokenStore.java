@@ -1,25 +1,31 @@
 package io.github.yangxj96.starter.security.store.impl;
 
-import cn.hutool.core.convert.Convert;
+import cn.hutool.extra.spring.SpringUtil;
 import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.common.utils.ConvertUtil;
+import io.github.yangxj96.starter.security.props.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.redis.JdkSerializationStrategy;
 import io.github.yangxj96.starter.security.store.redis.RedisTokenStoreSerializationStrategy;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisKeyCommands;
+import org.springframework.data.redis.connection.RedisStringCommands;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * redis 存储token的实现
  */
+@Slf4j
 public class RedisTokenStore implements TokenStore {
 
     private static final String ACCESS_PREFIX = "access:";
@@ -28,15 +34,15 @@ public class RedisTokenStore implements TokenStore {
     private static final String ACCESS_TO_REFRESH_PREFIX = "access_to_refresh:";
     private static final String REFRESH_TO_ACCESS_PREFIX = "refresh_to_access:";
     private static final String AUTHORITY_PREFIX = "authority_token:";
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final RedisTemplate<String, byte[]> bytesRedisTemplate;
 
-    private final RedisTokenStoreSerializationStrategy serializationStrategy = new JdkSerializationStrategy();
+    private final RedisTokenStoreSerializationStrategy valueSerializer = new JdkSerializationStrategy();
 
+    private final StringRedisSerializer keySerializer = new StringRedisSerializer();
 
-    public RedisTokenStore(RedisTemplate<String, Object> redisTemplate, RedisTemplate<String, byte[]> bytesRedisTemplate) {
-        this.redisTemplate = redisTemplate;
-        this.bytesRedisTemplate = bytesRedisTemplate;
+    private final RedisConnectionFactory connectionFactory;
+
+    public RedisTokenStore(RedisConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     @Override
@@ -68,49 +74,80 @@ public class RedisTokenStore implements TokenStore {
                 .token(token.getRefreshToken())
                 .expirationTime(token.getExpirationTime().plusHours(1))
                 .build();
+        // 存储
+        try (var conn = connectionFactory.getConnection()) {
+            conn.openPipeline();
+            RedisStringCommands commands = conn.stringCommands();
 
-        redisTemplate.opsForValue().setIfAbsent(accessKey, access, 1, TimeUnit.HOURS);
-        redisTemplate.opsForValue().setIfAbsent(refreshKey, refresh, 2, TimeUnit.HOURS);
-        redisTemplate.opsForValue().setIfAbsent(accessToUserKey, token.getAccessToken(), 1, TimeUnit.HOURS);
-        redisTemplate.opsForValue().setIfAbsent(accessToRefreshKey, token.getRefreshToken(), 1, TimeUnit.HOURS);
-        redisTemplate.opsForValue().setIfAbsent(refreshToAccessKey, token.getAccessToken(), 1, TimeUnit.HOURS);
-        bytesRedisTemplate.opsForValue().setIfAbsent(authorityKey, ConvertUtil.objectToByte(auth), 1, TimeUnit.HOURS);
+            commands.set(wrapKey(accessKey), wrapValue(access));
+            commands.set(wrapKey(refreshKey), wrapValue(refresh));
+            commands.set(wrapKey(accessToUserKey), wrapValue(token.getAccessToken()));
+            commands.set(wrapKey(accessToRefreshKey), wrapValue(token.getRefreshToken()));
+            commands.set(wrapKey(refreshToAccessKey), wrapValue(token.getAccessToken()));
+            commands.set(wrapKey(authorityKey), wrapValue(auth));
+
+            RedisKeyCommands keyCommands = conn.keyCommands();
+            keyCommands.expire(wrapKey(accessKey), 3600);
+            keyCommands.expire(wrapKey(refreshKey), 7200);
+            keyCommands.expire(wrapKey(accessToUserKey), 3600);
+            keyCommands.expire(wrapKey(accessToRefreshKey), 3600);
+            keyCommands.expire(wrapKey(refreshToAccessKey), 3600);
+            keyCommands.expire(wrapKey(authorityKey), 3600);
+
+            conn.closePipeline();
+        }
 
         return token;
     }
 
     @Override
     public Authentication read(String token) {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(ACCESS_PREFIX + token))) {
-            byte[] bytes = bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + token);
-            return (Authentication) ConvertUtil.byteToObject(bytes);
+        try (var connection = connectionFactory.getConnection()) {
+            if (Boolean.TRUE.equals(connection.keyCommands().exists(wrapKey(ACCESS_PREFIX + token)))) {
+                byte[] bytes = connection.stringCommands().get(wrapKey(AUTHORITY_PREFIX + token));
+                return deserializeAuthentication(bytes);
+            }
         }
         return null;
     }
 
     @Override
     public void remove(String token) {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(ACCESS_TO_REFRESH_PREFIX + token))) {
-            String refresh = (String) redisTemplate.opsForValue().get(ACCESS_TO_REFRESH_PREFIX + token);
-            TokenAccess access = Convert.convert(TokenAccess.class, redisTemplate.opsForValue().get(ACCESS_PREFIX + token));
 
-            redisTemplate.delete(ACCESS_PREFIX + token);
-            redisTemplate.delete(REFRESH_PREFIX + refresh);
-            redisTemplate.delete(AUTHORITY_PREFIX + token);
+        try (var connection = connectionFactory.getConnection()) {
+            if (Boolean.TRUE.equals(connection.keyCommands().exists(wrapKey(ACCESS_TO_REFRESH_PREFIX + token)))) {
+                RedisStringCommands commands = connection.stringCommands();
 
-            redisTemplate.delete(ACCESS_TO_REFRESH_PREFIX + token);
-            redisTemplate.delete(ACCESS_TO_USER_PREFIX + access.getUsername());
-            redisTemplate.delete(REFRESH_TO_ACCESS_PREFIX + refresh);
+                byte[] refreshBytes = commands.get(wrapKey(ACCESS_TO_REFRESH_PREFIX + token));
+                String refresh = deserialize(refreshBytes);
+
+                byte[] accessBytes = commands.get(wrapKey(ACCESS_PREFIX + token));
+                TokenAccess access = deserializeTokenAccess(accessBytes);
+
+                connection.openPipeline();
+                connection.keyCommands().del(wrapKey(ACCESS_PREFIX + token));
+                connection.keyCommands().del(wrapKey(REFRESH_PREFIX + refresh));
+                connection.keyCommands().del(wrapKey(AUTHORITY_PREFIX + token));
+
+                connection.keyCommands().del(wrapKey(ACCESS_TO_REFRESH_PREFIX + token));
+                connection.keyCommands().del(wrapKey(ACCESS_TO_USER_PREFIX + access.getUsername()));
+                connection.keyCommands().del(wrapKey(REFRESH_TO_ACCESS_PREFIX + refresh));
+
+                connection.closePipeline();
+            }
         }
     }
 
     @Override
     public Token refresh(String refreshToken) {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(REFRESH_TO_ACCESS_PREFIX + refreshToken))) {
-            var access = (String) redisTemplate.opsForValue().get(REFRESH_TO_ACCESS_PREFIX + refreshToken);
-            Authentication auth = (Authentication) ConvertUtil.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + access));
-            this.remove(access);
-            return this.create(auth);
+        try (var conn = connectionFactory.getConnection()) {
+            if (Boolean.TRUE.equals(conn.keyCommands().exists(wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken)))) {
+                var access = deserialize(conn.stringCommands().get(wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken)));
+                var auth = deserializeAuthentication(conn.stringCommands().get(wrapKey(AUTHORITY_PREFIX + access)));
+
+                remove(access);
+                return create(auth);
+            }
         }
         return null;
     }
@@ -118,9 +155,11 @@ public class RedisTokenStore implements TokenStore {
     @Override
     public Token check(String token) {
         var key = ACCESS_PREFIX + token;
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-            var access = Convert.convert(TokenAccess.class, redisTemplate.opsForValue().get(key));
-            return wrap(access.getUsername());
+        try (var conn = connectionFactory.getConnection()) {
+            if (Boolean.TRUE.equals(conn.keyCommands().exists(wrapKey(key)))) {
+                var access = deserializeTokenAccess(conn.stringCommands().get(wrapKey(key)));
+                return wrap(access.getUsername());
+            }
         }
         return null;
     }
@@ -139,9 +178,11 @@ public class RedisTokenStore implements TokenStore {
      * @return 存在返回token信息, 否则返回null
      */
     private @Nullable Token exists(@NotNull Authentication auth) {
-        var username = ((User) auth.getPrincipal()).getUsername();
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(ACCESS_TO_USER_PREFIX + username))) {
-            return wrap(username);
+        try (var conn = connectionFactory.getConnection()) {
+            var username = ((User) auth.getPrincipal()).getUsername();
+            if (Boolean.TRUE.equals(conn.keyCommands().exists(wrapKey(ACCESS_TO_USER_PREFIX + username)))) {
+                return wrap(username);
+            }
         }
         return null;
     }
@@ -153,34 +194,56 @@ public class RedisTokenStore implements TokenStore {
      * @return token信息
      */
     private Token wrap(String username) {
-        // access token
-        var accessToken = (String) redisTemplate.opsForValue().get(ACCESS_TO_USER_PREFIX + username);
-        var access = Convert.convert(TokenAccess.class, redisTemplate.opsForValue().get(ACCESS_PREFIX + accessToken));
-        // refresh token
-        var refreshToken = (String) redisTemplate.opsForValue().get(ACCESS_TO_REFRESH_PREFIX + accessToken);
-        var refresh = Convert.convert(TokenRefresh.class, redisTemplate.opsForValue().get(REFRESH_PREFIX + refreshToken));
-        // 获取权限
-        var authority = new ArrayList<String>();
-        var authentication = (Authentication) ConvertUtil.byteToObject(bytesRedisTemplate.opsForValue().get(AUTHORITY_PREFIX + accessToken));
-        authentication.getAuthorities().forEach(item -> authority.add(item.getAuthority()));
-        // 构建
-        return Token
-                .builder()
-                .username(access.getUsername())
-                .accessToken(access.getToken())
-                .refreshToken(refresh.getToken())
-                .authorities(authority)
-                .expirationTime(access.getExpirationTime())
-                .build();
+        try (var conn = connectionFactory.getConnection()) {
+            // access token
+            var accessToken = deserialize(conn.stringCommands().get(wrapKey(ACCESS_TO_USER_PREFIX + username)));
+            var access = deserializeTokenAccess(conn.stringCommands().get(wrapKey(ACCESS_PREFIX + accessToken)));
+            // refresh token
+            var refreshToken = deserialize(conn.stringCommands().get(wrapKey(ACCESS_TO_REFRESH_PREFIX + accessToken)));
+            var refresh = deserializeTokenRefresh(conn.stringCommands().get(wrapKey(REFRESH_PREFIX + refreshToken)));
+            // 获取权限
+            var authority = new ArrayList<String>();
+            var authentication = deserializeAuthentication(conn.stringCommands().get(wrapKey(AUTHORITY_PREFIX + accessToken)));
+            authentication.getAuthorities().forEach(item -> authority.add(item.getAuthority()));
+            // 构建
+            return Token
+                    .builder()
+                    .username(access.getUsername())
+                    .accessToken(access.getToken())
+                    .refreshToken(refresh.getToken())
+                    .authorities(authority)
+                    .expirationTime(access.getExpirationTime())
+                    .build();
+        }
     }
 
 
-    private byte[] serialize(Object object) {
-        return serializationStrategy.serialize(object);
+    private byte[] wrapKey(String key) {
+        return keySerializer.serialize(key);
     }
 
-    private Authentication deserialize(byte[] bytes) {
-        return serializationStrategy.deserialize(bytes, Authentication.class);
+    private byte[] wrapValue(Object obj) {
+        return valueSerializer.serialize(obj);
+    }
+
+    private byte[] wrapValue(String val) {
+        return valueSerializer.serialize(val);
+    }
+
+    private Authentication deserializeAuthentication(byte[] bytes) {
+        return valueSerializer.deserialize(bytes, Authentication.class);
+    }
+
+    private TokenAccess deserializeTokenAccess(byte[] bytes) {
+        return valueSerializer.deserialize(bytes, TokenAccess.class);
+    }
+
+    private TokenRefresh deserializeTokenRefresh(byte[] bytes) {
+        return valueSerializer.deserialize(bytes, TokenRefresh.class);
+    }
+
+    private String deserialize(byte[] bytes) {
+        return valueSerializer.deserializeString(bytes);
     }
 
 }

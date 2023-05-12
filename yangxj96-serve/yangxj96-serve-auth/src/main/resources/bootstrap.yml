@@ -29,5 +29,3 @@ yangxj96:
   security:
     enable: false
     store-type: redis
-  db:
-    security-db: 9

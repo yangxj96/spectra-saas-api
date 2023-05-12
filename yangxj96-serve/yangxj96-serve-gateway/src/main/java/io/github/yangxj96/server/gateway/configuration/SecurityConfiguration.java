@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
@@ -52,13 +53,11 @@ public class SecurityConfiguration {
         TokenStore store;
         if (storeType == StoreType.JDBC) {
             log.debug("{},store使用jdbc", LOG_PREFIX);
-            JdbcTemplate jdbcTemplate = SpringUtil.getBean(JdbcTemplate.class);
             store = new JdbcTokenStore();
         } else {
             log.debug("{},store使用redis", LOG_PREFIX);
-            RedisTemplate<String, Object> redisTemplate = SpringUtil.getBean("securityRedisTemplate");
-            RedisTemplate<String, byte[]> bytesRedisTemplate = SpringUtil.getBean("securityBytesRedisTemplate");
-            store = new RedisTokenStore(redisTemplate, bytesRedisTemplate);
+            var connectionFactory = SpringUtil.getBean(RedisConnectionFactory.class);
+            store = new RedisTokenStore(connectionFactory);
         }
 
         http

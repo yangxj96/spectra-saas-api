@@ -13,6 +13,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,11 +53,8 @@ public class WebSecurityConfiguration {
     @Value("${yangxj96.security.store-type}")
     private StoreType storeType;
 
-    @Resource(name = "securityRedisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Resource(name = "securityBytesRedisTemplate")
-    private RedisTemplate<String, byte[]> bytesRedisTemplate;
+    @Resource
+    private RedisConnectionFactory connectionFactory;
 
     /**
      * 密码管理器
@@ -80,7 +78,7 @@ public class WebSecurityConfiguration {
         if (storeType == StoreType.JDBC) {
             return new JdbcTokenStore();
         } else {
-            return new RedisTokenStore(redisTemplate, bytesRedisTemplate);
+            return new RedisTokenStore(connectionFactory);
         }
     }
 

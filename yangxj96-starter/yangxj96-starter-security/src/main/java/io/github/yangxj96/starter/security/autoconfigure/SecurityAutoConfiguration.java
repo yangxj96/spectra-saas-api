@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -106,9 +107,8 @@ public class SecurityAutoConfiguration {
             store = new JdbcTokenStore();
         } else {
             log.debug("{},store使用redis", LOG_PREFIX);
-            RedisTemplate<String, Object> redisTemplate = SpringUtil.getBean("securityRedisTemplate");
-            RedisTemplate<String, byte[]> bytesRedisTemplate = SpringUtil.getBean("securityBytesRedisTemplate");
-            store = new RedisTokenStore(redisTemplate, bytesRedisTemplate);
+            var connectionFactory = SpringUtil.getBean(RedisConnectionFactory.class);
+            store = new RedisTokenStore(connectionFactory);
         }
 
         http

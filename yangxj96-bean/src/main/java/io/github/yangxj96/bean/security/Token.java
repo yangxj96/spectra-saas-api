@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 响应的token实体
@@ -70,8 +71,8 @@ public class Token implements Serializable {
         return Token
                 .builder()
                 .username(principal.getUsername())
-                .accessToken(IdUtil.fastUUID())
-                .refreshToken(IdUtil.fastUUID())
+                .accessToken(IdUtil.fastUUID().toUpperCase(Locale.CHINA))
+                .refreshToken(IdUtil.fastUUID().toUpperCase(Locale.CHINA))
                 .authorities(authorities)
                 .expirationTime(LocalDateTime.now().plusHours(1))
                 .build();

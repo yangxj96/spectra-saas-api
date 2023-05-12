@@ -31,4 +31,19 @@ public class SecurityProperties {
      */
     private StoreType storeType = StoreType.JDBC;
 
+    private TokenOptions tokenOptions;
+
+    @Data
+    static class TokenOptions {
+        /**
+         * 鉴权token过期时长
+         */
+        private Long accessExpire = 3600L;
+        /**
+         * 刷新token过期时长
+         */
+        private Long refreshExpire = 3600L;
+
+    }
+
 }
