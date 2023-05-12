@@ -1,19 +1,15 @@
 package io.github.yangxj96.starter.security.store.impl;
 
-import cn.hutool.extra.spring.SpringUtil;
 import io.github.yangxj96.bean.security.Token;
 import io.github.yangxj96.bean.security.TokenAccess;
 import io.github.yangxj96.bean.security.TokenRefresh;
 import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.starter.security.props.SecurityProperties;
 import io.github.yangxj96.starter.security.store.TokenStore;
 import io.github.yangxj96.starter.security.store.redis.JdkSerializationStrategy;
 import io.github.yangxj96.starter.security.store.redis.RedisTokenStoreSerializationStrategy;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisKeyCommands;
 import org.springframework.data.redis.connection.RedisStringCommands;
