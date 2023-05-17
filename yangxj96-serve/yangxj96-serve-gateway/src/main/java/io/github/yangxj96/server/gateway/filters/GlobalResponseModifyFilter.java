@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.yangxj96.common.respond.R;
 import io.github.yangxj96.common.respond.RHttpHeadersExpand;
 import io.github.yangxj96.common.respond.RStatus;
-import io.github.yangxj96.common.utils.AesUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -177,11 +176,13 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
             try {
                 String s;
                 if (JSONUtil.isTypeJSON(str)) {
-                    s = AesUtil.encrypt(om.readTree(str).toPrettyString());
+                    //s = AesUtil.encrypt(om.readTree(str).toPrettyString());
+                    result.setData(om.readTree(str));
                 } else {
-                    s = AesUtil.encrypt(str);
+                    //s = AesUtil.encrypt(str);
+                    result.setData(str);
                 }
-                result.setData(s);
+//                result.setData(s);
                 bytes = om.writeValueAsBytes(result);
             } catch (JsonProcessingException e) {
                 log.error("json转换异常,可能是非json类型的返回,{}", e.getMessage());

@@ -63,7 +63,7 @@ services:
     ports:
       - "8848:8848"
       - "9848:9848"
-      - "9868:9868"
+      - "9849:9849"
     depends_on:
       yangxj96-pgsql:
         condition: service_healthy
