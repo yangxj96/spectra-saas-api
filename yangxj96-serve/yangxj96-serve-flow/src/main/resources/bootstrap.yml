@@ -2,12 +2,12 @@ server:
   port: 0
 spring:
   datasource:
-    url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db?currentSchema=db_flow&nullCatalogMeansCurrent=true
+    url: jdbc:postgresql://${DB_HOST:127.0.0.1:5432}/yangxj96_saas_db?currentSchema=db_flow&nullCatalogMeansCurrent=true
   redis:
-    host: ${yangxj96.wsl}
-    password: QuVsKppcWvwwX2Vv
-    port: 6379
-    database: 10
+    host: ${REDIS_HOST:127.0.0.1}
+    password: ${REDIS_PASSWORD:QuVsKppcWvwwX2Vv}
+    port: ${REDIS_PORT:6379}
+    database: 0
     lettuce:
       pool:
         max-active: 8
@@ -20,9 +20,9 @@ spring:
     history-level: full
     deployment-mode: never-fail
   rabbitmq:
-    host: ${yangxj96.wsl}
-    username: root
-    password: QuVsKppcWvwwX2Vv
+    host: ${MQ_HOST:127.0.0.1}
+    username: ${MQ_USERNAME:root}
+    password: ${MQ_PASSWORD:QuVsKppcWvwwX2Vv}
     virtual-host: /
   cloud:
     stream:
@@ -44,7 +44,6 @@ mybatis-plus:
 yangxj96:
   security:
     enable: false
-    store-type: redis
   db:
     security-db: 9
     # 当前项目版本低于3.0.0 导致自动配置包不适用

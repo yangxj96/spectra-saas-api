@@ -22,7 +22,7 @@ public class SecurityProperties {
     /**
      * 是否启用
      */
-    private boolean enable = true;
+    private Boolean enable = true;
 
     /**
      * 存储介质类型

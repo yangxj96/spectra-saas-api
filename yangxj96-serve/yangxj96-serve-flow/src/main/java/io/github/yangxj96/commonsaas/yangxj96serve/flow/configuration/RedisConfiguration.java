@@ -1,6 +1,6 @@
 package io.github.yangxj96.commonsaas.yangxj96serve.flow.configuration;
 
-import io.github.yangxj96.starter.db.properties.DBProperties;
+import io.github.yangxj96.starter.db.props.DBProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;

@@ -1,5 +1,5 @@
-
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.jetbrains.kotlin.konan.target.HostManager.Companion.host
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
@@ -99,6 +99,10 @@ subprojects {
                 name.set("cache-${rootProject.name}.launch")
             }
         }
+    }
+
+    tasks.named("compileJava") {
+        inputs.files(tasks.named("processResources"))
     }
 }
 

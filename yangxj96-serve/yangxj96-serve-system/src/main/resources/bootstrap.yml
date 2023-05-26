@@ -1,22 +1,12 @@
 server:
-  port: 8080
+  port: 0
 spring:
   datasource:
-    url: jdbc:postgresql://${yangxj96.wsl}:5432/yangxj96_saas_db
-    #hikari数据源特性配置
-    hikari:
-      maximum-pool-size: 100 #最大连接数,默认值10.
-      minimum-idle: 20 #最小空闲连接，默认值10.
-      connection-timeout: 60000 #连接超时时间(毫秒),默认值30秒.
-      #空闲连接超时时间，默认值600000(10分钟),只有空闲连接数大于最大连接数且空闲时间超过该值，才会被释放
-      #如果大于等于 max-lifetime 且 max-lifetime>0,则会被重置为0.
-      idle-timeout: 600000
-      max-lifetime: 3000000 #连接最大存活时间,默认值30分钟.设置应该比mysql设置的超时时间短
-      connection-test-query: select 1 #连接测试查询
+    url: jdbc:postgresql://${DB_HOST:127.0.0.1:5432}/yangxj96_saas_db
   rabbitmq:
-    host: ${yangxj96.wsl}
-    username: root
-    password: QuVsKppcWvwwX2Vv
+    host: ${MQ_HOST:127.0.0.1}
+    username: ${MQ_USERNAME:root}
+    password: ${MQ_PASSWORD:QuVsKppcWvwwX2Vv}
     virtual-host: /
   cloud:
     stream:
@@ -47,7 +37,6 @@ yangxj96:
     connect-time-out: 10000
   security:
     enable: true
-    store-type: jdbc
 
 logging:
   level:
