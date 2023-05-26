@@ -1,5 +1,4 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-import org.jetbrains.kotlin.konan.target.HostManager.Companion.host
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {

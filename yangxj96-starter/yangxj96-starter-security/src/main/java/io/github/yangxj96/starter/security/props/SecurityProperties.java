@@ -22,16 +22,17 @@ public class SecurityProperties {
     /**
      * 是否启用
      */
-    private Boolean enable = true;
+    private boolean enable = true;
 
     /**
      * 存储介质类型
      * <br/>
      * 如果是redis类型的话,需要yangxj96.db.redis-enable=true
      */
-    private StoreType storeType = StoreType.JDBC;
+    private StoreType storeType = StoreType.REDIS;
 
-    private TokenOptions tokenOptions;
+    /** token配置 **/
+    private TokenOptions tokenOptions = new TokenOptions();
 
     @Data
     static class TokenOptions {

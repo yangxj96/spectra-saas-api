@@ -15,17 +15,17 @@ public class RemoteProperties {
     /**
      * 连接超时时间,单位毫秒.
      **/
-    private Integer connectTimeOut = 1000;
+    private int connectTimeOut = 1000;
 
     /**
      * 读取超时时间,单位毫秒.
      **/
-    private Integer readTimeOut = 1000;
+    private int readTimeOut = 1000;
 
     /**
      * 写出超时时间,单位毫秒.
      **/
-    private Integer writeTimeout = 1000;
+    private int writeTimeout = 1000;
 
     /**
      * feign日志输出等级

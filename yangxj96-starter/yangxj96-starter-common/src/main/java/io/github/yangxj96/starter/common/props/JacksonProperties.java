@@ -21,7 +21,7 @@ public class JacksonProperties {
     /**
      * 是否开启自动配置.
      */
-    private Boolean enable = true;
+    private boolean enable = true;
     /**
      * LocalDateTime类序列化方式.
      */
