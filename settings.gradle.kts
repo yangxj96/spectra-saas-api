@@ -17,6 +17,9 @@ findProject(":yangxj96-serve:yangxj96-serve-dept")?.name = "yangxj96-serve-dept"
 include("yangxj96-serve:yangxj96-serve-system")
 findProject(":yangxj96-serve:yangxj96-serve-system")?.name = "yangxj96-serve-system"
 
+include("yangxj96-serve:yangxj96-serve-platform")
+findProject(":yangxj96-serve:yangxj96-serve-platform")?.name = "yangxj96-serve-platform"
+
 /////////////////// starter
 
 include("yangxj96-starter:yangxj96-starter-remote")
