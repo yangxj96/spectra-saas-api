@@ -1,20 +1,3 @@
-plugins {
-    `maven-publish`
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = project.group.toString()
-            artifactId = "yangxj96-bean"
-            version = project.version.toString()
-
-            from(components["java"])
-        }
-
-    }
-}
-
 dependencies {
     compileOnly(project(":yangxj96-common"))
 
