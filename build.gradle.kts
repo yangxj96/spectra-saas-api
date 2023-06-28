@@ -3,8 +3,6 @@ import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     java
-    id("java-library")
-    id("maven-publish")
     id("org.springframework.boot") version "3.0.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
     id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
@@ -12,7 +10,7 @@ plugins {
 
 allprojects {
     group = "io.github.yangxj96.commonsaas"
-    version = "1.0.0-SNAPSHOT"
+    version = "0.0.1-SNAPSHOT"
 
 
     repositories {
@@ -29,7 +27,6 @@ subprojects {
 
     // 此处的插件由于在最外层的plugins中声明了. 且声明了版本号,此处能直接使用apply()
     apply(plugin = "java")
-    apply(plugin = "java-library")
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.jetbrains.kotlin.jvm")
