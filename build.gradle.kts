@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.buildpack.platform.build.PullPolicy
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
@@ -6,7 +7,8 @@ plugins {
     java
     id("org.springframework.boot") version "3.0.0" apply false
     id("io.spring.dependency-management") version "1.1.0" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.7.20" apply false
+    id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
+    id("org.jetbrains.kotlin.plugin.spring") version "1.8.22" apply false
 }
 
 allprojects {
@@ -31,6 +33,7 @@ subprojects {
     apply(plugin = "org.springframework.boot")
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.kotlin.plugin.spring")
 
     // java源码和目标文件版本
     java {
@@ -54,6 +57,8 @@ subprojects {
     }
 
     dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         // 测试 begin
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
@@ -73,6 +78,14 @@ subprojects {
     tasks.named<Test>("test") {
         useJUnitPlatform()
     }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs += "-Xjsr305=strict"
+            jvmTarget = "17"
+        }
+    }
+
 
     // 官方提供的打包为OCI镜像的配置
     tasks.named<BootBuildImage>("bootBuildImage") {
