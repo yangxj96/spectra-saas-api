@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost/yangxj96_saas_db
+    username: postgres
+    password: QuVsKppcWvwwX2Vv
+logging:
+  level:
+    sql: debug
+    root: debug
