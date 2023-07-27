@@ -10,7 +10,17 @@ spring:
     url: r2dbc:postgresql://localhost/yangxj96_saas_db
     username: postgres
     password: QuVsKppcWvwwX2Vv
+
+# 端点检查放开所有
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
 logging:
   level:
-    sql: debug
-    root: debug
+    org.springframework.r2dbc: DEBUG  #输出执行的sql

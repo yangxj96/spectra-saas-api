@@ -7,6 +7,7 @@ dependencies {
     // spring data数据包
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     api("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    api("io.r2dbc:r2dbc-pool")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
 
