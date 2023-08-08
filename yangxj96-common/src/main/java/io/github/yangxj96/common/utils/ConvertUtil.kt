@@ -1,16 +1,11 @@
+package io.github.yangxj96.common.utils
 
-package io.github.yangxj96.common.utils;
-
-import java.io.*;
-import java.util.*;
+import java.io.*
 
 /**
  * 转换工具类
  */
-public class ConvertUtil {
-
-    private ConvertUtil(){}
-
+object ConvertUtil {
 
     /**
      * obj 转 list map,固定map的key为string 类型
@@ -19,11 +14,10 @@ public class ConvertUtil {
      * @param vClass map的value的类型
      * @param <V>    V 的类型
      * @return 转换后的list map,可能为空
-     */
-    public static <V> List<Map<String, V>> objToListMap(Object obj, Class<V> vClass) {
-        return objToListMap(obj, String.class, vClass);
+    </V> */
+    fun <V> objToListMap(obj: Any?, vClass: Class<V>): List<Map<String, V>> {
+        return objToListMap(obj, String::class.java, vClass)
     }
-
 
     /**
      * obj 转 list map
@@ -34,24 +28,23 @@ public class ConvertUtil {
      * @param <K>    K 的类型
      * @param <V>    V 的类型
      * @return 转换后的list map,可能为空
-     */
-    public static <K, V> List<Map<K, V>> objToListMap(Object obj, Class<K> kCalzz, Class<V> vCalzz) {
-        if (!(obj instanceof List<?>)) {
-            return Collections.emptyList();
+    </V></K> */
+    fun <K, V> objToListMap(obj: Any?, kCalzz: Class<K>, vCalzz: Class<V>): List<Map<K, V>> {
+        if (obj !is List<*>) {
+            return emptyList()
         }
-        List<Map<K, V>> result = new ArrayList<>();
-        for (Object mapObj : (List<?>) obj) {
-            if (mapObj instanceof Map<?, ?>) {
-                Map<K, V> map = new HashMap<>(16);
-                for (Map.Entry<?, ?> entry : ((Map<?, ?>) mapObj).entrySet()) {
-                    map.put(kCalzz.cast(entry.getKey()), vCalzz.cast(entry.getValue()));
+        val result: MutableList<Map<K, V>> = ArrayList()
+        for (mapObj in obj) {
+            if (mapObj is Map<*, *>) {
+                val map: MutableMap<K, V> = HashMap(16)
+                for ((key, value) in mapObj) {
+                    map[kCalzz.cast(key)] = vCalzz.cast(value)
                 }
-                result.add(map);
+                result.add(map)
             }
         }
-        return result;
+        return result
     }
-
 
     /**
      * 对象转list
@@ -60,18 +53,17 @@ public class ConvertUtil {
      * @param clazz list item的类型
      * @param <T>   list item的类型
      * @return 转换后的list, 可能为空
-     */
-    public static <T> List<T> objToList(Object obj, Class<T> clazz) {
-        if (!(obj instanceof List<?>)) {
-            return Collections.emptyList();
+    </T> */
+    fun <T> objToList(obj: Any?, clazz: Class<T>): List<T> {
+        if (obj !is List<*>) {
+            return emptyList()
         }
-        List<T> result = new ArrayList<>();
-        for (Object o : (List<?>) obj) {
-            result.add(clazz.cast(o));
+        val result: MutableList<T> = ArrayList()
+        for (o in obj) {
+            result.add(clazz.cast(o))
         }
-        return result;
+        return result
     }
-
 
     /**
      * 字节数组转对象
@@ -79,17 +71,15 @@ public class ConvertUtil {
      * @param bytes 字节数组
      * @return 转换后的对象
      */
-    public static Object byteToObject(byte[] bytes) {
-        try (
-                ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
-                ObjectInputStream oi = new ObjectInputStream(stream)
-        ) {
-            return oi.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("字节数组转对象异常");
+    fun byteToObject(bytes: ByteArray?): Any {
+        try {
+            ByteArrayInputStream(bytes).use { stream -> ObjectInputStream(stream).use { oi -> return oi.readObject() } }
+        } catch (e: IOException) {
+            throw RuntimeException("字节数组转对象异常")
+        } catch (e: ClassNotFoundException) {
+            throw RuntimeException("字节数组转对象异常")
         }
     }
-
 
     /**
      * 对象转字节数组
@@ -97,16 +87,16 @@ public class ConvertUtil {
      * @param obj 对象
      * @return 字节数组
      */
-    public static byte[] objectToByte(Object obj) {
-        try (
-                ByteArrayOutputStream bo = new ByteArrayOutputStream();
-                ObjectOutputStream oo = new ObjectOutputStream(bo)
-        ) {
-            oo.writeObject(obj);
-            return bo.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException("对象转字节数组异常");
+    fun objectToByte(obj: Any?): ByteArray {
+        try {
+            ByteArrayOutputStream().use { bo ->
+                ObjectOutputStream(bo).use { oo ->
+                    oo.writeObject(obj)
+                    return bo.toByteArray()
+                }
+            }
+        } catch (e: IOException) {
+            throw RuntimeException("对象转字节数组异常")
         }
     }
-
 }

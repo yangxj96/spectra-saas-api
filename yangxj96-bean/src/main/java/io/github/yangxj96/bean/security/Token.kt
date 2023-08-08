@@ -1,81 +1,69 @@
-package io.github.yangxj96.bean.security;
+package io.github.yangxj96.bean.security
 
-import cn.hutool.core.util.IdUtil;
-import io.github.yangxj96.bean.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import cn.hutool.core.util.IdUtil
+import io.github.yangxj96.bean.user.User
+import org.springframework.security.core.Authentication
+import java.io.Serial
+import java.io.Serializable
+import java.time.LocalDateTime
+import java.util.*
 
 /**
  * 响应的token实体
  */
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class Token implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+class Token : Serializable {
 
     /**
      * 用户名
-     **/
-    private String username;
+     */
+    var username: String? = null
 
     /**
      * 访问 token
-     **/
-    private String accessToken;
+     */
+    var accessToken: String? = null
 
     /**
      * 权限token
-     **/
-    private String refreshToken;
+     */
+    var refreshToken: String? = null
 
     /**
      * 权限列表
-     **/
-    private List<String> authorities;
+     */
+    var authorities: List<String>? = null
 
     /**
      * 过期时间
-     **/
-    private LocalDateTime expirationTime;
-
-    /**
-     * 生成token
-     *
-     * @param auth {@link Authentication} 认证对象
-     * @return 生成的token数据
      */
-    public static Token generate(Authentication auth) {
-        // 获取必须的数据
-        var principal = (User) auth.getPrincipal();
-        List<String> authorities = new ArrayList<>();
-        for (GrantedAuthority authority : principal.getAuthorities()) {
-            authorities.add(authority.getAuthority());
+    var expirationTime: LocalDateTime? = null
+
+    companion object {
+
+        /**
+         * 生成token
+         *
+         * @param auth [Authentication] 认证对象
+         * @return 生成的token数据
+         */
+        @JvmStatic
+        fun generate(auth: Authentication): Token {
+            // 获取必须的数据
+            val principal = auth.principal as User
+            val authorities: MutableList<String> = ArrayList()
+            for (authority in principal.authorities) {
+                authorities.add(authority.authority)
+            }
+
+            val token = Token()
+            token.username = principal.username
+            token.accessToken = IdUtil.fastUUID().uppercase(Locale.CHINA)
+            token.refreshToken = IdUtil.fastUUID().uppercase(Locale.CHINA)
+            token.authorities = authorities
+            token.expirationTime = LocalDateTime.now().plusHours(1)
+
+            // 生成token
+            return token
         }
-
-        // 生成token
-        return Token
-                .builder()
-                .username(principal.getUsername())
-                .accessToken(IdUtil.fastUUID().toUpperCase(Locale.CHINA))
-                .refreshToken(IdUtil.fastUUID().toUpperCase(Locale.CHINA))
-                .authorities(authorities)
-                .expirationTime(LocalDateTime.now().plusHours(1))
-                .build();
     }
-
 }

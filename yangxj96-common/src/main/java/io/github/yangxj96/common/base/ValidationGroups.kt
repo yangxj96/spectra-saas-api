@@ -1,31 +1,26 @@
-package io.github.yangxj96.common.base;
+package io.github.yangxj96.common.base
 
 /**
  * 校验分组
  */
-public class ValidationGroups {
-
+class ValidationGroups {
     /**
      * 校验新增分组
-     **/
-    public interface Insert {
-    }
+     */
+    interface Insert
 
     /**
      * 校验删除分组
-     **/
-    public interface Delete {
-    }
+     */
+    interface Delete
 
     /**
      * 校验修改分组
-     **/
-    public interface Update {
-    }
+     */
+    interface Update
 
     /**
      * 校验查询分组
-     **/
-    public interface Select {
-    }
+     */
+    interface Select
 }

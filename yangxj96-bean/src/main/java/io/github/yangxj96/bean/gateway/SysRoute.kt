@@ -1,69 +1,53 @@
-package io.github.yangxj96.bean.gateway;
+package io.github.yangxj96.bean.gateway
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.yangxj96.common.base.BasicEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableField
+import com.baomidou.mybatisplus.annotation.TableName
+import io.github.yangxj96.common.base.BasicEntity
+import java.io.Serializable
+import java.time.LocalDateTime
 
 /**
  * 路由表定义
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName(value = "db_system.t_sys_route")
-public class SysRoute extends BasicEntity implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+class SysRoute : BasicEntity(), Serializable {
 
     /**
      * 路由地址
      */
     @TableField(value = "uri")
-    private String uri;
+    var uri: String? = null
 
     /**
      * 排序
      */
     @TableField(value = "\"order\"")
-    private Integer order;
+    var order: Int? = null
 
     /**
      * 断言
      */
     @TableField(value = "predicates")
-    private String predicates;
+    var predicates: String? = null
 
     /**
      * 过滤器
      */
     @TableField(value = "filters")
-    private String filters;
+    var filters: String? = null
 
     /**
      * 元数据
      */
     @TableField(value = "metadata")
-    private String metadata;
+    var metadata: String? = null
 
     /**
      * 路由ID
      */
     @TableField(value = "route_id")
-    private String routeId;
+    var routeId: String? = null
 
     @TableField(value = "updated_time")
-    private LocalDateTime updatedTime;
-
+    override var updatedTime: LocalDateTime? = null
 }

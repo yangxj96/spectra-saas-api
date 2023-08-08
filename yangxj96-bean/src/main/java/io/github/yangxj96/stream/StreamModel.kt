@@ -1,14 +1,4 @@
-/*
- *  Copyright (c) 2021 - 2023
- *  作者：杨新杰(Jack Young)
- *  邮箱：yangxj96@gmail.com
- *  日期：2023-04-20 14:52:53
- *  Copyright (c) 2021 - 2023
- */
-
-package io.github.yangxj96.stream;
-
-import lombok.*;
+package io.github.yangxj96.stream
 
 /**
  * 流消息格式
@@ -17,15 +7,10 @@ import lombok.*;
  * @version 1.0.0
  * @date 2023/4/20 14:52
  */
-@Data
-@ToString
-@EqualsAndHashCode
-@AllArgsConstructor
-@NoArgsConstructor
-public class StreamModel {
+class StreamModel {
 
-    private String type;
+    var type: String? = null
 
-    private Object message;
+    var message: Any? = null
 
 }

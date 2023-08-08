@@ -1,36 +1,25 @@
-package io.github.yangxj96.bean.system;
+package io.github.yangxj96.bean.system
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.yangxj96.common.base.BasicEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableField
+import com.baomidou.mybatisplus.annotation.TableName
+import io.github.yangxj96.common.base.BasicEntity
+import java.io.Serializable
 
 /**
  * 系统配置表
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName(value = "db_system.t_configure")
-public class Configure extends BasicEntity implements Serializable {
+class Configure : BasicEntity(), Serializable {
 
     /**
      * key
      */
     @TableField(value = "\"key\"")
-    private String key;
+    var key: String? = null
 
     /**
      * value
      */
     @TableField(value = "\"value\"")
-    private String value;
+    var value: String? = null
 }

@@ -1,43 +1,38 @@
-package io.github.yangxj96.server.auth.service.impl;
+package io.github.yangxj96.server.auth.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.server.auth.service.UserService;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
+import io.github.yangxj96.bean.user.User
+import io.github.yangxj96.server.auth.service.UserService
+import jakarta.annotation.Resource
+import org.apache.commons.lang3.StringUtils
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.stereotype.Service
 
 /**
  * 用户名密码登录的实现
  */
-@Slf4j
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+class UserDetailsServiceImpl : UserDetailsService {
 
     @Resource
-    private UserService userService;
+    private lateinit var userService: UserService
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    @Throws(UsernameNotFoundException::class)
+    override fun loadUserByUsername(username: String): UserDetails {
         if (StringUtils.isEmpty(username)) {
-            throw new NullPointerException("用户名为空");
-        }
-        User user = userService.getOne(
-                new LambdaQueryWrapper<User>()
-                        .eq(User::getUsername, username)
-                        .last("LIMIT 1")
-        );
-        if (null == user) {
-            throw new UsernameNotFoundException("用户不存在");
+            throw NullPointerException("用户名为空")
         }
 
-        user.setAuthorities(userService.getAuthoritiesByUserId(user.getId()));
-        return user;
+        val wrapper = LambdaQueryWrapper<User>()
+            .eq(User::username, username)
+            .last("LIMIT 1")
+
+        val user = userService.getOne(wrapper) ?: throw UsernameNotFoundException("用户不存在")
+
+        user.authorities = userService.getAuthoritiesByUserId(user.id!!)
+
+        return user
     }
-
 }

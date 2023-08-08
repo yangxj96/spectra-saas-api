@@ -1,92 +1,90 @@
-package io.github.yangxj96.bean.user;
+package io.github.yangxj96.bean.user
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.github.yangxj96.common.base.BasicEntity;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.List;
+import com.baomidou.mybatisplus.annotation.TableField
+import com.baomidou.mybatisplus.annotation.TableName
+import com.fasterxml.jackson.annotation.JsonIgnore
+import io.github.yangxj96.common.base.BasicEntity
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import java.io.Serializable
 
 /**
  * 用户表
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName(value = "db_user.t_user")
-public class User extends BasicEntity implements Serializable, UserDetails {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+class User : BasicEntity(), Serializable, UserDetails {
 
     /**
      * 用户名
      */
     @TableField(value = "username")
-    private String username;
+    @get:JvmName("username")
+    var username: String = ""
 
     /**
      * 密码
      */
     @TableField(value = "\"password\"")
-    private String password;
+    @get:JvmName("password")
+    var password: String = ""
 
     /**
      * 账号是否过期
      */
     @TableField(value = "access_expired")
-    private Boolean accessExpired;
+    var accessExpired: Boolean? = null
 
     /**
      * 账号是否锁定
      */
     @TableField(value = "access_locked")
-    private Boolean accessLocked;
+    var accessLocked: Boolean? = null
 
     /**
      * 账号是否启用
      */
     @TableField(value = "access_enable")
-    private Boolean accessEnable;
+    var accessEnable: Boolean? = null
 
     /**
      * 密码是否过期
      */
     @TableField(value = "credentials_expired")
-    private Boolean credentialsExpired;
+    var credentialsExpired: Boolean? = null
+
     /**
      * 权限列表
-     **/
+     */
     @JsonIgnore
     @TableField(exist = false)
-    private List<? extends GrantedAuthority> authorities;
+    @get:JvmName("authorities")
+    var authorities: MutableCollection<GrantedAuthority> = mutableListOf()
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return !this.accessExpired;
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return this.authorities
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return !this.accessLocked;
+    override fun getPassword(): String {
+        return password
     }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return !this.credentialsExpired;
+    override fun getUsername(): String {
+        return username
     }
 
-    @Override
-    public boolean isEnabled() {
-        return this.accessEnable;
+    override fun isAccountNonExpired(): Boolean {
+        return !accessExpired!!
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return !accessLocked!!
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return !credentialsExpired!!
+    }
+
+    override fun isEnabled(): Boolean {
+        return accessEnable!!
     }
 }

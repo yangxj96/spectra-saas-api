@@ -1,17 +1,13 @@
-package io.github.yangxj96.server.auth.service;
+package io.github.yangxj96.server.auth.service
 
-import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.common.base.BasicService;
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.List;
+import io.github.yangxj96.bean.user.User
+import io.github.yangxj96.common.base.BasicService
+import org.springframework.security.core.GrantedAuthority
 
 /**
  * 用户service层
  */
-public interface UserService extends BasicService<User> {
-
-
+interface UserService : BasicService<User> {
     /**
      * 关联用户和角色
      *
@@ -19,7 +15,7 @@ public interface UserService extends BasicService<User> {
      * @param role 角色id
      * @return 是否关联成功
      */
-    boolean relevance(Long user, Long role);
+    fun relevance(user: Long, role: Long): Boolean
 
     /**
      * 根据用户id查询用户权限列表
@@ -27,5 +23,5 @@ public interface UserService extends BasicService<User> {
      * @param userId 用户id
      * @return 权限列表
      */
-    List<GrantedAuthority> getAuthoritiesByUserId(Long userId);
+    fun getAuthoritiesByUserId(userId: Long): MutableList<GrantedAuthority>
 }

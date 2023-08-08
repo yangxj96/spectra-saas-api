@@ -1,9 +1,9 @@
-package io.github.yangxj96.server.auth;
+package io.github.yangxj96.server.auth
 
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.mybatis.spring.annotation.MapperScan
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 
 /**
  * 用户认证服务的启动类
@@ -11,9 +11,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @MapperScan("io.github.yangxj96.server.auth.mapper")
 @EnableDiscoveryClient
 @SpringBootApplication
-public class Application {
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+class Application
 
+fun main(args: Array<String>) {
+    runApplication<Application>(*args)
 }

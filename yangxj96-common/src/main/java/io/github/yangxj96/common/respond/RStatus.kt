@@ -1,22 +1,18 @@
-package io.github.yangxj96.common.respond;
+package io.github.yangxj96.common.respond
 
-import lombok.Getter;
-
-import java.util.Objects;
+import lombok.Getter
 
 /**
- * 通用响应的状态,<br/>
+ * 通用响应的状态,<br></br>
  * 进行主要是进行标准化响应内容,也许以后如果增加国际化相关内容可能会有用
  */
 @Getter
-public enum RStatus {
-
+enum class RStatus(val code: Int, val msg: String) {
     /*
     code分布:
     认证相关: 100000 - 199999
     服务异常: 200000 - 299999
      */
-
     SUCCESS(0, "success"),
     FAILURE(-1, "failure"),
     SECURITY_AUTHENTICATION(100000, "认证异常"),
@@ -36,21 +32,14 @@ public enum RStatus {
     FAILURE_DATA_NULL(200010, "查询不到数据"),
     NOT_FIND_ROUTE(200011, "未找到路由");
 
-    private final Integer code;
-
-    private final String msg;
-
-    RStatus(Integer code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
-
-    public static String getMsgByCode(Integer code) {
-        for (RStatus status : values()) {
-            if (Objects.equals(status.code, code)) {
-                return status.msg;
+    companion object {
+        fun getMsgByCode(code: Int?): String {
+            for (status in values()) {
+                if (status.code == code) {
+                    return status.msg
+                }
             }
+            return "undefined"
         }
-        return "undefined";
     }
 }

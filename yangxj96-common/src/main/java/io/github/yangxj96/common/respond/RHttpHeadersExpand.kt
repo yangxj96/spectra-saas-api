@@ -1,20 +1,23 @@
-package io.github.yangxj96.common.respond;
+package io.github.yangxj96.common.respond
 
-import org.springframework.http.HttpHeaders;
-
-import java.io.Serial;
+import org.springframework.http.HttpHeaders
+import java.io.Serial
 
 /**
  * 响应头类型扩展
  *
  */
-public class RHttpHeadersExpand extends HttpHeaders {
+object RHttpHeadersExpand : HttpHeaders() {
+
+    private fun readResolve(): Any = RHttpHeadersExpand
+
+    @Serial
+    private val serialVersionUID = -2727675696060704975L
 
     /**
      * 响应码
-     **/
-    public static final String RESULT_CODE = "result-code";
-    @Serial
-    private static final long serialVersionUID = -2727675696060704975L;
+     */
+    const val RESULT_CODE = "result-code"
+
 
 }

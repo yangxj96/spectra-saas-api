@@ -1,35 +1,36 @@
-package io.github.yangxj96.server.auth.controller;
+package io.github.yangxj96.server.auth.controller
 
-import io.github.yangxj96.bean.security.Token;
-import io.github.yangxj96.common.respond.R;
-import io.github.yangxj96.server.auth.domain.Login;
-import io.github.yangxj96.starter.security.store.TokenStore;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import io.github.yangxj96.bean.security.Token
+import io.github.yangxj96.common.respond.R.Companion.failure
+import io.github.yangxj96.common.respond.R.Companion.success
+import io.github.yangxj96.server.auth.domain.Login
+import io.github.yangxj96.starter.security.store.TokenStore
+import jakarta.annotation.Resource
+import org.slf4j.LoggerFactory
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 /**
  * 认证控制器
  */
-@Slf4j
 @RestController
 @RequestMapping
-public class AuthController {
+class AuthController {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
 
     @Resource
-    private AuthenticationManager authenticationManager;
+    private lateinit var authenticationManager: AuthenticationManager
 
     @Resource
-    private TokenStore tokenStore;
+    private lateinit var tokenStore: TokenStore
 
     /**
      * 用户名密码方式登录
@@ -37,24 +38,25 @@ public class AuthController {
      * @param param 登录参数
      * @return 登录结果
      */
-    @PostMapping(value = "/login")
-    public Token login(@RequestBody @NotNull Login param) {
-        Token token = null;
+    @PostMapping(value = ["/login"])
+    fun login(@RequestBody param: Login): Token? {
+        log.info("用户:${param.username}开始登录,输入的密码为:${param.password}")
+        var token: Token? = null
         // 构建后认证
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(param.getUsername(), param.getPassword());
-        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        val authenticationToken = UsernamePasswordAuthenticationToken(param.username, param.password)
+        val authenticate = authenticationManager.authenticate(authenticationToken)
         // 判断是否登录成功,进行创建token且响应
         try {
-            if (authenticate.isAuthenticated()) {
-                token = tokenStore.create(authenticate);
-                R.success();
+            if (authenticate.isAuthenticated) {
+                token = tokenStore.create(authenticate)
+                success()
             } else {
-                R.failure();
+                failure()
             }
-        } catch (Exception e) {
-            R.failure();
+        } catch (e: Exception) {
+            failure()
         }
-        return token;
+        return token
     }
 
     /**
@@ -65,14 +67,13 @@ public class AuthController {
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/refresh")
-    public Token refresh(String token) {
-        try {
-            Token refresh = tokenStore.refresh(token);
-            R.success();
-            return refresh;
-        } catch (Exception e) {
-            R.failure();
-            return null;
+    fun refresh(token: String): Token? {
+        return try {
+            success()
+            tokenStore.refresh(token)
+        } catch (e: Exception) {
+            failure()
+            null
         }
     }
 
@@ -83,15 +84,14 @@ public class AuthController {
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/logoff")
-    public void logout(String token) {
+    fun logout(token: String) {
         try {
-            tokenStore.remove(token);
-            R.success();
-        } catch (Exception e) {
-            R.failure();
+            tokenStore.remove(token)
+            success()
+        } catch (e: Exception) {
+            failure()
         }
     }
-
 
     /**
      * 检查token状态
@@ -101,14 +101,13 @@ public class AuthController {
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/check_token")
-    public Token checkToken(String token) {
-        try {
-            R.success();
-            return tokenStore.check(token);
-        } catch (Exception e) {
-            R.failure();
-            throw new RuntimeException("获取auth状态异常");
+    fun checkToken(token: String): Token? {
+        return try {
+            success()
+            tokenStore.check(token)
+        } catch (e: Exception) {
+            failure()
+            throw RuntimeException("获取auth状态异常")
         }
     }
-
 }

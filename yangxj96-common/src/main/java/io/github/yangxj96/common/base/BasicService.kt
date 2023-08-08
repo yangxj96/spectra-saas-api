@@ -1,18 +1,18 @@
-package io.github.yangxj96.common.base;
+package io.github.yangxj96.common.base
 
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.IService
 
 /**
  * RESTFul 接口公用service层
  *
  * @param <O> 子类对应的实体
- */
-public interface BasicService<O extends BasicEntity> extends IService<O> {
+</O> */
+interface BasicService<O : BasicEntity?> : IService<O> {
 
-    O create(O datum);
+    fun create(datum: O): O
 
-    boolean delete(String id);
+    fun delete(id: String?): Boolean
 
-    O modify(O datum);
+    fun modify(datum: O): O
 
 }

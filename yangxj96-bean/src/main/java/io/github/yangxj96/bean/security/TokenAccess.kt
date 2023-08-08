@@ -1,55 +1,38 @@
-package io.github.yangxj96.bean.security;
+package io.github.yangxj96.bean.security
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.yangxj96.common.base.BasicEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
+import com.baomidou.mybatisplus.annotation.TableField
+import com.baomidou.mybatisplus.annotation.TableName
+import io.github.yangxj96.common.base.BasicEntity
+import java.io.Serializable
+import java.time.LocalDateTime
 
 /**
  * 存储的access token实体
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName(value = "db_user.t_token_access")
-public class TokenAccess extends BasicEntity implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+class TokenAccess : BasicEntity(), Serializable {
 
     /**
      * token
      */
     @TableField(value = "token")
-    private String token;
+    var token: String? = null
 
     /**
      * 所属用户id
      */
     @TableField(value = "username")
-    private String username;
+    var username: String? = null
 
     /**
      * 权限对象
      */
     @TableField(value = "authentication")
-    private byte[] authentication;
+    var authentication: ByteArray? = null
 
     /**
      * 到期时间
      */
     @TableField(value = "expiration_time")
-    private LocalDateTime expirationTime;
-
+    var expirationTime: LocalDateTime? = null
 }

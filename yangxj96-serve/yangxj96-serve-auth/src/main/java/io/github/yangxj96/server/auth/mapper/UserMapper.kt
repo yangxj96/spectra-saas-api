@@ -1,19 +1,16 @@
-package io.github.yangxj96.server.auth.mapper;
+package io.github.yangxj96.server.auth.mapper
 
-import io.github.yangxj96.bean.user.Authority;
-import io.github.yangxj96.bean.user.Role;
-import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.common.base.BasicMapper;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
+import io.github.yangxj96.bean.user.Authority
+import io.github.yangxj96.bean.user.Role
+import io.github.yangxj96.bean.user.User
+import io.github.yangxj96.common.base.BasicMapper
+import org.apache.ibatis.annotations.Param
 
 /**
  * 用户mapper层
  */
-public interface UserMapper extends BasicMapper<User> {
-
-    boolean relevance(@Param("id") Long id, @Param("user") Long user, @Param("role") Long role);
+interface UserMapper : BasicMapper<User> {
+    fun relevance(@Param("id") id: Long, @Param("user") user: Long, @Param("role") role: Long): Boolean
 
     /**
      * 根据用户id查询角色列表
@@ -21,7 +18,7 @@ public interface UserMapper extends BasicMapper<User> {
      * @param userId 用户id
      * @return 角色列表
      */
-    List<Role> getRoleByUserId(@Param("userId") Long userId);
+    fun getRoleByUserId(@Param("userId") userId: Long): List<Role>
 
     /**
      * 根据角色列表查询用权限列表
@@ -29,5 +26,5 @@ public interface UserMapper extends BasicMapper<User> {
      * @param roleIds 用户列表
      * @return 权限列表
      */
-    List<Authority> getAuthorityByRoleIds(@Param("ids") List<Long> roleIds);
+    fun getAuthorityByRoleIds(@Param("ids") roleIds: List<Long?>): List<Authority>
 }

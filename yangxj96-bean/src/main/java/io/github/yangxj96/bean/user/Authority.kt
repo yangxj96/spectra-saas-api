@@ -1,39 +1,25 @@
-package io.github.yangxj96.bean.user;
+package io.github.yangxj96.bean.user
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import io.github.yangxj96.common.base.BasicEntity;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
-import java.io.Serial;
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableField
+import com.baomidou.mybatisplus.annotation.TableName
+import io.github.yangxj96.common.base.BasicEntity
+import java.io.Serializable
 
 /**
  * 权限表实体
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString
-@SuperBuilder
-@AllArgsConstructor
-@NoArgsConstructor
 @TableName(value = "db_user.t_authority")
-public class Authority extends BasicEntity implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+class Authority : BasicEntity(), Serializable {
 
     /**
      * 名称
      */
     @TableField(value = "code")
-    private String code;
+    var code: String? = null
 
     /**
      * 描述
      */
     @TableField(value = "description")
-    private String description;
-
+    var description: String? = null
 }

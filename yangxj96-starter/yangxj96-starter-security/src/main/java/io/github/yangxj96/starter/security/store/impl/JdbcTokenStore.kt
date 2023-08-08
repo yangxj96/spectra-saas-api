@@ -1,188 +1,162 @@
-package io.github.yangxj96.starter.security.store.impl;
+package io.github.yangxj96.starter.security.store.impl
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import io.github.yangxj96.bean.security.Token;
-import io.github.yangxj96.bean.security.TokenAccess;
-import io.github.yangxj96.bean.security.TokenRefresh;
-import io.github.yangxj96.bean.user.User;
-import io.github.yangxj96.common.utils.ConvertUtil;
-import io.github.yangxj96.starter.security.mapper.TokenAccessMapper;
-import io.github.yangxj96.starter.security.mapper.TokenRefreshMapper;
-import io.github.yangxj96.starter.security.store.TokenStore;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import cn.hutool.extra.spring.SpringUtil
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
+import io.github.yangxj96.bean.security.Token
+import io.github.yangxj96.bean.security.TokenAccess
+import io.github.yangxj96.bean.security.TokenRefresh
+import io.github.yangxj96.bean.user.User
+import io.github.yangxj96.common.utils.ConvertUtil.byteToObject
+import io.github.yangxj96.common.utils.ConvertUtil.objectToByte
+import io.github.yangxj96.starter.security.mapper.TokenAccessMapper
+import io.github.yangxj96.starter.security.mapper.TokenRefreshMapper
+import io.github.yangxj96.starter.security.store.TokenStore
+import lombok.extern.slf4j.Slf4j
+import org.slf4j.LoggerFactory
+import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.core.Authentication
+import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
+import java.time.LocalDateTime
 
 /**
  * jdbc 存储token的实现
  */
 @Slf4j
-public class JdbcTokenStore implements TokenStore {
+open class JdbcTokenStore : TokenStore {
 
-    private final TokenAccessMapper accessMapper;
+    companion object {
+        private const val LIMIT1 = "LIMIT 1"
 
-    private final TokenRefreshMapper refreshMapper;
-
-    public JdbcTokenStore() {
-        // @formatter:off
-        this.accessMapper  = SpringUtil.getBean(TokenAccessMapper.class);
-        this.refreshMapper = SpringUtil.getBean(TokenRefreshMapper.class);
-        // @formatter:on
+        private val log = LoggerFactory.getLogger(this::class.java)
     }
 
-    private static final String LIMIT1 = "LIMIT 1";
+    private val accessMapper: TokenAccessMapper = SpringUtil.getBean(TokenAccessMapper::class.java)
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Token create(Authentication auth) throws SQLException {
+    private val refreshMapper: TokenRefreshMapper = SpringUtil.getBean(TokenRefreshMapper::class.java)
+
+    @Transactional(rollbackFor = [Exception::class])
+    @Throws(SQLException::class)
+    override fun create(auth: Authentication): Token {
         // token存在则返回已存在的token信息,否则创建token
-        var token = exists(auth);
-        if (token != null) {
-            return token;
+        var token = exists(auth)
+        token = if (token != null) {
+            return token
         } else {
-            token = Token.generate(auth);
+            Token.generate(auth)
         }
-
-        var access = TokenAccess.builder()
-                .token(token.getAccessToken())
-                .username(token.getUsername())
-                .authentication(ConvertUtil.objectToByte(auth))
-                .expirationTime(token.getExpirationTime())
-                .build();
+        val access = TokenAccess()
+        access.token = token.accessToken
+        access.username = token.username
+        access.authentication = objectToByte(auth)
+        access.expirationTime = token.expirationTime
 
         if (accessMapper.insert(access) <= 0) {
-            throw new SQLException("插入access token失败");
+            throw SQLException("插入access token失败")
         }
-
-        var refresh = TokenRefresh.builder()
-                .accessId(access.getId())
-                .token(token.getRefreshToken())
-                .expirationTime(token.getExpirationTime().plusHours(1))
-                .build();
+        val refresh = TokenRefresh()
+        refresh.accessId = access.id
+        refresh.token = token.refreshToken
+        refresh.expirationTime = token.expirationTime!!.plusHours(1)
 
         if (refreshMapper.insert(refresh) <= 0) {
-            throw new SQLException("插入refresh token失败");
+            throw SQLException("插入refresh token失败")
         }
 
         // 响应token
-        return token;
+        return token
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Token check(String token) {
+    @Transactional(rollbackFor = [Exception::class])
+    override fun check(token: String): Token? {
         // 先检查是否已经有token了
-        var wrapper = new LambdaQueryWrapper<TokenAccess>();
+        val wrapper = LambdaQueryWrapper<TokenAccess>()
         wrapper
-                .eq(TokenAccess::getToken, token)
-                .last(LIMIT1);
-        var access = accessMapper.selectOne(wrapper);
-        if (access == null) {
-            return null;
-        }
-        return wrap(access);
+            .eq(TokenAccess::token, token)
+            .last(LIMIT1)
+        val access = accessMapper.selectOne(wrapper) ?: return null
+        return wrap(access)
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Authentication read(String token) throws SQLException {
-        var wrapper = new LambdaQueryWrapper<TokenAccess>().eq(TokenAccess::getToken, token).last(LIMIT1);
-
-        var datum = accessMapper.selectOne(wrapper);
-
-        if (null == datum) {
-            throw new SQLException("未能获取到token");
+    @Transactional(rollbackFor = [Exception::class])
+    @Throws(SQLException::class)
+    override fun read(token: String): Authentication {
+        val wrapper = LambdaQueryWrapper<TokenAccess>().eq(TokenAccess::token, token).last(LIMIT1)
+        val datum = accessMapper.selectOne(wrapper) ?: throw SQLException("未能获取到token")
+        if (datum.expirationTime!!.isBefore(LocalDateTime.now())) {
+            throw AccessDeniedException("token过期")
         }
-        if (datum.getExpirationTime().isBefore(LocalDateTime.now())) {
-            throw new AccessDeniedException("token过期");
-        }
-        return (Authentication) ConvertUtil.byteToObject(datum.getAuthentication());
+        return byteToObject(datum.authentication) as Authentication
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void remove(String token) throws SQLException {
-
-        var access = accessMapper.selectOne(new LambdaQueryWrapper<TokenAccess>().eq(TokenAccess::getToken, token).last(LIMIT1));
-
-        if (access == null) {
-            return;
-        }
-
-        var refresh = refreshMapper.selectOne(new LambdaQueryWrapper<TokenRefresh>().eq(TokenRefresh::getAccessId, access.getId()).last(LIMIT1));
+    @Transactional(rollbackFor = [Exception::class])
+    @Throws(SQLException::class)
+    override fun remove(token: String) {
+        val access = accessMapper.selectOne(
+            LambdaQueryWrapper<TokenAccess>().eq(TokenAccess::token, token).last(LIMIT1)
+        )
+            ?: return
+        val refresh = refreshMapper.selectOne(
+            LambdaQueryWrapper<TokenRefresh>().eq(TokenRefresh::accessId, access.id).last(
+                LIMIT1
+            )
+        )
 
         // 删除access token
-        if (accessMapper.deleteById(access.getId()) <= 0) {
-            throw new SQLException("删除access token 错误");
+        if (accessMapper.deleteById(access.id) <= 0) {
+            throw SQLException("删除access token 错误")
         }
 
         // 删除refresh token
-        if (refresh != null && refreshMapper.deleteById(refresh.getId()) <= 0) {
-            throw new SQLException("删除refresh token 错误");
+        if (refresh != null && refreshMapper.deleteById(refresh.id) <= 0) {
+            throw SQLException("删除refresh token 错误")
         }
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Token refresh(String refreshToken) throws SQLException {
-        var refresh = refreshMapper.selectOne(new LambdaQueryWrapper<TokenRefresh>().eq(TokenRefresh::getToken, refreshToken).last(LIMIT1));
-
-        if (null == refresh) {
-            throw new NullPointerException("未能获取refresh token信息");
-        }
-
-        var access = accessMapper.selectOne(new LambdaQueryWrapper<TokenAccess>().eq(TokenAccess::getId, refresh.getAccessId()).last(LIMIT1));
-
-        if (null == access) {
-            throw new NullPointerException("未能获取access token信息");
-        }
-
-        Token token = this.create((Authentication) ConvertUtil.byteToObject(access.getAuthentication()));
-        this.remove(access.getToken());
-        return token;
+    @Transactional(rollbackFor = [Exception::class])
+    @Throws(SQLException::class)
+    override fun refresh(refreshToken: String): Token {
+        val refresh = refreshMapper.selectOne(
+            LambdaQueryWrapper<TokenRefresh>().eq(TokenRefresh::token, refreshToken).last(LIMIT1)
+        )
+            ?: throw NullPointerException("未能获取refresh token信息")
+        val access = accessMapper.selectOne(
+            LambdaQueryWrapper<TokenAccess>().eq(TokenAccess::id, refresh.accessId).last(LIMIT1)
+        )
+            ?: throw NullPointerException("未能获取access token信息")
+        val token = create(byteToObject(access.authentication) as Authentication)
+        this.remove(access.token!!)
+        return token
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void autoClean() {
+    @Transactional(rollbackFor = [Exception::class])
+    override fun autoClean() {
         // 删除过期 token
-        var now = LocalDateTime.now();
-        var accessCount = accessMapper.delete(new LambdaQueryWrapper<TokenAccess>().le(TokenAccess::getExpirationTime, now));
-        var refreshCount = refreshMapper.delete(new LambdaQueryWrapper<TokenRefresh>().le(TokenRefresh::getExpirationTime, now));
-        log.debug("清除{}条access token,{}条refresh token", accessCount, refreshCount);
-
+        val now = LocalDateTime.now()
+        val accessCount = accessMapper.delete(LambdaQueryWrapper<TokenAccess>().le(TokenAccess::expirationTime, now))
+        val refreshCount =
+            refreshMapper.delete(LambdaQueryWrapper<TokenRefresh>().le(TokenRefresh::expirationTime, now))
+        log.debug("清除{}条access token,{}条refresh token", accessCount, refreshCount)
     }
 
     /////////////////////// 私有方法区 //////////////////////////////////////
 
     /**
-     * 根据{@link Authentication}判断token是否存在
+     * 根据[Authentication]判断token是否存在
      *
-     * @param auth {@link Authentication}
+     * @param auth [Authentication]
      * @return 存在返回token信息, 否则返回null
      */
-    private @Nullable Token exists(@NotNull Authentication auth) {
+    private fun exists(auth: Authentication): Token? {
         // 如果token存在,则返回已经存在的token
-        var username = ((User) auth.getPrincipal()).getUsername();
+        val username = (auth.principal as User).getUsername()
         // 先检查是否已经有token了
-        var accessTokenWrapper = new LambdaQueryWrapper<TokenAccess>();
+        val accessTokenWrapper = LambdaQueryWrapper<TokenAccess>()
         accessTokenWrapper
-                .eq(TokenAccess::getUsername, username)
-                .last(LIMIT1);
-        var accessToken = accessMapper.selectOne(accessTokenWrapper);
-        if (accessToken != null) {
-            return wrap(accessToken);
-        }
-        return null;
+            .eq(TokenAccess::username, username)
+            .last(LIMIT1)
+        val accessToken = accessMapper.selectOne(accessTokenWrapper)
+        return accessToken?.let { wrap(it) }
     }
 
     /**
@@ -191,26 +165,28 @@ public class JdbcTokenStore implements TokenStore {
      * @param access access token
      * @return token信息
      */
-    private Token wrap(@NotNull TokenAccess access) {
+    private fun wrap(access: TokenAccess): Token {
         // 查询刷新token
-        var refreshTokenWrapper = new LambdaQueryWrapper<TokenRefresh>()
-                .eq(TokenRefresh::getAccessId, access.getId())
-                .last(LIMIT1);
-        var refresh = refreshMapper.selectOne(refreshTokenWrapper);
-        Authentication auth = (Authentication) ConvertUtil.byteToObject(access.getAuthentication());
+        val refreshTokenWrapper = LambdaQueryWrapper<TokenRefresh>()
+            .eq(TokenRefresh::accessId, access.id)
+            .last(LIMIT1)
+        val refresh = refreshMapper.selectOne(refreshTokenWrapper)
+        val auth = byteToObject(access.authentication) as Authentication
 
         // 组装响应
-        var authorities = new ArrayList<String>();
-        for (GrantedAuthority authority : auth.getAuthorities()) {
-            authorities.add(authority.getAuthority());
+        val authorities = ArrayList<String>()
+        for (authority in auth.authorities) {
+            authorities.add(authority.authority)
         }
-        return Token
-                .builder()
-                .username(access.getUsername())
-                .accessToken(access.getToken())
-                .refreshToken(refresh.getToken())
-                .authorities(authorities)
-                .expirationTime(access.getExpirationTime())
-                .build();
+        val token = Token()
+        token.username = access.username
+        token.accessToken = access.token
+        token.refreshToken = refresh.token
+        token.authorities = authorities
+        token.expirationTime = access.expirationTime
+
+        return token
     }
+
+
 }
