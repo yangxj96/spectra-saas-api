@@ -2,36 +2,34 @@ package io.github.yangxj96.starter.remote.autoconfigure;
 
 import feign.*;
 import feign.okhttp.OkHttpClient;
-import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor;
 import io.github.yangxj96.starter.remote.props.RemoteProperties;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
-import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.loadbalancer.FeignBlockingLoadBalancerClient;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration;
-import org.springframework.cloud.openfeign.loadbalancer.OnRetryNotEnabledCondition;
+import org.springframework.cloud.openfeign.support.FeignHttpClientProperties;
+import org.springframework.cloud.openfeign.support.PageJacksonModule;
+import org.springframework.cloud.openfeign.support.SortJacksonModule;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
 
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * 远程请求的openfeign配置
  */
 @Slf4j
-@Import(value = {FeignLoadBalancerAutoConfiguration.class})
+@Import(value = {
+        FeignLoadBalancerAutoConfiguration.class,
+        FeignAutoConfiguration.class
+})
 @AutoConfiguration(before = FeignLoadBalancerAutoConfiguration.class)
 @EnableFeignClients("io.github.yangxj96.starter.remote.clients")
 @EnableConfigurationProperties(RemoteProperties.class)
@@ -96,63 +94,93 @@ public class RemoteAutoConfiguration {
      */
     @Bean
     public feign.Retryer retryer() {
-        return new Retryer.Default(100, SECONDS.toMillis(1), 2);
-    }
-
-
-
-    /**
-     * 定义okhttp3客户端
-     *
-     * @return OkHttpClient
-     */
-    @Bean
-    @LoadBalanced
-    public okhttp3.OkHttpClient okHttpClient() {
-        log.debug(LOG_PREFIX + "创建okhttp3客户端信息");
-        return new okhttp3.OkHttpClient
-                .Builder()
-                .readTimeout(properties.getReadTimeOut(), TimeUnit.MILLISECONDS)
-                .connectTimeout(properties.getConnectTimeOut(), TimeUnit.MILLISECONDS)
-                .writeTimeout(properties.getWriteTimeout(), TimeUnit.MILLISECONDS)
-                .connectionPool(new ConnectionPool())
-                .addInterceptor(new OkHttpLogInterceptor())
-                .build();
-    }
-
-//    @Bean
-//    public Client feignRetryClient(
-//            LoadBalancerClient loadBalancerClient,
-//            okhttp3.OkHttpClient okHttpClient,
-//            LoadBalancedRetryFactory loadBalancedRetryFactory,
-//            LoadBalancerClientFactory loadBalancerClientFactory,
-//            List<LoadBalancerFeignRequestTransformer> transformers
-//    ) {
-//        log.debug(LOG_PREFIX + "可重试的feign");
-//        OkHttpClient delegate = new OkHttpClient(okHttpClient);
-//        return new RetryableFeignBlockingLoadBalancerClient(delegate, loadBalancerClient, loadBalancedRetryFactory,
-//                loadBalancerClientFactory, transformers);
-//    }
-
-    /**
-     * feign 客户端
-     *
-     * @return feign 客户端
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    @Conditional(OnRetryNotEnabledCondition.class)
-    public Client feignClient(okhttp3.OkHttpClient okHttpClient,
-                              LoadBalancerClient loadBalancerClient,
-                              LoadBalancerClientFactory loadBalancerClientFactory) {
-        log.debug(LOG_PREFIX + "使用okhttp3作为底层");
-        OkHttpClient delegate = new OkHttpClient(okHttpClient);
-        return new FeignBlockingLoadBalancerClient(delegate, loadBalancerClient, loadBalancerClientFactory, Collections.emptyList());
+        return new Retryer.Default(100, TimeUnit.SECONDS.toMillis(1), 2);
     }
 
     @Bean
     public RequestInterceptor requestInterceptor() {
         return template -> template.header("feign", "true");
     }
+
+    /////////////////////////////// okhttp3
+    private okhttp3.OkHttpClient okHttpClient;
+
+    @Bean
+    @ConditionalOnMissingBean
+    public okhttp3.OkHttpClient.Builder okHttpClientBuilder() {
+        return new okhttp3.OkHttpClient.Builder();
+    }
+
+    @Bean
+    public ConnectionPool httpClientConnectionPool(FeignHttpClientProperties httpClientProperties) {
+        int maxTotalConnections = httpClientProperties.getMaxConnections();
+        long timeToLive = httpClientProperties.getTimeToLive();
+        TimeUnit ttlUnit = httpClientProperties.getTimeToLiveUnit();
+        return new ConnectionPool(maxTotalConnections, timeToLive, ttlUnit);
+    }
+
+    @Bean
+    public okhttp3.OkHttpClient okHttpClient(okhttp3.OkHttpClient.Builder builder, ConnectionPool connectionPool) {
+        this.okHttpClient = builder
+                .connectTimeout(properties.getConnectTimeOut(), TimeUnit.MILLISECONDS)
+                .followRedirects(true)
+                .readTimeout(properties.getReadTimeOut(), TimeUnit.MILLISECONDS)
+                .connectionPool(connectionPool)
+                .build();
+        return this.okHttpClient;
+    }
+
+    @PreDestroy
+    public void destroy() {
+        if (this.okHttpClient != null) {
+            this.okHttpClient.dispatcher().executorService().shutdown();
+            this.okHttpClient.connectionPool().evictAll();
+        }
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(Client.class)
+    public Client feignClient(okhttp3.OkHttpClient client) {
+        return new OkHttpClient(client);
+    }
+
+
+    /////////////////////////////// jackson
+
+    @Bean
+    public PageJacksonModule pageJacksonModule() {
+        return new PageJacksonModule();
+    }
+
+    @Bean
+    public SortJacksonModule sortModule() {
+        return new SortJacksonModule();
+    }
+
+    ///////////////////////////////  circuitbreaker
+//
+//    @Bean
+//    public Targeter defaultFeignTargeter() {
+//        return new Targeter() {
+//            @Override
+//            public <T> T target(FeignClientFactoryBean factory, Feign.Builder feign, FeignClientFactory context, Target.HardCodedTarget<T> target) {
+//                return feign.target(target);
+//            }
+//        };
+//    }
+//
+//    @Bean
+//    public CircuitBreakerNameResolver alphanumericCircuitBreakerNameResolver() {
+//        return (feignClientName, target, method) -> Feign.configKey(target.type(), method).replaceAll("[^a-zA-Z0-9]", "");
+//    }
+//
+//    @SuppressWarnings("rawtypes")
+//    @Bean
+//    public Targeter circuitBreakerFeignTargeter(CircuitBreakerFactory circuitBreakerFactory,
+//                                                @Value("${spring.cloud.openfeign.circuitbreaker.group.enabled:false}") boolean circuitBreakerGroupEnabled,
+//                                                CircuitBreakerNameResolver circuitBreakerNameResolver) {
+//        return new FeignCircuitBreakerTargeter(circuitBreakerFactory, circuitBreakerGroupEnabled, circuitBreakerNameResolver);
+//    }
+
 
 }

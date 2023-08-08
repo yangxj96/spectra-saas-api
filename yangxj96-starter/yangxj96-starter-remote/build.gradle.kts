@@ -13,6 +13,8 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine")
     // feign-okhttp
     implementation("io.github.openfeign:feign-okhttp")
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
     // okhttp 日志拦截器
     implementation("com.squareup.okhttp3:logging-interceptor")
 

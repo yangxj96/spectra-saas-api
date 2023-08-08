@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="示例项目" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="yangxj96-saas-api.yangxj96-serve-reactive.yangxj96-serve-demo.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.reactive.demo.Application" />
-    <method v="2">
-      <option name="Make" enabled="true" />
-    </method>
-  </configuration>
-</component>

@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 8080
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:49.235.101.106:5432}/yangxj96_saas_db
@@ -17,6 +17,13 @@ spring:
         tenant-in-0:
           destination: saas.tenant
           group: ${spring.application.name}
+    openfeign:
+      circuitbreaker:
+        enabled: true
+        alphanumeric-ids:
+          enabled: true
+        group:
+          enabled: true
 
 mybatis-plus:
   type-aliases-package: io.github.yangxj96.bean.user
