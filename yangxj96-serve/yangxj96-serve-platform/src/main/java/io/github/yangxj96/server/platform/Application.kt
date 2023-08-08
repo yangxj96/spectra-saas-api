@@ -1,18 +1,16 @@
-package io.github.yangxj96.server.platform;
+package io.github.yangxj96.server.platform
 
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.mybatis.spring.annotation.MapperScan
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 /**
  * 平台内容的主启动类
  */
 @MapperScan("io.github.yangxj96.server.platform.mapper")
 @SpringBootApplication
-public class Application {
+class Application
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
-
+fun main(args: Array<String>) {
+    runApplication<Application>(*args)
 }
