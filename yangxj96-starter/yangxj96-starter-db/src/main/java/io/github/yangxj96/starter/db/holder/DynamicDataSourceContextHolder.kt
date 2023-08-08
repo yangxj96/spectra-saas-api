@@ -1,40 +1,34 @@
-package io.github.yangxj96.starter.db.holder;
+package io.github.yangxj96.starter.db.holder
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j
+import org.slf4j.LoggerFactory
 
 /**
  * 动态数据源上下文管理
  */
 @Slf4j
-public class DynamicDataSourceContextHolder {
+object DynamicDataSourceContextHolder {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     /**
      * 存放当前线程使用的数据源类型信息
      */
-    private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
+    private val contextHolder = ThreadLocal<String>()
 
     /**
      * 存放数据源id
      */
-    @Getter
-    @Setter
-    private static List<String> dataSourceIds = new ArrayList<>();
-
-    private DynamicDataSourceContextHolder() {
-    }
+    var dataSourceIds: MutableList<String> = mutableListOf()
 
     /**
      * 设置数据源
      *
      * @param type 数据源类型
      */
-    public static void set(String type) {
-        contextHolder.set(type);
+    @JvmStatic
+    fun set(type: String) {
+        contextHolder.set(type)
     }
 
     /**
@@ -42,18 +36,20 @@ public class DynamicDataSourceContextHolder {
      *
      * @return 数据源
      */
-    public static String get() {
+    @JvmStatic
+    fun get(): String {
         if (!contains(contextHolder.get())) {
-            log.info("数据源不存在");
+            log.info("数据源不存在")
         }
-        return contextHolder.get();
+        return contextHolder.get()
     }
 
     /**
      * 清除数据源
      */
-    public static void clear() {
-        contextHolder.remove();
+    @JvmStatic
+    fun clear() {
+        contextHolder.remove()
     }
 
     /**
@@ -62,8 +58,7 @@ public class DynamicDataSourceContextHolder {
      * @param dataSourceId 数据源ID
      * @return 是否存在
      */
-    public static boolean contains(String dataSourceId) {
-        return dataSourceIds.contains(dataSourceId);
+    operator fun contains(dataSourceId: String): Boolean {
+        return dataSourceIds.contains(dataSourceId)
     }
-
 }

@@ -1,32 +1,30 @@
-package io.github.yangxj96.starter.security.exception.handle;
+package io.github.yangxj96.starter.security.exception.handle
 
-import cn.hutool.extra.spring.SpringUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.yangxj96.common.respond.R;
-import io.github.yangxj96.common.respond.RStatus;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-
-import java.io.IOException;
+import cn.hutool.extra.spring.SpringUtil
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.yangxj96.common.respond.R.Companion.specify
+import io.github.yangxj96.common.respond.RStatus
+import jakarta.servlet.ServletException
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.web.access.AccessDeniedHandler
+import java.io.IOException
 
 /**
  * 无权访问自定义响应
  */
-public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
+class AccessDeniedHandlerImpl : AccessDeniedHandler {
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    @Throws(IOException::class, ServletException::class)
+    override fun handle(request: HttpServletRequest, response: HttpServletResponse, accessDeniedException: AccessDeniedException) {
         try {
-            ObjectMapper mapper = SpringUtil.getBean(ObjectMapper.class);
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            mapper.writeValue(response.getOutputStream(), R.specify(RStatus.SECURITY_ACCESS_DENIED));
-        } catch (Exception e) {
-            throw new ServletException("格式化异常");
+            val mapper = SpringUtil.getBean(ObjectMapper::class.java)
+            response.contentType = "application/json"
+            response.status = HttpServletResponse.SC_OK
+            mapper.writeValue(response.outputStream, specify(RStatus.SECURITY_ACCESS_DENIED))
+        } catch (e: Exception) {
+            throw ServletException("格式化异常")
         }
     }
 }
-

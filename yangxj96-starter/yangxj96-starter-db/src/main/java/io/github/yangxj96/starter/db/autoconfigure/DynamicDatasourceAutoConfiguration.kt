@@ -1,135 +1,127 @@
-package io.github.yangxj96.starter.db.autoconfigure;
+package io.github.yangxj96.starter.db.autoconfigure
 
-import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer;
-import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
-import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS;
-import com.baomidou.mybatisplus.autoconfigure.SqlSessionFactoryBeanCustomizer;
-import com.baomidou.mybatisplus.core.MybatisConfiguration;
-import com.baomidou.mybatisplus.core.config.GlobalConfig;
-import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.baomidou.mybatisplus.core.handlers.PostInitTableInfoHandler;
-import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator;
-import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import com.baomidou.mybatisplus.core.injector.ISqlInjector;
-import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import io.github.yangxj96.starter.db.configure.dynamic.DynamicDataSourceRegister;
-import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource;
-import io.github.yangxj96.starter.db.filters.DynamicDatasourceFilter;
-import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder;
-import io.github.yangxj96.starter.db.props.DBProperties;
-import jakarta.servlet.Filter;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.mapping.DatabaseIdProvider;
-import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.scripting.LanguageDriver;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.type.TypeHandler;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
-import javax.sql.DataSource;
-import java.util.*;
-import java.util.function.Consumer;
+import com.baomidou.mybatisplus.autoconfigure.ConfigurationCustomizer
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties
+import com.baomidou.mybatisplus.autoconfigure.SpringBootVFS
+import com.baomidou.mybatisplus.autoconfigure.SqlSessionFactoryBeanCustomizer
+import com.baomidou.mybatisplus.core.MybatisConfiguration
+import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler
+import com.baomidou.mybatisplus.core.handlers.PostInitTableInfoHandler
+import com.baomidou.mybatisplus.core.incrementer.IKeyGenerator
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator
+import com.baomidou.mybatisplus.core.injector.ISqlInjector
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean
+import io.github.yangxj96.starter.db.configure.dynamic.DynamicDataSourceRegister
+import io.github.yangxj96.starter.db.configure.jdbc.DynamicDataSource
+import io.github.yangxj96.starter.db.filters.DynamicDatasourceFilter
+import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder
+import io.github.yangxj96.starter.db.props.DBProperties
+import jakarta.servlet.Filter
+import lombok.extern.slf4j.Slf4j
+import org.apache.ibatis.mapping.DatabaseIdProvider
+import org.apache.ibatis.plugin.Interceptor
+import org.apache.ibatis.scripting.LanguageDriver
+import org.apache.ibatis.session.SqlSessionFactory
+import org.apache.ibatis.transaction.TransactionFactory
+import org.apache.ibatis.type.TypeHandler
+import org.mybatis.spring.SqlSessionTemplate
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.ObjectProvider
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
+import org.springframework.core.annotation.Order
+import org.springframework.core.io.ResourceLoader
+import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.util.CollectionUtils
+import org.springframework.util.ObjectUtils
+import org.springframework.util.StringUtils
+import java.util.*
+import java.util.function.Consumer
+import javax.sql.DataSource
 
 /**
  * 动态数据源配置
  */
 @Slf4j
 @EnableTransactionManagement
-@EnableConfigurationProperties(DBProperties.class)
-public class DynamicDatasourceAutoConfiguration {
+@EnableConfigurationProperties(DBProperties::class)
+class DynamicDatasourceAutoConfiguration(
+    properties: MybatisPlusProperties,
+    resourceLoader: ResourceLoader,
+    configurationCustomizersProvider: ObjectProvider<List<ConfigurationCustomizer?>>,
+    interceptorsProvider: ObjectProvider<Array<Interceptor?>>,
+    databaseIdProvider: ObjectProvider<DatabaseIdProvider?>,
+    typeHandlersProvider: ObjectProvider<Array<TypeHandler<*>?>>,
+    languageDriversProvider: ObjectProvider<Array<LanguageDriver?>>,
+    sqlSessionFactoryBeanCustomizers: ObjectProvider<List<SqlSessionFactoryBeanCustomizer?>>,
+    applicationContext: ApplicationContext
+) {
 
-    private static final String LOG_PREFIX = "[自动配置-动态数据源]:";
+    companion object {
+        private const val LOG_PREFIX = "[自动配置-动态数据源]:"
 
-    private final MybatisPlusProperties properties;
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
 
-    private final ResourceLoader resourceLoader;
+    private val properties: MybatisPlusProperties
+    private val resourceLoader: ResourceLoader
+    private val configurationCustomizers: List<ConfigurationCustomizer?>
+    private val interceptors: Array<Interceptor?>
+    private val databaseIdProvider: DatabaseIdProvider?
+    private val typeHandlers: Array<TypeHandler<*>?>
+    private val languageDrivers: Array<LanguageDriver?>
+    private val applicationContext: ApplicationContext
+    private val sqlSessionFactoryBeanCustomizers: List<SqlSessionFactoryBeanCustomizer?>
 
-    private final List<ConfigurationCustomizer> configurationCustomizers;
-
-    private final Interceptor[] interceptors;
-
-    private final DatabaseIdProvider databaseIdProvider;
-
-    private final TypeHandler[] typeHandlers;
-
-    private final LanguageDriver[] languageDrivers;
-
-    private final ApplicationContext applicationContext;
-
-    private final List<SqlSessionFactoryBeanCustomizer> sqlSessionFactoryBeanCustomizers;
-
-    public DynamicDatasourceAutoConfiguration(MybatisPlusProperties properties,
-                                              ResourceLoader resourceLoader,
-                                              ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider,
-                                              ObjectProvider<Interceptor[]> interceptorsProvider,
-                                              ObjectProvider<DatabaseIdProvider> databaseIdProvider,
-                                              ObjectProvider<TypeHandler[]> typeHandlersProvider,
-                                              ObjectProvider<LanguageDriver[]> languageDriversProvider,
-                                              ObjectProvider<List<SqlSessionFactoryBeanCustomizer>> sqlSessionFactoryBeanCustomizers,
-                                              ApplicationContext applicationContext
-    ) {
-        log.info("{}开始自动装配动态数据源", LOG_PREFIX);
-        this.properties = properties;
-        this.resourceLoader = resourceLoader;
-        this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
-        this.interceptors = interceptorsProvider.getIfAvailable();
-        this.databaseIdProvider = databaseIdProvider.getIfAvailable();
-        this.typeHandlers = typeHandlersProvider.getIfAvailable();
-        this.languageDrivers = languageDriversProvider.getIfAvailable();
-        this.sqlSessionFactoryBeanCustomizers = sqlSessionFactoryBeanCustomizers.getIfAvailable();
-        this.applicationContext = applicationContext;
+    init {
+        log.info("{}开始自动装配动态数据源", LOG_PREFIX)
+        this.properties = properties
+        this.resourceLoader = resourceLoader
+        configurationCustomizers = configurationCustomizersProvider.getIfAvailable()!!
+        interceptors = interceptorsProvider.getIfAvailable()!!
+        this.databaseIdProvider = databaseIdProvider.getIfAvailable()
+        typeHandlers = typeHandlersProvider.getIfAvailable()!!
+        languageDrivers = languageDriversProvider.getIfAvailable()!!
+        this.sqlSessionFactoryBeanCustomizers = sqlSessionFactoryBeanCustomizers.getIfAvailable()!!
+        this.applicationContext = applicationContext
     }
 
     /**
-     * 数据源注册<br/>
+     * 数据源注册<br></br>
      * 需要在前面进行注册,不然后面启动的bean会循环查找
      *
      * @return 注册后的数据源
      */
     @Bean
-    @Order(Integer.MIN_VALUE)
-    public DynamicDataSourceRegister dataSourceRegister() {
-        return new DynamicDataSourceRegister();
+    @Order(Int.MIN_VALUE)
+    fun dataSourceRegister(): DynamicDataSourceRegister {
+        return DynamicDataSourceRegister()
     }
 
     /**
-     * 注册数据源<br/>
+     * 注册数据源<br></br>
      * 需要在这里进行注册并指定是主数据源
      * @param register 数据源信息
      * @return 数据源
      */
     @Bean
     @Primary
-    public DataSource dataSource(DynamicDataSourceRegister register) {
-        var source = new DynamicDataSource();
-
-        var targetDataSources = new HashMap<>();
+    fun dataSource(register: DynamicDataSourceRegister): DataSource {
+        val source = DynamicDataSource()
+        val targetDataSources = HashMap<Any, Any?>()
         // 将主数据源添加到更多数据源中
-        targetDataSources.put("default", register.defaultDataSource);
-        DynamicDataSourceContextHolder.getDataSourceIds().add("default");
+        targetDataSources["default"] = register.defaultDataSource
+        DynamicDataSourceContextHolder.dataSourceIds.add("default")
         // 添加更多数据源
-        targetDataSources.putAll(register.customDataSources);
-
-        for (Object key : register.customDataSources.keySet()) {
-            DynamicDataSourceContextHolder.getDataSourceIds().add(key.toString());
+        targetDataSources.putAll(register.customDataSources)
+        for (key in register.customDataSources.keys) {
+            DynamicDataSourceContextHolder.dataSourceIds.add(key.toString())
         }
-
-        source.setTargetDataSources(targetDataSources);
-        source.setDefaultTargetDataSource(register.defaultDataSource);
-        return source;
+        source.setTargetDataSources(targetDataSources)
+        source.setDefaultTargetDataSource(register.defaultDataSource!!)
+        return source
     }
 
     /**
@@ -138,73 +130,81 @@ public class DynamicDatasourceAutoConfiguration {
      * @return 动态数据源过滤器
      */
     @Bean
-    public Filter dynamicDatasourceInterceptor() {
-        log.info("{}载入动态数据源", LOG_PREFIX);
-        return new DynamicDatasourceFilter();
+    fun dynamicDatasourceInterceptor(): Filter {
+        log.info("{}载入动态数据源", LOG_PREFIX)
+        return DynamicDatasourceFilter()
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+    @Throws(Exception::class)
+    fun sqlSessionFactory(dataSource: DataSource?): SqlSessionFactory? {
         // 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
-        log.info("{}开始初始化SqlSessionFactory", LOG_PREFIX);
-        MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();
-        factory.setDataSource(dataSource);
-        factory.setVfs(SpringBootVFS.class);
-        if (StringUtils.hasText(properties.getConfigLocation())) {
-            factory.setConfigLocation(resourceLoader.getResource(properties.getConfigLocation()));
+        log.info("{}开始初始化SqlSessionFactory", LOG_PREFIX)
+        val factory = MybatisSqlSessionFactoryBean()
+        factory.setDataSource(dataSource)
+        factory.vfs = SpringBootVFS::class.java
+        if (StringUtils.hasText(properties.configLocation)) {
+            factory.setConfigLocation(resourceLoader.getResource(properties.configLocation))
         }
-        applyConfiguration(factory);
-        if (properties.getConfigurationProperties() != null) {
-            factory.setConfigurationProperties(properties.getConfigurationProperties());
+        applyConfiguration(factory)
+        if (properties.configurationProperties != null) {
+            factory.setConfigurationProperties(properties.configurationProperties)
         }
-        if (!ObjectUtils.isEmpty(this.interceptors)) {
-            factory.setPlugins(this.interceptors);
+        if (!ObjectUtils.isEmpty(interceptors)) {
+            factory.setPlugins(*interceptors)
         }
-        if (this.databaseIdProvider != null) {
-            factory.setDatabaseIdProvider(this.databaseIdProvider);
+        if (databaseIdProvider != null) {
+            factory.databaseIdProvider = databaseIdProvider
         }
-        if (StringUtils.hasLength(properties.getTypeAliasesPackage())) {
-            factory.setTypeAliasesPackage(properties.getTypeAliasesPackage());
+        if (StringUtils.hasLength(properties.typeAliasesPackage)) {
+            factory.setTypeAliasesPackage(properties.typeAliasesPackage)
         }
-        if (properties.getTypeAliasesSuperType() != null) {
-            factory.setTypeAliasesSuperType(properties.getTypeAliasesSuperType());
+        if (properties.typeAliasesSuperType != null) {
+            factory.setTypeAliasesSuperType(properties.typeAliasesSuperType)
         }
-        if (StringUtils.hasLength(properties.getTypeHandlersPackage())) {
-            factory.setTypeHandlersPackage(properties.getTypeHandlersPackage());
+        if (StringUtils.hasLength(properties.typeHandlersPackage)) {
+            factory.setTypeHandlersPackage(properties.typeHandlersPackage)
         }
-        if (!ObjectUtils.isEmpty(this.typeHandlers)) {
-            factory.setTypeHandlers(this.typeHandlers);
+        if (!ObjectUtils.isEmpty(typeHandlers)) {
+            factory.setTypeHandlers(*typeHandlers)
         }
         if (!ObjectUtils.isEmpty(properties.resolveMapperLocations())) {
-            factory.setMapperLocations(properties.resolveMapperLocations());
+            factory.setMapperLocations(*properties.resolveMapperLocations())
         }
         //  修改源码支持定义 TransactionFactory
-        this.getBeanThen(TransactionFactory.class, factory::setTransactionFactory);
+        getBeanThen(TransactionFactory::class.java) { transactionFactory: TransactionFactory? ->
+            factory.setTransactionFactory(
+                transactionFactory
+            )
+        }
 
         //  对源码做了一定的修改(因为源码适配了老旧的mybatis版本,但我们不需要适配)
-        Class<? extends LanguageDriver> defaultLanguageDriver = properties.getDefaultScriptingLanguageDriver();
-        if (!ObjectUtils.isEmpty(this.languageDrivers)) {
-            factory.setScriptingLanguageDrivers(this.languageDrivers);
+        val defaultLanguageDriver = properties.defaultScriptingLanguageDriver
+        if (!ObjectUtils.isEmpty(languageDrivers)) {
+            factory.setScriptingLanguageDrivers(*languageDrivers)
         }
-        Optional.ofNullable(defaultLanguageDriver).ifPresent(factory::setDefaultScriptingLanguageDriver);
 
-        applySqlSessionFactoryBeanCustomizers(factory);
+        Optional.ofNullable(defaultLanguageDriver).ifPresent {
+            factory.setDefaultScriptingLanguageDriver(it)
+        }
+
+        applySqlSessionFactoryBeanCustomizers(factory)
 
         //  此处必为非 NULL
-        GlobalConfig globalConfig = properties.getGlobalConfig();
+        val globalConfig = properties.globalConfig
         //  注入填充器
-        this.getBeanThen(MetaObjectHandler.class, globalConfig::setMetaObjectHandler);
+        getBeanThen(MetaObjectHandler::class.java) { globalConfig.setMetaObjectHandler(it) }
         //  注入参与器
-        this.getBeanThen(PostInitTableInfoHandler.class, globalConfig::setPostInitTableInfoHandler);
+        getBeanThen(PostInitTableInfoHandler::class.java) { globalConfig.setPostInitTableInfoHandler(it) }
         //  注入主键生成器
-        this.getBeansThen(IKeyGenerator.class, i -> globalConfig.getDbConfig().setKeyGenerators(i));
+        getBeansThen(IKeyGenerator::class.java) { globalConfig.dbConfig.setKeyGenerators(it) }
         //  注入sql注入器
-        this.getBeanThen(ISqlInjector.class, globalConfig::setSqlInjector);
+        getBeanThen(ISqlInjector::class.java) { globalConfig.setSqlInjector(it) }
         //  注入ID生成器
-        this.getBeanThen(IdentifierGenerator.class, globalConfig::setIdentifierGenerator);
+        getBeanThen(IdentifierGenerator::class.java) { globalConfig.setIdentifierGenerator(it) }
         //  设置 GlobalConfig 到 MybatisSqlSessionFactoryBean
-        factory.setGlobalConfig(globalConfig);
-        return factory.getObject();
+        factory.setGlobalConfig(globalConfig)
+        return factory.getObject()
     }
 
     /**
@@ -212,18 +212,18 @@ public class DynamicDatasourceAutoConfiguration {
      *
      * @param factory 工厂类
      */
-    private void applyConfiguration(MybatisSqlSessionFactoryBean factory) {
+    private fun applyConfiguration(factory: MybatisSqlSessionFactoryBean) {
         // 使用 MybatisConfiguration
-        MybatisConfiguration configuration = this.properties.getConfiguration();
-        if (configuration == null && !StringUtils.hasText(this.properties.getConfigLocation())) {
-            configuration = new MybatisConfiguration();
+        var configuration = properties.configuration
+        if (configuration == null && !StringUtils.hasText(properties.configLocation)) {
+            configuration = MybatisConfiguration()
         }
-        if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
-            for (ConfigurationCustomizer customizer : this.configurationCustomizers) {
-                customizer.customize(configuration);
+        if (configuration != null && !CollectionUtils.isEmpty(configurationCustomizers)) {
+            for (customizer in configurationCustomizers) {
+                customizer!!.customize(configuration)
             }
         }
-        factory.setConfiguration(configuration);
+        factory.configuration = configuration
     }
 
     /**
@@ -232,10 +232,10 @@ public class DynamicDatasourceAutoConfiguration {
      * @param clazz    class
      * @param consumer 消费
      * @param <T>      泛型
-     */
-    private <T> void getBeanThen(Class<T> clazz, Consumer<T> consumer) {
-        if (applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
-            consumer.accept(applicationContext.getBean(clazz));
+    </T> */
+    private fun <T> getBeanThen(clazz: Class<T>, consumer: Consumer<T>) {
+        if (applicationContext.getBeanNamesForType(clazz, false, false).isNotEmpty()) {
+            consumer.accept(applicationContext.getBean(clazz))
         }
     }
 
@@ -245,32 +245,28 @@ public class DynamicDatasourceAutoConfiguration {
      * @param clazz    class
      * @param consumer 消费
      * @param <T>      泛型
-     */
-    private <T> void getBeansThen(Class<T> clazz, Consumer<List<T>> consumer) {
-        if (this.applicationContext.getBeanNamesForType(clazz, false, false).length > 0) {
-            final Map<String, T> beansOfType = this.applicationContext.getBeansOfType(clazz);
-            List<T> clazzList = new ArrayList<>();
-            beansOfType.forEach((k, v) -> clazzList.add(v));
-            consumer.accept(clazzList);
+    </T> */
+    private fun <T> getBeansThen(clazz: Class<T>, consumer: Consumer<List<T>>) {
+        if (applicationContext.getBeanNamesForType(clazz, false, false).isNotEmpty()) {
+            val beansOfType = applicationContext.getBeansOfType(clazz)
+            val clazzList: MutableList<T> = ArrayList()
+            beansOfType.forEach { (_, v) -> clazzList.add(v) }
+            consumer.accept(clazzList)
         }
     }
 
-    private void applySqlSessionFactoryBeanCustomizers(MybatisSqlSessionFactoryBean factory) {
-        if (!CollectionUtils.isEmpty(this.sqlSessionFactoryBeanCustomizers)) {
-            for (SqlSessionFactoryBeanCustomizer customizer : this.sqlSessionFactoryBeanCustomizers) {
-                customizer.customize(factory);
+    private fun applySqlSessionFactoryBeanCustomizers(factory: MybatisSqlSessionFactoryBean) {
+        if (!CollectionUtils.isEmpty(sqlSessionFactoryBeanCustomizers)) {
+            for (customizer in sqlSessionFactoryBeanCustomizers) {
+                customizer!!.customize(factory)
             }
         }
     }
 
     @Bean
-    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        ExecutorType executorType = properties.getExecutorType();
-        if (executorType != null) {
-            return new SqlSessionTemplate(sqlSessionFactory, executorType);
-        } else {
-            return new SqlSessionTemplate(sqlSessionFactory);
-        }
+    fun sqlSessionTemplate(sqlSessionFactory: SqlSessionFactory?): SqlSessionTemplate {
+        val executorType = properties.executorType
+        return executorType?.let { SqlSessionTemplate(sqlSessionFactory, it) } ?: SqlSessionTemplate(sqlSessionFactory)
     }
 
 

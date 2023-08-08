@@ -5,46 +5,44 @@
  *  日期：2023-04-27 10:52:15
  *  Copyright (c) 2021 - 2023
  */
+package io.github.yangxj96.starter.security.props
 
-package io.github.yangxj96.starter.security.props;
-
-import io.github.yangxj96.starter.security.bean.StoreType;
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import io.github.yangxj96.starter.security.bean.StoreType
+import lombok.Data
+import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
  * security相关配置
  */
 @Data
 @ConfigurationProperties(prefix = "yangxj96.security")
-public class SecurityProperties {
+class SecurityProperties {
 
     /**
      * 是否启用
      */
-    private boolean enable = true;
+    var enable = true
 
     /**
      * 存储介质类型
-     * <br/>
+     * <br></br>
      * 如果是redis类型的话,需要yangxj96.db.redis-enable=true
      */
-    private StoreType storeType = StoreType.REDIS;
+    var storeType = StoreType.REDIS
 
-    /** token配置 **/
-    private TokenOptions tokenOptions = new TokenOptions();
+    /** token配置  */
+    var tokenOptions = TokenOptions()
 
     @Data
-    static class TokenOptions {
+    class TokenOptions {
         /**
          * 鉴权token过期时长
          */
-        private Long accessExpire = 3600L;
+        var accessExpire = 3600L
+
         /**
          * 刷新token过期时长
          */
-        private Long refreshExpire = 3600L;
-
+        var refreshExpire = 3600L
     }
-
 }

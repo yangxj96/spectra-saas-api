@@ -1,78 +1,72 @@
-package io.github.yangxj96.starter.db.autoconfigure;
+package io.github.yangxj96.starter.db.autoconfigure
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.yangxj96.starter.db.props.DBProperties;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.yangxj96.starter.db.props.DBProperties
+import jakarta.annotation.Resource
+import lombok.extern.slf4j.Slf4j
+import org.jetbrains.annotations.Contract
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.context.annotation.Bean
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
+import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.core.ReactiveRedisTemplate
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.RedisSerializationContext
+import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair
+import org.springframework.data.redis.serializer.StringRedisSerializer
 
 /**
  * Redis的自动配置类
  */
 @Slf4j
-@ConditionalOnProperty(name = "yangxj96.db.redis-enable", havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties(DBProperties.class)
-@AutoConfiguration(before = org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration.class)
-public class RedisAutoConfiguration {
+@ConditionalOnProperty(name = ["yangxj96.db.redis-enable"], havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(DBProperties::class)
+@AutoConfiguration(before = [org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration::class])
+class RedisAutoConfiguration {
 
-    private static final String LOG_PREFIX = "[自动配置-redis]:";
+    companion object {
+        private const val LOG_PREFIX = "[自动配置-redis]:"
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
 
     @Resource
-    private ObjectMapper om;
+    private lateinit var om: ObjectMapper
 
     /**
      * redisTemplate 序列化使用的JDKSerializable,
      * 存储二进制字节码, 所以自定义序列化类
      *
      * @param redisConnectionFactory factory
-     * @return {@link RedisTemplate}
+     * @return [RedisTemplate]
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(@Autowired RedisConnectionFactory redisConnectionFactory) {
-        log.debug("{}配置RedisTemplate<String,Object>的序列化方式", LOG_PREFIX);
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        return commonConfig(redisTemplate);
+    fun redisTemplate(@Autowired redisConnectionFactory: RedisConnectionFactory?): RedisTemplate<String, Any> {
+        log.debug("{}配置RedisTemplate<String,Object>的序列化方式", LOG_PREFIX)
+        val redisTemplate = RedisTemplate<String, Any>()
+        redisTemplate.setConnectionFactory(redisConnectionFactory!!)
+        return commonConfig(redisTemplate)
     }
 
     @Bean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
-    public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(@Autowired ReactiveRedisConnectionFactory connectionFactory) {
-        log.debug("{}配置reactiveRedisTemplate<String,Object>的序列化方式", LOG_PREFIX);
-        RedisSerializationContext.SerializationPair<String> strSerializer = RedisSerializationContext
-                .SerializationPair.fromSerializer(StringRedisSerializer.UTF_8);
-
-        RedisSerializationContext.SerializationPair<Object> objSerializer = RedisSerializationContext
-                .SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(om, Object.class));
-
-
-        RedisSerializationContext.RedisSerializationContextBuilder<String, Object> builder =
-                RedisSerializationContext.newSerializationContext();
-        builder.key(strSerializer);
-        builder.hashKey(strSerializer);
-
-        builder.value(objSerializer);
-        builder.hashValue(objSerializer);
-
-        builder.string(strSerializer);
-
-        RedisSerializationContext<String, Object> build = builder.build();
-
-        return new ReactiveRedisTemplate<>(connectionFactory, build);
+    fun reactiveRedisTemplate(@Autowired connectionFactory: ReactiveRedisConnectionFactory?): ReactiveRedisTemplate<String, Any> {
+        log.debug("{}配置reactiveRedisTemplate<String,Object>的序列化方式", LOG_PREFIX)
+        val strSerializer = SerializationPair.fromSerializer(StringRedisSerializer.UTF_8)
+        val objSerializer = SerializationPair.fromSerializer(Jackson2JsonRedisSerializer(om, Any::class.java))
+        val builder = RedisSerializationContext.newSerializationContext<String, Any>()
+        builder.key(strSerializer)
+        builder.hashKey(strSerializer)
+        builder.value(objSerializer)
+        builder.hashValue(objSerializer)
+        builder.string(strSerializer)
+        val build = builder.build()
+        return ReactiveRedisTemplate(connectionFactory!!, build)
     }
 
     /**
@@ -82,16 +76,17 @@ public class RedisAutoConfiguration {
      * @return redis template
      */
     @Contract("_ -> param1")
-    private @NotNull RedisTemplate<String, Object> commonConfig(@NotNull RedisTemplate<String, Object> redisTemplate) {
+    private fun commonConfig(redisTemplate: RedisTemplate<String, Any>): RedisTemplate<String, Any> {
         // 使用Jackson2JsonRedisSerialize 替换默认序列化
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
+        val jackson2JsonRedisSerializer = Jackson2JsonRedisSerializer(om, Any::class.java)
         // 设置value的序列化规则和 key的序列化规则
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
+        redisTemplate.keySerializer = StringRedisSerializer()
+        redisTemplate.valueSerializer = jackson2JsonRedisSerializer
+        redisTemplate.hashKeySerializer = StringRedisSerializer()
+        redisTemplate.hashValueSerializer = jackson2JsonRedisSerializer
+        redisTemplate.afterPropertiesSet()
+        return redisTemplate
     }
+
 
 }

@@ -5,26 +5,21 @@
  *  日期：2023-04-27 10:52:50
  *  Copyright (c) 2021 - 2023
  */
+package io.github.yangxj96.starter.db.props
 
-package io.github.yangxj96.starter.db.props;
-
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.Data
+import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
  * db相关的props
  */
 @Data
 @ConfigurationProperties(prefix = "yangxj96.db")
-public class DBProperties {
-
+class DBProperties {
     /**
      * 是否启用
      */
-    private boolean jdbcEnable = true;
-
-    private boolean redisEnable = true;
-
-    private int securityDb = 0;
-
+    var jdbcEnable = true
+    var redisEnable = true
+    var securityDb = 0
 }

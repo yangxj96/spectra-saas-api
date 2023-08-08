@@ -5,16 +5,12 @@
  *  日期：2023-05-05 09:49:48
  *  Copyright (c) 2021 - 2023
  */
+package io.github.yangxj96.starter.security.mapper
 
-package io.github.yangxj96.starter.security.mapper;
-
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.github.yangxj96.bean.security.TokenAccess;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
+import io.github.yangxj96.bean.security.TokenAccess
 
 /**
  * Token的JDBC相关操作
  */
-public interface TokenAccessMapper extends BaseMapper<TokenAccess> {
-
-
-}
+interface TokenAccessMapper : BaseMapper<TokenAccess>
