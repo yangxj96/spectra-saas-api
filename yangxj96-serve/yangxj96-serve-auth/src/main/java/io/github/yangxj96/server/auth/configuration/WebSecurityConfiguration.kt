@@ -105,7 +105,7 @@ class WebSecurityConfiguration {
      */
     @Bean
     @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity, tokenStore: TokenStore?): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity, tokenStore: TokenStore): SecurityFilterChain {
         log.info("{}加载核心配置", LOG_PREFIX)
         // 关闭cors csrf httpBasic formLogin
         http.cors().disable()

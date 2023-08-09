@@ -1,19 +1,24 @@
-package io.github.yangxj96.starter.remote.autoconfigure;
+package io.github.yangxj96.starter.remote.autoconfigure
 
-import io.github.yangxj96.starter.remote.fallback.SystemFeignClientFallback;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
+import io.github.yangxj96.starter.remote.fallback.SystemFeignClientFallback
+import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Bean
 
 /**
  * 远程请求回调配置
  */
-@Slf4j
-public class RemoteFallbackAutoConfiguration {
+class RemoteFallbackAutoConfiguration {
+
+   companion object {
+        private const val PREFIX = "[自动配置-远程调用]:"
+
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
 
     @Bean
-    public SystemFeignClientFallback demoFeignClientFallback() {
-        log.info("加载DemoFeignClientFallback");
-        return new SystemFeignClientFallback();
+    fun systemFeignClientFallback(): SystemFeignClientFallback {
+        log.info("$PREFIX 熔断器加载-SystemFeignClientFallback")
+        return SystemFeignClientFallback()
     }
 
 }

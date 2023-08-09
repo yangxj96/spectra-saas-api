@@ -1,50 +1,42 @@
-package io.github.yangxj96.starter.remote.autoconfigure;
+package io.github.yangxj96.starter.remote.autoconfigure
 
-import feign.*;
-import feign.okhttp.OkHttpClient;
-import io.github.yangxj96.starter.remote.props.RemoteProperties;
-import jakarta.annotation.PreDestroy;
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.ConnectionPool;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignAutoConfiguration;
-import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration;
-import org.springframework.cloud.openfeign.support.FeignHttpClientProperties;
-import org.springframework.cloud.openfeign.support.PageJacksonModule;
-import org.springframework.cloud.openfeign.support.SortJacksonModule;
-import org.springframework.cloud.openfeign.support.SpringMvcContract;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-
-import java.util.concurrent.TimeUnit;
+import feign.*
+import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor
+import io.github.yangxj96.starter.remote.props.RemoteProperties
+import jakarta.annotation.PreDestroy
+import jakarta.annotation.Resource
+import okhttp3.ConnectionPool
+import okhttp3.OkHttpClient
+import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.cloud.openfeign.FeignAutoConfiguration
+import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration
+import org.springframework.cloud.openfeign.support.FeignHttpClientProperties
+import org.springframework.cloud.openfeign.support.PageJacksonModule
+import org.springframework.cloud.openfeign.support.SortJacksonModule
+import org.springframework.cloud.openfeign.support.SpringMvcContract
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
+import java.util.concurrent.TimeUnit
 
 /**
  * 远程请求的openfeign配置
  */
-@Slf4j
-@Import(value = {
-        FeignLoadBalancerAutoConfiguration.class,
-        FeignAutoConfiguration.class
-})
-@AutoConfiguration(before = FeignLoadBalancerAutoConfiguration.class)
+@Import(value = [FeignLoadBalancerAutoConfiguration::class, FeignAutoConfiguration::class])
+@AutoConfiguration(before = [FeignLoadBalancerAutoConfiguration::class])
 @EnableFeignClients("io.github.yangxj96.starter.remote.clients")
-@EnableConfigurationProperties(RemoteProperties.class)
-public class RemoteAutoConfiguration {
+@EnableConfigurationProperties(RemoteProperties::class)
+class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties) {
 
-    private static final String LOG_PREFIX = "[自动配置-远程调用]:";
+    companion object {
+        private const val PREFIX = "[自动配置-远程调用]:"
 
-    /**
-     * 项目配置文件
-     */
-    private final RemoteProperties properties;
-
-    public RemoteAutoConfiguration(@Autowired RemoteProperties properties) {
-        this.properties = properties;
+        private val log = LoggerFactory.getLogger(this::class.java)
     }
+
+    private lateinit var client: OkHttpClient
 
     /**
      * feign 请求超时时间配置
@@ -53,8 +45,9 @@ public class RemoteAutoConfiguration {
      * @return feign 日志
      */
     @Bean
-    public Logger.Level level() {
-        return properties.getLevel();
+    fun level(): Logger.Level {
+        log.debug("$PREFIX 配置feign日志级别")
+        return properties.level
     }
 
     /**
@@ -63,13 +56,11 @@ public class RemoteAutoConfiguration {
      * @return 契约
      */
     @Bean
-    public Contract contract() {
-        // 默认契约
-        // return new Contract.Default()
+    fun contract(): Contract {
+        log.debug("$PREFIX 配置feign契约")
         // spring 包装好的契约
-        return new SpringMvcContract();
+        return SpringMvcContract()
     }
-
 
     /**
      * feign超时时间
@@ -77,15 +68,14 @@ public class RemoteAutoConfiguration {
      * @return Options
      */
     @Bean
-    public Request.Options options() {
-        return new Request.Options(
-                // @formatter:off
-                properties.getConnectTimeOut(), TimeUnit.MILLISECONDS,
-                properties.getReadTimeOut()   , TimeUnit.MILLISECONDS,
-                true);
-                // @formatter:on
+    fun options(): Request.Options {
+        log.debug("$PREFIX 配置feign超时时间")
+        return Request.Options(
+            properties.connectTimeOut, TimeUnit.MILLISECONDS,
+            properties.readTimeOut, TimeUnit.MILLISECONDS,
+            true
+        )
     }
-
 
     /**
      * feign 重试机制
@@ -93,94 +83,79 @@ public class RemoteAutoConfiguration {
      * @return 重试机制
      */
     @Bean
-    public feign.Retryer retryer() {
-        return new Retryer.Default(100, TimeUnit.SECONDS.toMillis(1), 2);
+    fun retryer(): Retryer {
+        log.debug("$PREFIX 配置feign重试机制")
+        return properties.retryer
     }
 
+    /**
+     * openfeign请求拦截器
+     */
     @Bean
-    public RequestInterceptor requestInterceptor() {
-        return template -> template.header("feign", "true");
+    fun requestInterceptor(): RequestInterceptor {
+        log.debug("$PREFIX 配置feign请求拦截器")
+        return RequestInterceptor { template: RequestTemplate -> template.header("feign", "true") }
     }
 
     /////////////////////////////// okhttp3
-    private okhttp3.OkHttpClient okHttpClient;
 
+    /**
+     * http客户端连接池
+     */
     @Bean
-    @ConditionalOnMissingBean
-    public okhttp3.OkHttpClient.Builder okHttpClientBuilder() {
-        return new okhttp3.OkHttpClient.Builder();
+    fun httpClientConnectionPool(httpClientProperties: FeignHttpClientProperties): ConnectionPool {
+        log.debug("$PREFIX 配置feign okhttp连接池")
+        // 最大连接数,默认活动时间,活动时间单位
+        return ConnectionPool(200, 900L, TimeUnit.SECONDS)
     }
 
+    /**
+     * okhttp客户端
+     * @param connectionPool 连接池
+     */
     @Bean
-    public ConnectionPool httpClientConnectionPool(FeignHttpClientProperties httpClientProperties) {
-        int maxTotalConnections = httpClientProperties.getMaxConnections();
-        long timeToLive = httpClientProperties.getTimeToLive();
-        TimeUnit ttlUnit = httpClientProperties.getTimeToLiveUnit();
-        return new ConnectionPool(maxTotalConnections, timeToLive, ttlUnit);
-    }
-
-    @Bean
-    public okhttp3.OkHttpClient okHttpClient(okhttp3.OkHttpClient.Builder builder, ConnectionPool connectionPool) {
-        this.okHttpClient = builder
-                .connectTimeout(properties.getConnectTimeOut(), TimeUnit.MILLISECONDS)
-                .followRedirects(true)
-                .readTimeout(properties.getReadTimeOut(), TimeUnit.MILLISECONDS)
-                .connectionPool(connectionPool)
-                .build();
-        return this.okHttpClient;
+    fun okHttpClient(connectionPool: ConnectionPool): OkHttpClient {
+        log.debug("$PREFIX 配置feign okhttp客户端")
+        this.client = OkHttpClient.Builder()
+            .connectTimeout(properties.connectTimeOut, TimeUnit.MILLISECONDS)
+            .readTimeout(properties.readTimeOut, TimeUnit.MILLISECONDS)
+            .writeTimeout(properties.writeTimeout, TimeUnit.MILLISECONDS)
+            .addInterceptor(OkHttpLogInterceptor())
+            .connectionPool(connectionPool)
+            .build()
+        return this.client
     }
 
     @PreDestroy
-    public void destroy() {
-        if (this.okHttpClient != null) {
-            this.okHttpClient.dispatcher().executorService().shutdown();
-            this.okHttpClient.connectionPool().evictAll();
+    fun destroy() {
+        log.debug("$PREFIX 准备销毁okhttp")
+        if (this::client::isInitialized.get()) {
+            this.client.dispatcher.executorService.shutdown()
+            this.client.connectionPool.evictAll()
         }
     }
 
+    /**
+     * 构建feign客户端
+     */
     @Bean
-    @ConditionalOnMissingBean(Client.class)
-    public Client feignClient(okhttp3.OkHttpClient client) {
-        return new OkHttpClient(client);
+    fun feignClient(client: OkHttpClient): feign.okhttp.OkHttpClient {
+        log.debug("$PREFIX 配置feign okhttp的客户端")
+        return feign.okhttp.OkHttpClient(client)
     }
-
 
     /////////////////////////////// jackson
-
     @Bean
-    public PageJacksonModule pageJacksonModule() {
-        return new PageJacksonModule();
+    fun pageJacksonModule(): PageJacksonModule {
+        log.debug("$PREFIX 配置feign中jackson适配的PageJacksonModule")
+        return PageJacksonModule()
     }
 
     @Bean
-    public SortJacksonModule sortModule() {
-        return new SortJacksonModule();
+    fun sortModule(): SortJacksonModule {
+        log.debug("$PREFIX 配置feign中jackson适配的SortJacksonModule")
+        return SortJacksonModule()
     }
-
-    ///////////////////////////////  circuitbreaker
-//
-//    @Bean
-//    public Targeter defaultFeignTargeter() {
-//        return new Targeter() {
-//            @Override
-//            public <T> T target(FeignClientFactoryBean factory, Feign.Builder feign, FeignClientFactory context, Target.HardCodedTarget<T> target) {
-//                return feign.target(target);
-//            }
-//        };
-//    }
-//
-//    @Bean
-//    public CircuitBreakerNameResolver alphanumericCircuitBreakerNameResolver() {
-//        return (feignClientName, target, method) -> Feign.configKey(target.type(), method).replaceAll("[^a-zA-Z0-9]", "");
-//    }
-//
-//    @SuppressWarnings("rawtypes")
-//    @Bean
-//    public Targeter circuitBreakerFeignTargeter(CircuitBreakerFactory circuitBreakerFactory,
-//                                                @Value("${spring.cloud.openfeign.circuitbreaker.group.enabled:false}") boolean circuitBreakerGroupEnabled,
-//                                                CircuitBreakerNameResolver circuitBreakerNameResolver) {
-//        return new FeignCircuitBreakerTargeter(circuitBreakerFactory, circuitBreakerGroupEnabled, circuitBreakerNameResolver);
-//    }
 
 
 }

@@ -1,47 +1,38 @@
-package io.github.yangxj96.starter.remote.configure;
+package io.github.yangxj96.starter.remote.configure
 
-import lombok.extern.slf4j.Slf4j;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j
+import okhttp3.Interceptor
+import okhttp3.Request
+import okhttp3.Response
+import org.slf4j.LoggerFactory
+import org.springframework.util.StopWatch
+import java.io.IOException
 
 /**
  * okhttp的拦截器
  */
 @Slf4j
-public class OkHttpLogInterceptor implements Interceptor {
+class OkHttpLogInterceptor : Interceptor {
 
-    @NotNull
-    @Override
-    public Response intercept(@NotNull Chain chain) throws IOException {
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
+
+    @Throws(IOException::class)
+    override fun intercept(chain: Interceptor.Chain): Response {
         //这个chain里面包含了request和response，所以你要什么都可以从这里拿
-        Request request = chain.request();
+        val request: Request = chain.request()
 
-        //请求发起的时间
-        long t1 = System.nanoTime();
-        log.debug(String.format("发送请求 %s on %s%n%s",
-                request.url(), chain.connection(), request.headers()));
-
-        Response response = chain.proceed(request);
-
-        //收到响应的时间
-        long t2 = System.nanoTime();
-
+        val watch = StopWatch()
+        watch.start()
+        log.info("发送请求:url[{}],headers[{}]", request.url, request.headers)
+        val response: Response = chain.proceed(request)
+        watch.stop()
         //这里不能直接使用response.body().string()的方式输出日志
         //因为response.body().string()之后，response中的流会被关闭，程序会报错，我们需要创建出一
         //个新的response给应用层处理
-        ResponseBody responseBody = response.peekBody((long) 1024 * 1024);
-
-        log.debug(String.format("接收响应: [%s] %n返回json:[%s] %.1fms%n%s",
-                response.request().url(),
-                responseBody.string(),
-                (t2 - t1) / 1e6d,
-                response.headers()));
-
-        return response;
+        val responseBody = response.peekBody(1024L * 1024)
+        log.info("接收响应:{},耗时:{}毫秒,响应内容:{}", response.request.url, watch.totalTimeMillis, responseBody.string())
+        return response
     }
 }

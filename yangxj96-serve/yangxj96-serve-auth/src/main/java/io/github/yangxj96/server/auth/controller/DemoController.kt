@@ -19,8 +19,8 @@ class DemoController {
     private lateinit var systemFeignClient: SystemFeignClient
 
     @GetMapping(path = ["/d1"])
-    fun d1() {
-        systemFeignClient.get()
+    fun d1(): String? {
+        return systemFeignClient.get()
     }
 
 }
