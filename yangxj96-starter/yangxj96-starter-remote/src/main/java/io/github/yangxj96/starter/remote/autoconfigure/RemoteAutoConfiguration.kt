@@ -1,6 +1,8 @@
 package io.github.yangxj96.starter.remote.autoconfigure
 
 import feign.*
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
+import io.github.resilience4j.timelimiter.TimeLimiterConfig
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor
 import io.github.yangxj96.starter.remote.props.RemoteProperties
 import jakarta.annotation.PreDestroy
@@ -9,24 +11,54 @@ import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder
+import org.springframework.cloud.client.circuitbreaker.Customizer
+import org.springframework.cloud.client.loadbalancer.LoadBalanced
+import org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient
+import org.springframework.cloud.loadbalancer.blocking.client.BlockingLoadBalancerClient
+import org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration
+import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory
+import org.springframework.cloud.openfeign.CircuitBreakerNameResolver
 import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.cloud.openfeign.FeignAutoConfiguration
+import org.springframework.cloud.openfeign.loadbalancer.FeignBlockingLoadBalancerClient
 import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration
+import org.springframework.cloud.openfeign.loadbalancer.LoadBalancerFeignRequestTransformer
 import org.springframework.cloud.openfeign.support.FeignHttpClientProperties
 import org.springframework.cloud.openfeign.support.PageJacksonModule
 import org.springframework.cloud.openfeign.support.SortJacksonModule
 import org.springframework.cloud.openfeign.support.SpringMvcContract
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import java.time.Duration
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
+
 
 /**
  * 远程请求的openfeign配置
  */
-@Import(value = [FeignLoadBalancerAutoConfiguration::class, FeignAutoConfiguration::class])
-@AutoConfiguration(before = [FeignLoadBalancerAutoConfiguration::class])
+@Import(
+    value = [
+        FeignLoadBalancerAutoConfiguration::class,
+        FeignAutoConfiguration::class,
+        BlockingLoadBalancerClientAutoConfiguration::class,
+        LoadBalancerAutoConfiguration::class
+    ]
+)
 @EnableFeignClients("io.github.yangxj96.starter.remote.clients")
+@AutoConfiguration(before = [FeignLoadBalancerAutoConfiguration::class])
 @EnableConfigurationProperties(RemoteProperties::class)
 class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties) {
 
@@ -114,15 +146,46 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
      * @param connectionPool 连接池
      */
     @Bean
+    @LoadBalanced
     fun okHttpClient(connectionPool: ConnectionPool): OkHttpClient {
         log.debug("$PREFIX 配置feign okhttp客户端")
-        this.client = OkHttpClient.Builder()
+        val build = OkHttpClient.Builder()
             .connectTimeout(properties.connectTimeOut, TimeUnit.MILLISECONDS)
             .readTimeout(properties.readTimeOut, TimeUnit.MILLISECONDS)
             .writeTimeout(properties.writeTimeout, TimeUnit.MILLISECONDS)
             .addInterceptor(OkHttpLogInterceptor())
             .connectionPool(connectionPool)
-            .build()
+
+        try {
+            val disabledTrustManager: X509TrustManager = object : X509TrustManager {
+                override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
+
+                }
+
+                override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
+
+                }
+
+                override fun getAcceptedIssuers(): Array<X509Certificate?> {
+                    return arrayOfNulls(0)
+                }
+
+            }
+            val trustManagers = arrayOfNulls<TrustManager>(1)
+            trustManagers[0] = disabledTrustManager
+            val sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustManagers, SecureRandom())
+            val disabledSSLSocketFactory = sslContext.socketFactory
+            build.sslSocketFactory(disabledSSLSocketFactory, disabledTrustManager)
+            build.hostnameVerifier { _, _ -> true }
+
+        } catch (e: NoSuchAlgorithmException) {
+            log.warn("Error setting SSLSocketFactory in OKHttpClient", e)
+        } catch (e: KeyManagementException) {
+            log.warn("Error setting SSLSocketFactory in OKHttpClient", e)
+        }
+
+        this.client = build.build()
         return this.client
     }
 
@@ -135,14 +198,27 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
         }
     }
 
+    @Bean
+    fun loadBalancedClient(loadBalancerClientFactory: LoadBalancerClientFactory?): LoadBalancerClient {
+        return BlockingLoadBalancerClient(loadBalancerClientFactory)
+    }
+
     /**
      * 构建feign客户端
      */
     @Bean
-    fun feignClient(client: OkHttpClient): feign.okhttp.OkHttpClient {
+    fun feignClient(
+        client: OkHttpClient,
+        loadBalancedClient: LoadBalancerClient,
+        loadBalancerClientFactory: LoadBalancerClientFactory,
+        transformers: List<LoadBalancerFeignRequestTransformer>
+    ): FeignBlockingLoadBalancerClient {
         log.debug("$PREFIX 配置feign okhttp的客户端")
-        return feign.okhttp.OkHttpClient(client)
+        val delegate = feign.okhttp.OkHttpClient(client)
+        return FeignBlockingLoadBalancerClient(delegate, loadBalancedClient, loadBalancerClientFactory, transformers)
+//        return feign.okhttp.OkHttpClient(client)
     }
+
 
     /////////////////////////////// jackson
     @Bean
@@ -157,5 +233,27 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
         return SortJacksonModule()
     }
 
+    ///////////////////////////////  CircuitBreaker
+
+    @Bean
+    fun alphanumericCircuitBreakerNameResolver(): CircuitBreakerNameResolver {
+        return CircuitBreakerNameResolver { _, target, method ->
+            Feign.configKey(target.type(), method)
+                .replace("[^a-zA-Z0-9]", "")
+        }
+    }
+
+    @Bean
+    fun defaultCustomizer(): Customizer<Resilience4JCircuitBreakerFactory> {
+        return Customizer<Resilience4JCircuitBreakerFactory> {
+            it.configureDefault { id ->
+                Resilience4JConfigBuilder(id)
+                    .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(4)).build())
+//                    .timeLimiterConfig(TimeLimiterConfig.ofDefaults())
+                    .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
+                    .build()
+            }
+        }
+    }
 
 }

@@ -17,9 +17,11 @@ spring:
         tenant-in-0:
           destination: saas.tenant
           group: ${spring.application.name}
-#    openfeign:
-#      circuitbreaker:
-#        enabled: true
+    loadbalancer:
+      enabled: true
+    openfeign:
+      circuitbreaker:
+        enabled: true
 #        alphanumeric-ids:
 #          enabled: true
 #        group:

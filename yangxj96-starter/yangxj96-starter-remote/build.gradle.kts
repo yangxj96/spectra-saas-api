@@ -7,6 +7,9 @@ dependencies {
     // RPC调用
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+    compileOnly("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery") {
+        exclude(group = "com.netflix.ribbon", module = "ribbon")
+    }
     // 负载均衡
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
     // 负载均衡的缓存

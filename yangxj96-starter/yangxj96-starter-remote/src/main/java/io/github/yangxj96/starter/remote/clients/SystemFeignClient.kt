@@ -4,10 +4,10 @@ import io.github.yangxj96.starter.remote.fallback.SystemFeignClientFallback
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 
-@FeignClient(name = "yangxj96-serve-system", url = "http://www.baidu.com", fallback = SystemFeignClientFallback::class)
+@FeignClient(name = "yangxj96-serve-platform", fallback = SystemFeignClientFallback::class)
 interface SystemFeignClient {
 
-    @GetMapping("/")
+    @GetMapping("/demo/d1")
     fun get(): String?
 
     @GetMapping("/")

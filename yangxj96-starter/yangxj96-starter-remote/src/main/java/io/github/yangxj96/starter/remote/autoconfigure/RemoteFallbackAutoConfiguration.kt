@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean
  */
 class RemoteFallbackAutoConfiguration {
 
-   companion object {
+    companion object {
         private const val PREFIX = "[自动配置-远程调用]:"
 
         private val log = LoggerFactory.getLogger(this::class.java)

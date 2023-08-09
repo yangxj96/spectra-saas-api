@@ -4,7 +4,10 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-actuator")
     api("org.springframework.cloud:spring-cloud-starter-bootstrap")
     // 服务发现
-    api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
+    api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery") {
+        exclude(group = "com.netflix.ribbon", module = "ribbon")
+    }
+    api("org.springframework.cloud:spring-cloud-starter-loadbalancer")
     // 配置中心
     api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
     // 数据库
