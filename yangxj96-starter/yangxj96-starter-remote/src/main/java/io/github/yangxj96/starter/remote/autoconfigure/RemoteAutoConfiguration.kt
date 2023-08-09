@@ -2,6 +2,7 @@ package io.github.yangxj96.starter.remote.autoconfigure
 
 import feign.*
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
+import io.github.resilience4j.springboot3.circuitbreaker.autoconfigure.CircuitBreakerAutoConfiguration
 import io.github.resilience4j.timelimiter.TimeLimiterConfig
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor
 import io.github.yangxj96.starter.remote.props.RemoteProperties
@@ -11,8 +12,6 @@ import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder
@@ -54,7 +53,8 @@ import javax.net.ssl.X509TrustManager
         FeignLoadBalancerAutoConfiguration::class,
         FeignAutoConfiguration::class,
         BlockingLoadBalancerClientAutoConfiguration::class,
-        LoadBalancerAutoConfiguration::class
+        LoadBalancerAutoConfiguration::class,
+        CircuitBreakerAutoConfiguration::class
     ]
 )
 @EnableFeignClients("io.github.yangxj96.starter.remote.clients")
