@@ -3,7 +3,6 @@ package io.github.yangxj96.bean.security
 import cn.hutool.core.util.IdUtil
 import io.github.yangxj96.bean.user.User
 import org.springframework.security.core.Authentication
-import java.io.Serial
 import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*

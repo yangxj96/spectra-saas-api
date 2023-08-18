@@ -10,7 +10,6 @@ import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient
 import org.springframework.cloud.loadbalancer.blocking.client.BlockingLoadBalancerClient
@@ -134,36 +133,6 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
             .writeTimeout(properties.writeTimeout, TimeUnit.MILLISECONDS)
             .addInterceptor(OkHttpLogInterceptor())
             .connectionPool(connectionPool)
-
-        try {
-            val disabledTrustManager: X509TrustManager = object : X509TrustManager {
-                override fun checkClientTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-                }
-
-                override fun checkServerTrusted(p0: Array<out X509Certificate>?, p1: String?) {
-
-                }
-
-                override fun getAcceptedIssuers(): Array<X509Certificate?> {
-                    return arrayOfNulls(0)
-                }
-
-            }
-            val trustManagers = arrayOfNulls<TrustManager>(1)
-            trustManagers[0] = disabledTrustManager
-            val sslContext = SSLContext.getInstance("SSL")
-            sslContext.init(null, trustManagers, SecureRandom())
-            val disabledSSLSocketFactory = sslContext.socketFactory
-            build.sslSocketFactory(disabledSSLSocketFactory, disabledTrustManager)
-            build.hostnameVerifier { _, _ -> true }
-
-        } catch (e: NoSuchAlgorithmException) {
-            log.warn("Error setting SSLSocketFactory in OKHttpClient", e)
-        } catch (e: KeyManagementException) {
-            log.warn("Error setting SSLSocketFactory in OKHttpClient", e)
-        }
-
         this.client = build.build()
         return this.client
     }

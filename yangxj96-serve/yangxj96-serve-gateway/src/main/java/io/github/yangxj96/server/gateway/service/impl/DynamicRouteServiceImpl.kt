@@ -44,7 +44,7 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
             hashOperations.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it.id, it).flatMap { b ->
                 return@flatMap if (b) {
                     publisher.publishEvent(RefreshRoutesEvent(route))
-                    Mono.empty<Void>()
+                    Mono.empty()
                 } else {
                     Mono.error(RuntimeException("插入redis失败"))
                 }
@@ -61,9 +61,9 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
         return routeId.flatMap {
             hashOperations.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it).flatMap { b: Boolean ->
                 if (b == java.lang.Boolean.TRUE) {
-                    return@flatMap hashOperations.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it).flatMap<Void> { _ ->
+                    return@flatMap hashOperations.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it).flatMap { _ ->
                         publisher.publishEvent(RefreshRoutesEvent(it))
-                        Mono.empty<Void>()
+                        Mono.empty()
                     }
                 }
                 Mono.error(RuntimeException("删除失败"))
