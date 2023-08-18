@@ -6,14 +6,12 @@ import io.github.yangxj96.server.gateway.mapper.SysRouteMapper
 import io.github.yangxj96.server.gateway.service.SysRouteService
 import io.github.yangxj96.server.gateway.utils.RouteUtil
 import jakarta.annotation.Resource
-import lombok.extern.slf4j.Slf4j
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 /**
  * 路由表定义service实现层
  */
-@Slf4j
 @Service
 class SysRouteServiceImpl protected constructor(bindMapper: SysRouteMapper) : BasicServiceImpl<SysRouteMapper, SysRoute>(bindMapper), SysRouteService {
 

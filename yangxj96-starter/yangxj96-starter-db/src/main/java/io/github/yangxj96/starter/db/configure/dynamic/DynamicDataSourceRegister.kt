@@ -1,6 +1,6 @@
 package io.github.yangxj96.starter.db.configure.dynamic
 
-import org.slf4j.LoggerFactory
+import com.zaxxer.hikari.HikariDataSource
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.EnvironmentAware
 import org.springframework.core.env.Environment
@@ -15,9 +15,7 @@ class DynamicDataSourceRegister : EnvironmentAware {
         /**
          * 指定默认数据源(springboot2.0默认数据源是hikari如何想使用其他数据源可以自己配置)
          */
-        private const val DATASOURCE_TYPE_DEFAULT = "com.zaxxer.hikari.HikariDataSource"
-
-        private val log = LoggerFactory.getLogger(this::class.java)
+        private val DATASOURCE_TYPE_DEFAULT = HikariDataSource::class.java
     }
 
     /**
@@ -30,7 +28,8 @@ class DynamicDataSourceRegister : EnvironmentAware {
      * 用户自定义数据源
      */
     @JvmField
-    var customDataSources: Map<Any, Any> = HashMap()
+    var customDataSources = mutableMapOf<Any, Any?>()
+
     override fun setEnvironment(environment: Environment) {
         // 初始化数据源注册
         initDefaultDataSource(environment)
@@ -45,14 +44,14 @@ class DynamicDataSourceRegister : EnvironmentAware {
      */
     private fun initCustomDataSources(env: Environment) {
         // 读取配置文件获取更多数据源
-//        for (int i = 0; i < 1; i++) {
-//            var datum = new DataSourceEntity();
-//            datum.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
-//            datum.setUrl("jdbc:postgresql://localhost:5432/VJVDQIWBMEJSMYAJX");
-//            datum.setUsername(env.getProperty("spring.datasource.username"));
-//            datum.setPassword(env.getProperty("spring.datasource.password"));
-//            customDataSources.put("tenant-" + i, buildDataSource(datum));
-//        }
+        for (i in 0 until 1) {
+            val datum = DataSourceEntity()
+            datum.driverClassName = env.getProperty("spring.datasource.driver-class-name")
+            datum.url = "jdbc:postgresql://localhost:5432/VJVDQIWBMEJSMYAJX"
+            datum.username = env.getProperty("spring.datasource.username")
+            datum.password = env.getProperty("spring.datasource.password")
+            customDataSources["tenant-$i"] = buildDataSource(datum)
+        }
     }
 
     /**
@@ -75,9 +74,9 @@ class DynamicDataSourceRegister : EnvironmentAware {
      * @param entity 数据源信息
      * @return 创建好的数据源
      */
-    fun buildDataSource(entity: DataSourceEntity): DataSource? {
+    private fun buildDataSource(entity: DataSourceEntity): DataSource? {
         try {
-            var type: String? = entity.type
+            var type = entity.type
             if (entity.type == null) {
                 type = DATASOURCE_TYPE_DEFAULT
             }
@@ -88,12 +87,13 @@ class DynamicDataSourceRegister : EnvironmentAware {
                 .url(entity.url)
                 .username(entity.username)
                 .password(entity.password)
-                .type(Class.forName(type) as Class<out DataSource?>)
+                .type(type)
                 .build()
+
         } catch (e: ClassNotFoundException) {
             e.printStackTrace()
+            throw e
         }
-        return null
     }
 
     /**
@@ -101,7 +101,7 @@ class DynamicDataSourceRegister : EnvironmentAware {
      */
     class DataSourceEntity {
 
-        var type: String? = null
+        var type: Class<out DataSource>? = null
         var driverClassName: String? = null
         var url: String? = null
         var username: String? = null

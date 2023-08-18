@@ -83,7 +83,7 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
     /**
      * 刷新路由信息
      */
-    fun refresh(): Mono<Void> {
+    fun refresh(): Mono<Unit> {
         return Mono.defer {
             publisher.publishEvent(RefreshRoutesEvent(this))
             Mono.empty()

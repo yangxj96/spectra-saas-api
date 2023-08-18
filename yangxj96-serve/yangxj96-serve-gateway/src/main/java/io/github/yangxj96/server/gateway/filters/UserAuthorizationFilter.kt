@@ -20,6 +20,7 @@ class UserAuthorizationFilter(private val tokenStore: TokenStore) : WebFilter {
     }
 
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+
         log.debug("[UserAuthorizationFilter] 进入用户认证过滤器")
         return try {
             val headers = exchange.request.headers["Authorization"]

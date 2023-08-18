@@ -5,7 +5,7 @@
     <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-gateway.main" />
     <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.gateway.ApplicationKt" />
-    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m --add-opens java.base/java.lang.invoke=ALL-UNNAMED" />
+    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

@@ -24,14 +24,7 @@ import org.springframework.cloud.openfeign.support.SortJacksonModule
 import org.springframework.cloud.openfeign.support.SpringMvcContract
 import org.springframework.context.annotation.Bean
 import org.springframework.core.annotation.Order
-import java.security.KeyManagementException
-import java.security.NoSuchAlgorithmException
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
 
 
 @Order()

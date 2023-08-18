@@ -10,4 +10,7 @@ interface SystemFeignClient {
     @GetMapping("/demo/d1")
     fun get(): String
 
+    @GetMapping("/demo/d2")
+    fun demo2(): String
+
 }
