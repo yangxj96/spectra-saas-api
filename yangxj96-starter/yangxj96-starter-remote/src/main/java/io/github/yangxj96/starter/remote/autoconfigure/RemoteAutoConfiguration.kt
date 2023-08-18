@@ -1,9 +1,6 @@
 package io.github.yangxj96.starter.remote.autoconfigure
 
 import feign.*
-import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
-import io.github.resilience4j.springboot3.circuitbreaker.autoconfigure.CircuitBreakerAutoConfiguration
-import io.github.resilience4j.timelimiter.TimeLimiterConfig
 import io.github.yangxj96.starter.remote.configure.OkHttpLogInterceptor
 import io.github.yangxj96.starter.remote.props.RemoteProperties
 import jakarta.annotation.PreDestroy
@@ -13,18 +10,12 @@ import okhttp3.OkHttpClient
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory
-import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder
-import org.springframework.cloud.client.circuitbreaker.Customizer
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
-import org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient
 import org.springframework.cloud.loadbalancer.blocking.client.BlockingLoadBalancerClient
-import org.springframework.cloud.loadbalancer.config.BlockingLoadBalancerClientAutoConfiguration
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory
-import org.springframework.cloud.openfeign.CircuitBreakerNameResolver
 import org.springframework.cloud.openfeign.EnableFeignClients
-import org.springframework.cloud.openfeign.FeignAutoConfiguration
 import org.springframework.cloud.openfeign.loadbalancer.FeignBlockingLoadBalancerClient
 import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration
 import org.springframework.cloud.openfeign.loadbalancer.LoadBalancerFeignRequestTransformer
@@ -33,30 +24,18 @@ import org.springframework.cloud.openfeign.support.PageJacksonModule
 import org.springframework.cloud.openfeign.support.SortJacksonModule
 import org.springframework.cloud.openfeign.support.SpringMvcContract
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
+import org.springframework.core.annotation.Order
 import java.security.KeyManagementException
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import java.time.Duration
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
-/**
- * 远程请求的openfeign配置
- */
-@Import(
-    value = [
-        FeignLoadBalancerAutoConfiguration::class,
-        FeignAutoConfiguration::class,
-        BlockingLoadBalancerClientAutoConfiguration::class,
-        LoadBalancerAutoConfiguration::class,
-        CircuitBreakerAutoConfiguration::class
-    ]
-)
+@Order()
 @EnableFeignClients("io.github.yangxj96.starter.remote.clients")
 @AutoConfiguration(before = [FeignLoadBalancerAutoConfiguration::class])
 @EnableConfigurationProperties(RemoteProperties::class)
@@ -216,7 +195,6 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
         log.debug("$PREFIX 配置feign okhttp的客户端")
         val delegate = feign.okhttp.OkHttpClient(client)
         return FeignBlockingLoadBalancerClient(delegate, loadBalancedClient, loadBalancerClientFactory, transformers)
-//        return feign.okhttp.OkHttpClient(client)
     }
 
 
@@ -231,29 +209,6 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
     fun sortModule(): SortJacksonModule {
         log.debug("$PREFIX 配置feign中jackson适配的SortJacksonModule")
         return SortJacksonModule()
-    }
-
-    ///////////////////////////////  CircuitBreaker
-
-    @Bean
-    fun alphanumericCircuitBreakerNameResolver(): CircuitBreakerNameResolver {
-        return CircuitBreakerNameResolver { _, target, method ->
-            Feign.configKey(target.type(), method)
-                .replace("[^a-zA-Z0-9]", "")
-        }
-    }
-
-    @Bean
-    fun defaultCustomizer(): Customizer<Resilience4JCircuitBreakerFactory> {
-        return Customizer<Resilience4JCircuitBreakerFactory> {
-            it.configureDefault { id ->
-                Resilience4JConfigBuilder(id)
-                    .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(4)).build())
-//                    .timeLimiterConfig(TimeLimiterConfig.ofDefaults())
-                    .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults())
-                    .build()
-            }
-        }
     }
 
 }

@@ -1,9 +1,8 @@
 server:
-  port: 8080
+  port: 0
 spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:49.235.101.106:5432}/yangxj96_saas_db
-  cloud:
     stream:
       rabbit:
         bindings:
@@ -19,13 +18,6 @@ spring:
           group: ${spring.application.name}
     loadbalancer:
       enabled: true
-    openfeign:
-      circuitbreaker:
-        enabled: true
-#        alphanumeric-ids:
-#          enabled: true
-#        group:
-#          enabled: true
 
 mybatis-plus:
   type-aliases-package: io.github.yangxj96.bean.user

@@ -21,6 +21,7 @@ class DemoController {
     @GetMapping(path = ["/d1"])
     fun d1(): String? {
         return systemFeignClient.get()
+//        return "1"
     }
 
 }

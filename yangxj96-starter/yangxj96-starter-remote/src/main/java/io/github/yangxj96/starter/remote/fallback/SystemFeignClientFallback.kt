@@ -8,8 +8,4 @@ class SystemFeignClientFallback : SystemFeignClient {
         return "熔断1"
     }
 
-    override fun get2(): String {
-        return "熔断2"
-    }
-
 }

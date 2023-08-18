@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping
 interface SystemFeignClient {
 
     @GetMapping("/demo/d1")
-    fun get(): String?
-
-    @GetMapping("/")
-    fun get2(): String?
+    fun get(): String
 
 }

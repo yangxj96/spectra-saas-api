@@ -4,12 +4,12 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
+    compileOnly("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
+
     // RPC调用
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
-    compileOnly("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery") {
-        exclude(group = "com.netflix.ribbon", module = "ribbon")
-    }
+    // sentinel
+    implementation("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
     // 负载均衡
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
     // 负载均衡的缓存
