@@ -5,7 +5,6 @@ import com.rabbitmq.client.Channel
 import io.github.yangxj96.stream.StreamModel
 import io.github.yangxj96.stream.tenant.TenantNew
 import jakarta.annotation.Resource
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.amqp.support.AmqpHeaders
 import org.springframework.context.annotation.Bean
@@ -21,7 +20,6 @@ import java.util.function.Consumer
  * @version 1.0.0
  * @date 2023/4/20 14:24
  */
-@Slf4j
 @Component
 class StreamConsumer {
 

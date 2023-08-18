@@ -12,6 +12,8 @@ dependencies {
 
     // 网关
     implementation("org.springframework.cloud:spring-cloud-starter-gateway")
+    // sentinel的spring cloud gateway适配
+    implementation("com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway")
     // 负载均衡
     implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer")
 }

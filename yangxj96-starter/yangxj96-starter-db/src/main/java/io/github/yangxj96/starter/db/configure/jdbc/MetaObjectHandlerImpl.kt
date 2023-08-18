@@ -2,7 +2,6 @@ package io.github.yangxj96.starter.db.configure.jdbc
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler
 import io.github.yangxj96.bean.user.User
-import lombok.extern.slf4j.Slf4j
 import org.apache.ibatis.reflection.MetaObject
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AnonymousAuthenticationToken
@@ -12,7 +11,6 @@ import java.time.LocalDateTime
 /**
  * 元对象字段填充控制器
  */
-@Slf4j
 class MetaObjectHandlerImpl : MetaObjectHandler {
 
     companion object {

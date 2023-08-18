@@ -1,14 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="认证服务" type="SpringBootApplicationConfigurationType"
-                   factoryName="Spring Boot">
-        <option name="ALTERNATIVE_JRE_PATH" value="17"/>
-        <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true"/>
-        <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-auth.main"/>
-        <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE"/>
-        <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.auth.Application"/>
-        <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m"/>
-        <method v="2">
-            <option name="Make" enabled="true"/>
-        </method>
-    </configuration>
+  <configuration default="false" name="认证服务" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ALTERNATIVE_JRE_PATH" value="17" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-auth.main" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.github.yangxj96.server.auth.ApplicationKt" />
+    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m --add-opens java.base/java.lang.invoke=ALL-UNNAMED" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
 </component>

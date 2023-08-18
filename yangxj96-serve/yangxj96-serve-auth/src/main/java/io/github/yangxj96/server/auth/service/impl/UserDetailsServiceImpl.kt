@@ -1,6 +1,6 @@
 package io.github.yangxj96.server.auth.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import io.github.yangxj96.bean.user.User
 import io.github.yangxj96.server.auth.service.UserService
 import jakarta.annotation.Resource
@@ -21,18 +21,23 @@ class UserDetailsServiceImpl : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
-        if (StringUtils.isEmpty(username)) {
-            throw NullPointerException("用户名为空")
+        try {
+            if (StringUtils.isEmpty(username)) {
+                throw NullPointerException("用户名为空")
+            }
+
+            val wrapper = QueryWrapper<User>()
+                .eq("username", username)
+                .last("LIMIT 1")
+
+            val user = userService.getOne(wrapper) ?: throw UsernameNotFoundException("用户不存在")
+
+            user.authorities = userService.getAuthoritiesByUserId(user.id!!)
+
+            return user
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
         }
-
-        val wrapper = LambdaQueryWrapper<User>()
-            .eq(User::username, username)
-            .last("LIMIT 1")
-
-        val user = userService.getOne(wrapper) ?: throw UsernameNotFoundException("用户不存在")
-
-        user.authorities = userService.getAuthoritiesByUserId(user.id!!)
-
-        return user
     }
 }

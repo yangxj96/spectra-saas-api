@@ -1,10 +1,6 @@
 package io.github.yangxj96.common.respond
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import lombok.AllArgsConstructor
-import lombok.Builder
-import lombok.Data
-import lombok.NoArgsConstructor
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import java.io.Serial
@@ -13,11 +9,7 @@ import java.io.Serializable
 /**
  * 通用响应
  */
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-class R(code: Int, msg: String) : Serializable {
+class R(var code: Int,var msg: String) : Serializable {
 
     var data: Any? = null
 

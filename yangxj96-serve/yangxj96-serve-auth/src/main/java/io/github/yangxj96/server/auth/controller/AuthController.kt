@@ -1,5 +1,6 @@
 package io.github.yangxj96.server.auth.controller
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource
 import io.github.yangxj96.bean.security.Token
 import io.github.yangxj96.common.respond.R.Companion.failure
 import io.github.yangxj96.common.respond.R.Companion.success
@@ -38,6 +39,7 @@ class AuthController {
      * @param param 登录参数
      * @return 登录结果
      */
+    @SentinelResource(value = "login")
     @PostMapping(value = ["/login"])
     fun login(@RequestBody param: Login): Token? {
         log.info("用户:${param.username}开始登录,输入的密码为:${param.password}")

@@ -11,9 +11,9 @@ dependencies {
     // sentinel 控制
     api("com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel")
     // 数据库
-    // api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     runtimeOnly("org.postgresql:postgresql")
+    
 
     // 流
     api("org.springframework.cloud:spring-cloud-stream")

@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor
 import io.github.yangxj96.starter.db.configure.jdbc.MetaObjectHandlerImpl
 import io.github.yangxj96.starter.db.props.DBProperties
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Bean
 /**
  * mybatis的自动配置类
  */
-@Slf4j
 @ConditionalOnProperty(name = ["yangxj96.db.jdbc-enable"], havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties::class)
 class MybatisPlusAutoConfiguration {

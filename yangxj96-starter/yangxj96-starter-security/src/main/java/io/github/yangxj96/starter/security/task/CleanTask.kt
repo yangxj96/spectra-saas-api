@@ -3,7 +3,6 @@ package io.github.yangxj96.starter.security.task
 import io.github.yangxj96.starter.security.store.TokenStore
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore
 import jakarta.annotation.Resource
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
@@ -17,7 +16,6 @@ import java.util.function.Consumer
  * 自动清理过期token
  * <br></br> 暂时主要是针对jdbc的,redis会自己过期
  */
-@Slf4j
 @Component
 @EnableScheduling
 class CleanTask {

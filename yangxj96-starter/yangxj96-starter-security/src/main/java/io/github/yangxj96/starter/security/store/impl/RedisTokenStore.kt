@@ -8,7 +8,6 @@ import io.github.yangxj96.common.utils.ConvertUtil
 import io.github.yangxj96.starter.security.store.TokenStore
 import io.github.yangxj96.starter.security.store.redis.JdkSerializationStrategy
 import io.github.yangxj96.starter.security.store.redis.RedisTokenStoreSerializationStrategy
-import lombok.extern.slf4j.Slf4j
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.security.core.Authentication
@@ -18,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority
 /**
  * redis 存储token的实现
  */
-@Slf4j
 class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : TokenStore {
 
     companion object {

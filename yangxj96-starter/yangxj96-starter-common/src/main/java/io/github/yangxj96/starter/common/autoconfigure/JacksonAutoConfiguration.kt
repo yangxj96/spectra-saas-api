@@ -12,7 +12,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer
 import io.github.yangxj96.starter.common.props.JacksonProperties
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.AutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -33,7 +32,6 @@ import java.util.*
 /**
  * Jackson的相关配置的自动配置类
  */
-@Slf4j
 @AutoConfiguration(before = [org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration::class])
 @ConditionalOnProperty(name = ["yangxj96.jackson.enable"], havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(JacksonProperties::class)

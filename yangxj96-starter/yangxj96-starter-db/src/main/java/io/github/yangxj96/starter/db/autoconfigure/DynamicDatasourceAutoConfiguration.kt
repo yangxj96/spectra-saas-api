@@ -17,7 +17,6 @@ import io.github.yangxj96.starter.db.filters.DynamicDatasourceFilter
 import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder
 import io.github.yangxj96.starter.db.props.DBProperties
 import jakarta.servlet.Filter
-import lombok.extern.slf4j.Slf4j
 import org.apache.ibatis.mapping.DatabaseIdProvider
 import org.apache.ibatis.plugin.Interceptor
 import org.apache.ibatis.scripting.LanguageDriver
@@ -44,7 +43,6 @@ import javax.sql.DataSource
 /**
  * 动态数据源配置
  */
-@Slf4j
 @EnableTransactionManagement
 @EnableConfigurationProperties(DBProperties::class)
 class DynamicDatasourceAutoConfiguration(

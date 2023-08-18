@@ -1,6 +1,5 @@
 package io.github.yangxj96.starter.db.configure.dynamic
 
-import lombok.Getter
 import org.slf4j.LoggerFactory
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.EnvironmentAware
@@ -25,14 +24,12 @@ class DynamicDataSourceRegister : EnvironmentAware {
      * 默认数据源
      */
     @JvmField
-    @Getter
     var defaultDataSource: DataSource? = null
 
     /**
      * 用户自定义数据源
      */
     @JvmField
-    @Getter
     var customDataSources: Map<Any, Any> = HashMap()
     override fun setEnvironment(environment: Environment) {
         // 初始化数据源注册

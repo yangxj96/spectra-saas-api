@@ -60,11 +60,9 @@ subprojects {
         // 测试 begin
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
-        compileOnly("org.projectlombok:lombok")
         compileOnly("org.jetbrains:annotations:23.1.0")
-        annotationProcessor("org.projectlombok:lombok")
-        testCompileOnly("org.projectlombok:lombok")
-        testAnnotationProcessor("org.projectlombok:lombok")
+        // kotlin支持
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
     }
 
     // 指定中文编码

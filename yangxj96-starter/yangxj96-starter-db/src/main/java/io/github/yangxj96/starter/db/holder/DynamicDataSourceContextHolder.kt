@@ -1,12 +1,10 @@
 package io.github.yangxj96.starter.db.holder
 
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 
 /**
  * 动态数据源上下文管理
  */
-@Slf4j
 object DynamicDataSourceContextHolder {
 
     private val log = LoggerFactory.getLogger(this::class.java)

@@ -1,12 +1,10 @@
 package io.github.yangxj96.common.respond
 
-import lombok.Getter
 
 /**
  * 通用响应的状态,<br></br>
  * 进行主要是进行标准化响应内容,也许以后如果增加国际化相关内容可能会有用
  */
-@Getter
 enum class RStatus(val code: Int, val msg: String) {
     /*
     code分布:

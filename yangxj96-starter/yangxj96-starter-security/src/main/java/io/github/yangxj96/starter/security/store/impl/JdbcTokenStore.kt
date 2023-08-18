@@ -11,7 +11,6 @@ import io.github.yangxj96.common.utils.ConvertUtil.objectToByte
 import io.github.yangxj96.starter.security.mapper.TokenAccessMapper
 import io.github.yangxj96.starter.security.mapper.TokenRefreshMapper
 import io.github.yangxj96.starter.security.store.TokenStore
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.Authentication
@@ -22,7 +21,6 @@ import java.time.LocalDateTime
 /**
  * jdbc 存储token的实现
  */
-@Slf4j
 open class JdbcTokenStore : TokenStore {
 
     companion object {

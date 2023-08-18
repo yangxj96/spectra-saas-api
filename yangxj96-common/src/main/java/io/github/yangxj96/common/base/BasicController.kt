@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping
  * @param <S> 相关的service层,需要继承BasicService
 </S></O> */
 @Validated
-abstract class BasicController<O : BasicEntity?, S : BasicService<O>?> protected constructor(protected var bindService: S) {
+abstract class BasicController<O : BasicEntity, S : BasicService<O>> protected constructor(protected var bindService: S) {
 
     /**
      * 基础创建数据接口
@@ -25,7 +25,7 @@ abstract class BasicController<O : BasicEntity?, S : BasicService<O>?> protected
      */
     @PostMapping
     fun create(@Validated obj: O): O {
-        return bindService!!.create(obj)
+        return bindService.create(obj)
     }
 
     /**
@@ -34,8 +34,8 @@ abstract class BasicController<O : BasicEntity?, S : BasicService<O>?> protected
      * @param id 数据id
      */
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: @NotBlank(message = "需要删除的资源id不能为空") String?) {
-        if (bindService!!.delete(id)) {
+    fun delete(@PathVariable id: @NotBlank(message = "需要删除的资源id不能为空") String) {
+        if (bindService.delete(id)) {
             R.success()
         } else {
             R.failure()
@@ -50,6 +50,6 @@ abstract class BasicController<O : BasicEntity?, S : BasicService<O>?> protected
      */
     @PutMapping
     fun modify(@Validated obj: O): O {
-        return bindService!!.modify(obj)
+        return bindService.modify(obj)
     }
 }

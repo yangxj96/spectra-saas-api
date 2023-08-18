@@ -9,25 +9,26 @@ import io.github.yangxj96.common.exception.PlaceholderException
  * @param <M> 子类对应的mapper
  * @param <O> 子类对应的实体
 </O></M> */
-open class BasicServiceImpl<M : BasicMapper<O>?, O : BasicEntity?>
+open class BasicServiceImpl<M : BasicMapper<O>, O : BasicEntity>
 protected constructor(@JvmField protected val bindMapper: M) : ServiceImpl<M, O>(), BasicService<O> {
+
     override fun create(datum: O): O {
-        return if (bindMapper!!.insert(datum) == 1) {
-            bindMapper.selectById(datum?.id)
+        return if (bindMapper.insert(datum) == 1) {
+            bindMapper.selectById(datum.id)
         } else datum
     }
 
-    override fun delete(id: String?): Boolean {
-        val datum = getById(id!!.toLong()) ?: throw PlaceholderException()
+    override fun delete(id: String): Boolean {
+        val datum = getById(id.toLong()) ?: throw PlaceholderException()
         return this.removeById(datum.id)
     }
 
     override fun modify(datum: O): O {
-        if (null == getById(datum?.id)) {
+        if (null == getById(datum.id)) {
             throw PlaceholderException()
         }
         return if (updateById(datum)) {
-            getById(datum?.id)
+            getById(datum.id)
         } else datum
     }
 }

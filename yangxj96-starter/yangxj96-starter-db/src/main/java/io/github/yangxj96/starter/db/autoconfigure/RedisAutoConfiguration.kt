@@ -3,7 +3,6 @@ package io.github.yangxj96.starter.db.autoconfigure
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.yangxj96.starter.db.props.DBProperties
 import jakarta.annotation.Resource
-import lombok.extern.slf4j.Slf4j
 import org.jetbrains.annotations.Contract
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +23,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 /**
  * Redis的自动配置类
  */
-@Slf4j
 @ConditionalOnProperty(name = ["yangxj96.db.redis-enable"], havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(DBProperties::class)
 @AutoConfiguration(before = [org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration::class])

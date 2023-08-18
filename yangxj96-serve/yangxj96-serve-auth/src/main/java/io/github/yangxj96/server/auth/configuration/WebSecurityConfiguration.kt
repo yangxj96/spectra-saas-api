@@ -8,7 +8,6 @@ import io.github.yangxj96.starter.security.store.TokenStore
 import io.github.yangxj96.starter.security.store.impl.JdbcTokenStore
 import io.github.yangxj96.starter.security.store.impl.RedisTokenStore
 import jakarta.annotation.Resource
-import lombok.extern.slf4j.Slf4j
 import org.mybatis.spring.annotation.MapperScan
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -34,7 +33,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 /**
  * Security 相关配置
  */
-@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)

@@ -4,7 +4,6 @@ import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder.clear
 import io.github.yangxj96.starter.db.holder.DynamicDataSourceContextHolder.set
 import jakarta.servlet.*
 import jakarta.servlet.http.HttpServletRequest
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import java.io.IOException

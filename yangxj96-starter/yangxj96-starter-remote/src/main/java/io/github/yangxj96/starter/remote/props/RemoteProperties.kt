@@ -2,14 +2,12 @@ package io.github.yangxj96.starter.remote.props
 
 import feign.Logger
 import feign.Retryer
-import lombok.Data
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.util.concurrent.TimeUnit
 
 /**
  * 远程相关配置
  */
-@Data
 @ConfigurationProperties(prefix = "yangxj96.remote")
 class RemoteProperties {
     /**

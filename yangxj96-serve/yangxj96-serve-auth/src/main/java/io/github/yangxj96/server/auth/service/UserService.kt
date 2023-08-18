@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority
  * 用户service层
  */
 interface UserService : BasicService<User> {
+
     /**
      * 关联用户和角色
      *

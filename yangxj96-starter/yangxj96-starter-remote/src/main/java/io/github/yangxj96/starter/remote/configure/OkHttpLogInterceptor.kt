@@ -1,6 +1,5 @@
 package io.github.yangxj96.starter.remote.configure
 
-import lombok.extern.slf4j.Slf4j
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -11,7 +10,6 @@ import java.io.IOException
 /**
  * okhttp的拦截器
  */
-@Slf4j
 class OkHttpLogInterceptor : Interceptor {
 
     companion object {

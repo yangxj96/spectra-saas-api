@@ -7,11 +7,11 @@ import com.baomidou.mybatisplus.extension.service.IService
  *
  * @param <O> 子类对应的实体
 </O> */
-interface BasicService<O : BasicEntity?> : IService<O> {
+interface BasicService<O : BasicEntity> : IService<O> {
 
     fun create(datum: O): O
 
-    fun delete(id: String?): Boolean
+    fun delete(id: String): Boolean
 
     fun modify(datum: O): O
 
