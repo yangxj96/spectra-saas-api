@@ -1,63 +1,38 @@
-/*
- *  Copyright (c) 2021 - 2023
- *  作者：杨新杰(Jack Young)
- *  邮箱：yangxj96@gmail.com
- *  日期：2023-05-08 15:08:19
- *  Copyright (c) 2021 - 2023
- */
+package io.github.yangxj96.starter.security.store.redis
 
-package io.github.yangxj96.starter.security.store.redis;
+abstract class BaseRedisTokenStoreSerializationStrategy : RedisTokenStoreSerializationStrategy {
 
-/**
- *
- */
-public abstract class BaseRedisTokenStoreSerializationStrategy implements RedisTokenStoreSerializationStrategy {
-
-
-    private static final byte[] EMPTY_ARRAY = new byte[0];
-
-    private static boolean isEmpty(byte[] bytes) {
-        return bytes == null || bytes.length == 0;
+    override fun <T> deserialize(bytes: ByteArray, clazz: Class<T>): T? {
+        return if (isEmpty(bytes)) {
+            null
+        } else deserializeInternal(bytes, clazz)
     }
 
-    @Override
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
-        if (isEmpty(bytes)) {
-            return null;
+    protected abstract fun <T> deserializeInternal(bytes: ByteArray?, clazz: Class<T>?): T
+
+    override fun deserializeString(bytes: ByteArray): String? {
+        return if (isEmpty(bytes)) {
+            null
+        } else deserializeStringInternal(bytes)
+    }
+
+    protected abstract fun deserializeStringInternal(bytes: ByteArray?): String
+    override fun serialize(obj: Any): ByteArray? {
+        return serializeInternal(obj)
+    }
+
+    protected abstract fun serializeInternal(obj: Any?): ByteArray
+
+    override fun serialize(data: String): ByteArray? {
+        return serializeInternal(data)
+    }
+
+    protected abstract fun serializeInternal(data: String?): ByteArray
+
+    companion object {
+        private fun isEmpty(bytes: ByteArray?): Boolean {
+            return bytes == null || bytes.isEmpty()
         }
-        return deserializeInternal(bytes, clazz);
+
     }
-
-    protected abstract <T> T deserializeInternal(byte[] bytes, Class<T> clazz);
-
-    @Override
-    public String deserializeString(byte[] bytes) {
-        if (isEmpty(bytes)) {
-            return null;
-        }
-        return deserializeStringInternal(bytes);
-    }
-
-    protected abstract String deserializeStringInternal(byte[] bytes);
-
-    @Override
-    public byte[] serialize(Object object) {
-        if (object == null) {
-            return EMPTY_ARRAY;
-        }
-        return serializeInternal(object);
-    }
-
-    protected abstract byte[] serializeInternal(Object object);
-
-    @Override
-    public byte[] serialize(String data) {
-        if (data == null) {
-            return EMPTY_ARRAY;
-        }
-        return serializeInternal(data);
-    }
-
-    protected abstract byte[] serializeInternal(String data);
-
 }

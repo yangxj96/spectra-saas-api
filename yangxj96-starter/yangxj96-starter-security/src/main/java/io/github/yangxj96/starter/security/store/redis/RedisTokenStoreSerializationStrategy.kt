@@ -1,24 +1,13 @@
-/*
- *  Copyright (c) 2021 - 2023
- *  作者：杨新杰(Jack Young)
- *  邮箱：yangxj96@gmail.com
- *  日期：2023-05-08 15:08:19
- *  Copyright (c) 2021 - 2023
- */
+package io.github.yangxj96.starter.security.store.redis
 
-package io.github.yangxj96.starter.security.store.redis;
+interface RedisTokenStoreSerializationStrategy {
 
-/**
- *
- */
-public interface RedisTokenStoreSerializationStrategy {
+    fun <T> deserialize(bytes: ByteArray, clazz: Class<T>): T?
 
-    <T> T deserialize(byte[] bytes, Class<T> clazz);
+    fun deserializeString(bytes: ByteArray): String?
 
-    String deserializeString(byte[] bytes);
+    fun serialize(obj: Any): ByteArray?
 
-    byte[] serialize(Object object);
-
-    byte[] serialize(String data);
+    fun serialize(data: String): ByteArray?
 
 }

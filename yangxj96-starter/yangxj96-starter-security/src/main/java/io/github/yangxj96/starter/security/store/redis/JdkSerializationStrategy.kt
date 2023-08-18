@@ -1,31 +1,21 @@
-/*
- *  Copyright (c) 2021 - 2023
- *  作者：杨新杰(Jack Young)
- *  邮箱：yangxj96@gmail.com
- *  日期：2023-05-08 15:08:19
- *  Copyright (c) 2021 - 2023
- */
+package io.github.yangxj96.starter.security.store.redis
 
-package io.github.yangxj96.starter.security.store.redis;
-
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer
 
 /**
  *
  */
-public class JdkSerializationStrategy extends StandardStringSerializationStrategy {
+class JdkSerializationStrategy : StandardStringSerializationStrategy() {
 
-    private static final JdkSerializationRedisSerializer OBJECT_SERIALIZER = new JdkSerializationRedisSerializer();
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected <T> T deserializeInternal(byte[] bytes, Class<T> clazz) {
-        return (T) OBJECT_SERIALIZER.deserialize(bytes);
+    override fun <T> deserializeInternal(bytes: ByteArray?, clazz: Class<T>?): T {
+        return OBJECT_SERIALIZER.deserialize(bytes) as T
     }
 
-    @Override
-    protected byte[] serializeInternal(Object object) {
-        return OBJECT_SERIALIZER.serialize(object);
+    override fun serializeInternal(obj: Any?): ByteArray {
+        return OBJECT_SERIALIZER.serialize(obj)
     }
 
+    companion object {
+        private val OBJECT_SERIALIZER = JdkSerializationRedisSerializer()
+    }
 }
