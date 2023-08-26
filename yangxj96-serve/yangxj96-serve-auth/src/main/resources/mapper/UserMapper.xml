@@ -13,11 +13,11 @@
         <result column="access_locked"       jdbcType="BOOLEAN"   property="accessLocked"/>
         <result column="access_enable"       jdbcType="BOOLEAN"   property="accessEnable"/>
         <result column="credentials_expired" jdbcType="BOOLEAN"   property="credentialsExpired"/>
-        <result column="created_by"          jdbcType="BIGINT"    property="createdBy"/>
+        <result column="created_user"        jdbcType="BIGINT"    property="createdUser"/>
         <result column="created_time"        jdbcType="TIMESTAMP" property="createdTime"/>
-        <result column="updated_by"          jdbcType="BIGINT"    property="updatedBy"/>
+        <result column="updated_user"        jdbcType="BIGINT"    property="updatedUser"/>
         <result column="updated_time"        jdbcType="TIMESTAMP" property="updatedTime"/>
-        <result column="deleted"             jdbcType="BOOLEAN"   property="deleted"/>
+        <result column="deleted"             jdbcType="TIMESTAMP" property="deleted"/>
     </resultMap>
     <!-- @formatter:on -->
 
@@ -30,15 +30,15 @@
         access_locked,
         access_enable,
         credentials_expired,
-        created_by,
+        created_user,
         created_time,
-        updated_by,
+        updated_user,
         updated_time,
         deleted
     </sql>
 
     <insert id="relevance">
-        INSERT INTO db_user.t_user_to_role(id, user_id, role_id, created_by, created_time, updated_by, updated_time)
+        INSERT INTO db_user.t_user_to_role(id, user_id, role_id, created_user, created_time, updated_user, updated_time)
         VALUES (#{id}, #{user}, #{role}, 0, now(), 0, now())
     </insert>
 

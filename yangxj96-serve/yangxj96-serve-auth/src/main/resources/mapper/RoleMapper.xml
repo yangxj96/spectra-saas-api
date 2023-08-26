@@ -11,11 +11,11 @@
         <result column="code"         jdbcType="VARCHAR"   property="code"/>
         <result column="pid"          jdbcType="VARCHAR"   property="pid"/>
         <result column="description"  jdbcType="VARCHAR"   property="description"/>
-        <result column="created_by"   jdbcType="BIGINT"    property="createdBy"/>
+        <result column="created_user" jdbcType="BIGINT"    property="createdUser"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
-        <result column="updated_by"   jdbcType="BIGINT"    property="updatedBy"/>
+        <result column="updated_user" jdbcType="BIGINT"    property="updatedUser"/>
         <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
-        <result column="deleted"      jdbcType="BOOLEAN"   property="deleted"/>
+        <result column="deleted"      jdbcType="TIMESTAMP" property="deleted"/>
     </resultMap>
     <!-- @formatter:on -->
 
@@ -26,16 +26,16 @@
         code,
         pid,
         description,
-        created_by,
+        created_user,
         created_time,
-        updated_by,
+        updated_user,
         updated_time,
         deleted
     </sql>
 
     <insert id="relevance">
         INSERT INTO db_user.t_role_to_authority
-        (id, role_id, authority_id, created_by, created_time, updated_by, updated_time)
+        (id, role_id, authority_id, created_user, created_time, updated_user, updated_time)
         VALUES (#{id}, #{role}, #{authority}, 0, now(), 0, now())
     </insert>
 </mapper>

@@ -27,9 +27,9 @@ open class BasicEntity : Serializable {
     /**
      * 创建人
      */
-    @TableField(value = "created_by", fill = FieldFill.INSERT)
+    @TableField(value = "created_user", fill = FieldFill.INSERT)
     @JsonIgnore
-    var createdBy: Long? = null
+    var createdUser: Long? = null
 
     /**
      * 创建时间
@@ -41,9 +41,9 @@ open class BasicEntity : Serializable {
     /**
      * 更新人
      */
-    @TableField(value = "updated_by", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "updated_user", fill = FieldFill.INSERT_UPDATE)
     @JsonIgnore
-    var updatedBy: Long? = null
+    var updatedUser: Long? = null
 
     /**
      * 更新时间
@@ -54,5 +54,5 @@ open class BasicEntity : Serializable {
 
     @TableField(value = "deleted")
     @JsonIgnore
-    var deleted: Boolean? = null
+    var deleted: LocalDateTime? = null
 }

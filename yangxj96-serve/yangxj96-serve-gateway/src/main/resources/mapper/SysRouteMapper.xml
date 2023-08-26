@@ -11,12 +11,13 @@
         <result column="predicates"   jdbcType="VARCHAR"   property="predicates" />
         <result column="filters"      jdbcType="VARCHAR"   property="filters" />
         <result column="metadata"     jdbcType="VARCHAR"   property="metadata" />
-        <result column="created_by"   jdbcType="BIGINT"    property="createdBy" />
-        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
-        <result column="updated_by"   jdbcType="BIGINT"    property="updatedBy" />
-        <result column="deleted"      jdbcType="BOOLEAN"   property="deleted" />
         <result column="route_id"     jdbcType="VARCHAR"   property="routeId" />
         <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+        <result column="created_user" jdbcType="BIGINT"    property="createdUser" />
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+        <result column="updated_user" jdbcType="BIGINT"    property="updatedUser" />
+        <result column="deleted"      jdbcType="TIMESTAMP" property="deleted" />
+
     </resultMap>
     <!-- @formatter:on -->
 
@@ -28,9 +29,9 @@
         predicates,
         filters,
         metadata,
-        created_by,
+        created_user,
         created_time,
-        updated_by,
+        updated_user,
         deleted,
         route_id,
         updated_time

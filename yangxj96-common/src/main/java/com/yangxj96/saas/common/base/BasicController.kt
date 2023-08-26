@@ -1,12 +1,10 @@
 package com.yangxj96.saas.common.base
 
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.common.respond.R
 import jakarta.validation.constraints.NotBlank
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.*
 
 /**
  * RESTFul 接口公用Controller层
@@ -52,4 +50,27 @@ abstract class BasicController<O : BasicEntity, S : BasicService<O>> protected c
     fun modify(@Validated obj: O): O {
         return bindService.modify(obj)
     }
+
+    /**
+     * 根据实体属性分页查询数据
+     *
+     * @param obj 查询对象
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     */
+    @GetMapping
+    fun query(obj: O, @RequestParam(defaultValue = "1") pageNum: Long, @RequestParam(defaultValue = "10") pageSize: Long): IPage<O> {
+        return bindService.select(obj, pageNum, pageSize)
+    }
+
+    /**
+     * 根据ID查询数据
+     *
+     * @param id 数据的ID
+     */
+    @GetMapping("/byId/{id}")
+    fun getById(@PathVariable id: Long): O {
+        return bindService.getById(id)
+    }
+
 }

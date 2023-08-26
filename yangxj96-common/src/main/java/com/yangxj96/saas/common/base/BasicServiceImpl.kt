@@ -1,5 +1,7 @@
 package com.yangxj96.saas.common.base
 
+import com.baomidou.mybatisplus.core.metadata.IPage
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.yangxj96.saas.common.exception.PlaceholderException
 
@@ -10,7 +12,7 @@ import com.yangxj96.saas.common.exception.PlaceholderException
  * @param <O> 子类对应的实体
 </O></M> */
 open class BasicServiceImpl<M : BasicMapper<O>, O : BasicEntity>
-protected constructor(@JvmField protected val bindMapper: M) : ServiceImpl<M, O>(), BasicService<O> {
+protected constructor(protected val bindMapper: M) : ServiceImpl<M, O>(), BasicService<O> {
 
     override fun create(datum: O): O {
         return if (bindMapper.insert(datum) == 1) {
@@ -30,5 +32,12 @@ protected constructor(@JvmField protected val bindMapper: M) : ServiceImpl<M, O>
         return if (updateById(datum)) {
             getById(datum.id)
         } else datum
+    }
+
+    override fun select(datum: O, pageNum: Long, pageSize: Long): IPage<O> {
+        val wrapper = this.query()
+            .setEntity(datum)
+            .page(Page(pageNum, pageSize))
+        return this.page(wrapper)
     }
 }

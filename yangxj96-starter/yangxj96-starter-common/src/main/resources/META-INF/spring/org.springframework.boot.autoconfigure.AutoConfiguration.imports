@@ -1,1 +1,2 @@
 com.yangxj96.saas.starter.common.autoconfigure.JacksonAutoConfiguration
+com.yangxj96.saas.starter.common.autoconfigure.SpringMvcAutoConfiguration

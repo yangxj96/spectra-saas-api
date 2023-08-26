@@ -16,11 +16,11 @@ class MetaObjectHandlerImpl : MetaObjectHandler {
     companion object {
         // @formatter:off
         /** 创建人  */
-        private const val CREATED_BY = "createdBy"
+        private const val CREATED_USER = "createdUser"
          /** 创建时间  */
         private const val CREATED_TIME = "createdTime"
          /** 更新人  */
-        private const val UPDATED_BY = "updatedBy"
+        private const val UPDATED_USER = "updatedUser"
          /** 更新时间  */
         private const val UPDATED_TIME = "updatedTime"
         // @formatter:on
@@ -43,17 +43,16 @@ class MetaObjectHandlerImpl : MetaObjectHandler {
 
     override fun insertFill(metaObject: MetaObject) {
         log.debug("[自动配置-MyBatisPlus] insert 填充字段开始")
-        setFieldValByName(CREATED_BY, 0L, metaObject)
+        setFieldValByName(CREATED_USER, currentUserId, metaObject)
         setFieldValByName(CREATED_TIME, LocalDateTime.now(), metaObject)
-        setFieldValByName(UPDATED_BY, currentUserId, metaObject)
+        setFieldValByName(UPDATED_USER, currentUserId, metaObject)
         setFieldValByName(UPDATED_TIME, LocalDateTime.now(), metaObject)
     }
 
     override fun updateFill(metaObject: MetaObject) {
         log.debug("[自动配置-MyBatisPlus] update 填充字段开始")
-        setFieldValByName(UPDATED_BY, currentUserId, metaObject)
+        setFieldValByName(UPDATED_USER, currentUserId, metaObject)
         setFieldValByName(UPDATED_TIME, LocalDateTime.now(), metaObject)
     }
-
 
 }

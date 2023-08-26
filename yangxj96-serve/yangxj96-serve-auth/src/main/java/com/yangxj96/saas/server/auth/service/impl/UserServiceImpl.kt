@@ -18,6 +18,7 @@ import java.util.function.Consumer
 @Service
 class UserServiceImpl protected constructor(bindMapper: UserMapper) :
     BasicServiceImpl<UserMapper, User>(bindMapper), UserService {
+
     override fun relevance(user: Long, role: Long): Boolean {
         return bindMapper.relevance(IdWorker.getId(), user, role)
     }

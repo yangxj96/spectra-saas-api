@@ -3,11 +3,11 @@ package com.yangxj96.saas.server.auth.service.impl
 import cn.hutool.core.lang.tree.Tree
 import cn.hutool.core.lang.tree.TreeNodeConfig
 import cn.hutool.core.lang.tree.TreeUtil
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BasicServiceImpl
-import com.yangxj96.saas.common.respond.R.Companion.specify
+import com.yangxj96.saas.common.respond.R
 import com.yangxj96.saas.common.respond.RStatus
 import com.yangxj96.saas.server.auth.mapper.RoleMapper
 import com.yangxj96.saas.server.auth.service.RoleService
@@ -26,16 +26,17 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
 
     override fun create(datum: Role): Role {
         if (!datum.code?.startsWith("ROLE_")!!) {
-            specify(RStatus.FAILURE_FORMAT)
+            R.specify(RStatus.FAILURE_FORMAT)
             return datum
         }
-        val wrapper = LambdaQueryWrapper<Role>()
-        wrapper
-            .eq(Role::name, datum.name)
+
+        val wrapper = QueryWrapper<Role>()
+            .eq("code", datum.code)
             .last("LIMIT 1")
+
         val db = this.getOne(wrapper)
         if (this.getOne(wrapper) != null) {
-            specify(RStatus.FAILURE_REPEAT)
+            R.specify(RStatus.FAILURE_REPEAT)
             return db!!
         }
         return super.create(datum)
