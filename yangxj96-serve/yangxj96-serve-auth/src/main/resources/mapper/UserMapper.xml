@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.github.yangxj96.server.auth.mapper.UserMapper">
-
+<mapper namespace="com.yangxj96.saas.server.auth.mapper.UserMapper">
     <!-- @formatter:off -->
-    <resultMap id="BaseResultMap" type="io.github.yangxj96.bean.user.User">
+    <resultMap id="BaseResultMap" type="com.yangxj96.saas.bean.user.User">
         <!--@mbg.generated-->
         <!--@Table db_user.t_user-->
         <id column="id"                      jdbcType="BIGINT"    property="id"/>
@@ -43,17 +42,17 @@
         VALUES (#{id}, #{user}, #{role}, 0, now(), 0, now())
     </insert>
 
-    <select id="getRoleByUserId" resultType="io.github.yangxj96.bean.user.Role">
+    <select id="getRoleByUserId" resultType="com.yangxj96.saas.bean.user.Role">
         SELECT r.*
         FROM db_user.t_role r,
-             db_user.t_user_to_role tr,
-             db_user.t_user u
+        db_user.t_user_to_role tr,
+        db_user.t_user u
         WHERE u.id = #{userId}
-          AND r.id = tr.role_id
-          AND tr.user_id = u.id
+        AND r.id = tr.role_id
+        AND tr.user_id = u.id
     </select>
 
-    <select id="getAuthorityByRoleIds" resultType="io.github.yangxj96.bean.user.Authority">
+    <select id="getAuthorityByRoleIds" resultType="com.yangxj96.saas.bean.user.Authority">
         SELECT DISTINCT (a.*)
         FROM db_user.t_authority a,
         db_user.t_role_to_authority ta

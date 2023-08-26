@@ -10,7 +10,7 @@ spring:
     virtual-host: /
 
 mybatis-plus:
-  type-aliases-package: io.github.yangxj96.bean.platform
+  type-aliases-package: com.yangxj96.saas.bean.platform
 yangxj96:
   remote:
     connect-time-out: 10000

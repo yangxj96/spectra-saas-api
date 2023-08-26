@@ -13,7 +13,7 @@ dependencies {
     // 数据库
     api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     runtimeOnly("org.postgresql:postgresql")
-    
+
 
     // 流
     api("org.springframework.cloud:spring-cloud-stream")

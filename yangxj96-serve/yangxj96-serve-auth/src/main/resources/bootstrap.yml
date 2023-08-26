@@ -20,7 +20,7 @@ spring:
       enabled: true
 
 mybatis-plus:
-  type-aliases-package: io.github.yangxj96.bean.user
+  type-aliases-package: com.yangxj96.saas.bean.user
 yangxj96:
   security:
     enable: false

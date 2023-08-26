@@ -12,7 +12,7 @@ plugins {
 }
 
 allprojects {
-    group = "io.github.yangxj96.commonsaas"
+    group = "com.yangxj96.saas"
     version = "0.0.1-SNAPSHOT"
 
 
@@ -99,12 +99,12 @@ subprojects {
 
         // 环境变量
         environment.set(
-                mapOf(
-                        "HTTP_PROXY" to "http://192.168.2.30:8889",
-                        "HTTPS_PROXY" to "http://192.168.2.30:8889",
-                        "BPE_DELIM_JAVA_TOOL_OPTIONS" to " ",
-                        "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Duser.timezone=Asia/Shanghai"
-                )
+            mapOf(
+                "HTTP_PROXY" to "http://192.168.2.30:8889",
+                "HTTPS_PROXY" to "http://192.168.2.30:8889",
+                "BPE_DELIM_JAVA_TOOL_OPTIONS" to " ",
+                "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Duser.timezone=Asia/Shanghai"
+            )
         )
 
         buildCache {
