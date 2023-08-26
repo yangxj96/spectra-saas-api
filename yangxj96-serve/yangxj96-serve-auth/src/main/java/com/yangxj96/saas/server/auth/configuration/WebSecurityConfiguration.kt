@@ -106,34 +106,26 @@ class WebSecurityConfiguration {
     fun filterChain(http: HttpSecurity, tokenStore: TokenStore): SecurityFilterChain {
         log.info("{}加载核心配置", LOG_PREFIX)
         // 关闭cors csrf httpBasic formLogin
-        http.cors().disable()
-            .csrf().disable()
-            .httpBasic().disable()
-            .formLogin().disable()
-
-        // 放开所有路径接口,需要鉴权的接口使用注解
-        http
-            .authorizeHttpRequests()
-            .anyRequest().permitAll()
-
-        // 认证异常和无权限异常处理
-        http
-            .exceptionHandling()
-            .accessDeniedHandler(AccessDeniedHandlerImpl())
-            .authenticationEntryPoint(AuthenticationEntryPointImpl())
-
-        // 不保存session
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-        // 添加获取授权的过滤器
-        http
+        http.cors { it.disable() }
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            // 放开所有路径接口,需要鉴权的接口使用注解
+            .authorizeHttpRequests { it.anyRequest().permitAll() }
+            // 认证异常和无权限异常处理
+            .exceptionHandling {
+                it.accessDeniedHandler(AccessDeniedHandlerImpl())
+                it.authenticationEntryPoint(AuthenticationEntryPointImpl())
+            }
+            // 不保存session
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            // 添加获取授权的过滤器
             .addFilterAt(
                 UserAuthorizationFilter(authenticationManager(), tokenStore),
                 UsernamePasswordAuthenticationFilter::class.java
             )
-
-        // 认证
-        http.userDetailsService(userDetailsService)
+            // 认证
+            .userDetailsService(userDetailsService)
         return http.build()
     }
 

@@ -43,15 +43,8 @@ class SecurityConfiguration {
     }
 
     @Bean
-    @Throws(Exception::class)
-    fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
-        log.info("{}初始化security核心配置", LOG_PREFIX)
-        http
-            .cors().disable()
-            .csrf().disable()
-            .httpBasic().disable()
-            .formLogin().disable()
-        val store: TokenStore = if (storeType === StoreType.JDBC) {
+    fun tokenStore(): TokenStore {
+        return if (storeType === StoreType.JDBC) {
             log.debug("{},store使用jdbc", LOG_PREFIX)
             JdbcTokenStore()
         } else {
@@ -59,8 +52,19 @@ class SecurityConfiguration {
             val connectionFactory = SpringUtil.getBean(RedisConnectionFactory::class.java)
             RedisTokenStore(connectionFactory)
         }
+    }
+
+
+    @Bean
+    @Throws(Exception::class)
+    fun securityWebFilterChain(http: ServerHttpSecurity, tokenStore: TokenStore): SecurityWebFilterChain {
+        log.info("{}初始化security核心配置", LOG_PREFIX)
         http
-            .addFilterAt(UserAuthorizationFilter(store), SecurityWebFiltersOrder.AUTHORIZATION)
+            .cors { it.disable() }
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .addFilterAt(UserAuthorizationFilter(tokenStore), SecurityWebFiltersOrder.AUTHORIZATION)
         return http.build()
     }
 

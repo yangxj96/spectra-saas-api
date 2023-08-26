@@ -63,39 +63,9 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
         return BCryptPasswordEncoder()
     }
 
-    /**
-     * security的核心规则配置
-     *
-     * @return [SecurityFilterChain]
-     */
     @Bean
-    @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        log.info("{}初始化security核心配置", LOG_PREFIX)
-        http
-            .securityContext { it.requireExplicitSave(true) }
-
-        // 禁用 cors csrf form httpBasic
-        http
-            .cors().disable()
-            .csrf().disable()
-            .httpBasic().disable()
-            .formLogin().disable()
-
-        // 认证异常和无权访问处理
-        http
-            .exceptionHandling()
-            .authenticationEntryPoint(AuthenticationEntryPointImpl())
-            .accessDeniedHandler(AccessDeniedHandlerImpl())
-
-        // 放行所有请求,需要权限的请求则使用注解进行控制
-        http
-            .authorizeHttpRequests()
-            .anyRequest()
-            .permitAll()
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-        val store: TokenStore = if (properties.storeType === StoreType.JDBC) {
+    fun tokenStore(): TokenStore {
+        return if (properties.storeType === StoreType.JDBC) {
             log.debug("{},store使用jdbc", LOG_PREFIX)
             JdbcTokenStore()
         } else {
@@ -103,10 +73,39 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
             val connectionFactory = SpringUtil.getBean(RedisConnectionFactory::class.java)
             RedisTokenStore(connectionFactory)
         }
+    }
 
+    /**
+     * security的核心规则配置
+     *
+     * @return [SecurityFilterChain]
+     */
+    @Bean
+    @Throws(Exception::class)
+    fun filterChain(http: HttpSecurity, tokenStore: TokenStore): SecurityFilterChain {
+        log.info("{}初始化security核心配置", LOG_PREFIX)
         http
+            .securityContext { it.requireExplicitSave(true) }
+            // 禁用 cors csrf form httpBasic
+            .cors { it.disable() }
+            .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            // 认证异常和无权访问处理
+            .exceptionHandling {
+                it.authenticationEntryPoint(AuthenticationEntryPointImpl())
+                it.accessDeniedHandler(AccessDeniedHandlerImpl())
+            }
+            // 放行所有请求,需要权限的请求则使用注解进行控制
+            .authorizeHttpRequests {
+                it.anyRequest()
+                    .permitAll()
+            }
+            // session 管理
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            // 添加一个过滤器
             .addFilterAt(
-                UserAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(), store),
+                UserAuthorizationFilter(authenticationConfiguration.getAuthenticationManager(), tokenStore),
                 UsernamePasswordAuthenticationFilter::class.java
             )
         return http.build()

@@ -4,7 +4,7 @@ spring:
   application:
     name: yangxj96-serve-gateway
   datasource:
-    url: jdbc:postgresql://${DB_HOST:127.0.0.1:5432}/yangxj96_saas_db
+    url: jdbc:postgresql://${DB_HOST:175.178.90.140:5432}/yangxj96_saas_db
 mybatis-plus:
   type-aliases-package: com.yangxj96.saas.bean.gateway
 yangxj96:

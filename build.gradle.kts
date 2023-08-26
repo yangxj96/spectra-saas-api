@@ -5,8 +5,8 @@ import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     java
-    id("org.springframework.boot") version "3.0.0" apply false
-    id("io.spring.dependency-management") version "1.1.0" apply false
+    id("org.springframework.boot") version "3.1.3" apply false
+    id("io.spring.dependency-management") version "1.1.3" apply false
     id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
     id("org.jetbrains.kotlin.plugin.spring") version "1.8.22" apply false
 }
@@ -42,10 +42,9 @@ subprojects {
     }
 
     // 定义的变量,可以再全局使用
-    extra["springCloudVersion"] = "2022.0.2"
-    extra["springCloudAlibabaVersion"] = "2022.0.0.0-RC1"
-    extra["mybatisVersion"] = "3.0.0"
-    extra["mybatisPlusVersion"] = "3.5.3.1"
+    extra["springCloudVersion"] = "2022.0.4"
+    extra["springCloudAlibabaVersion"] = "2022.0.0.0-RC2"
+    extra["mybatisPlusVersion"] = "3.5.3.2"
 
 
     // 等同于dependencyManagement {}

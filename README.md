@@ -9,21 +9,20 @@
 
 技术架构：
 
-- 🚀️  `JDK17`
-- 🚀️  `Gradle 7.5.1`
-- 🚀️  `PostgreSQL 14.4`
-- 🚀️  `apache-maven 3.8.4`
-- 🚀️  `spring-boot  3.0.0`
-- 🚀️  `spring-cloud 2022.0.0-RC2`
-- 🚀️  `spring-cloud-alibaba 2022.0.0.0-RC1`
-- 🚀️  `mybatis-plus 3.5.2.7-SNAPSHOT`
+- 🚀️  `JDK17.0.8`
+- 🚀️  `Gradle 7.6.1`
+- 🚀️  `PostgreSQL 15`
+- 🚀️  `spring-boot  3.1.3`
+- 🚀️  `spring-cloud 2022.0.4`
+- 🚀️  `spring-cloud-alibaba 2022.0.0.0-RC2`
+- 🚀️  `mybatis-plus 3.5.3.2`
 - ...
 
 # 2 IDEA环境`JVM`参数配置
 
 > tips: 主要目的减少web服务的的内存占用
 
-`JVM`参数: `-Xms256m -Xmx256m -Xmn100m -Xlog:gc*`
+`JVM`参数: `-Xms256m -Xmx256m -Xmn100m`
 
 # 3 功能计划
 
