@@ -17,9 +17,11 @@ class SysRouteServiceImpl protected constructor(bindMapper: SysRouteMapper) : Ba
 
     @Resource
     private lateinit var dynamicRouteService: DynamicRouteServiceImpl
+
+
     override fun create(datum: SysRoute): SysRoute {
         val route = super.create(datum)
-        dynamicRouteService.save(Mono.just(RouteUtil.convert(route))).subscribe()
+        dynamicRouteService.save(Mono.just(RouteUtil.convertToRouteDefinition(route))).subscribe()
         return route
     }
 
@@ -35,7 +37,7 @@ class SysRouteServiceImpl protected constructor(bindMapper: SysRouteMapper) : Ba
     override fun modify(datum: SysRoute): SysRoute {
         try {
             super.modify(datum)
-            dynamicRouteService.update(Mono.just(RouteUtil.convert(datum)))
+            dynamicRouteService.update(Mono.just(RouteUtil.convertToRouteDefinition(datum)))
             return datum
         } catch (e: Exception) {
             throw RuntimeException("路由信息修改失败")
@@ -45,9 +47,5 @@ class SysRouteServiceImpl protected constructor(bindMapper: SysRouteMapper) : Ba
     override fun refresh(): Boolean {
         dynamicRouteService.refresh().subscribe()
         return true
-    }
-
-    override fun select(): List<SysRoute> {
-        return this.list()
     }
 }

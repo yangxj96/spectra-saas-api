@@ -16,7 +16,7 @@ object RouteUtil {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
-    fun convert(route: SysRoute): RouteDefinition {
+    fun convertToRouteDefinition(route: SysRoute): RouteDefinition {
 
         val mapper = SpringUtil.getBean(ObjectMapper::class.java)
         val definition = RouteDefinition()
@@ -51,5 +51,9 @@ object RouteUtil {
             e.printStackTrace()
         }
         return definition
+    }
+
+    fun convertToRoute(definition: RouteDefinition):SysRoute {
+        return SysRoute()
     }
 }

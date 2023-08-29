@@ -15,10 +15,4 @@ interface SysRouteService : BasicService<SysRoute> {
      */
     fun refresh(): Boolean
 
-    /**
-     * 查询db中的路由信息
-     *
-     * @return db中的路由信息
-     */
-    fun select(): List<SysRoute>
 }

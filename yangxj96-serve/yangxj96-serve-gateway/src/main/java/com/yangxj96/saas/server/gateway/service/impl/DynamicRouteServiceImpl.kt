@@ -1,6 +1,7 @@
 package com.yangxj96.saas.server.gateway.service.impl
 
-import com.yangxj96.saas.constant.SystemRedisKey
+import com.yangxj96.saas.server.gateway.service.SysRouteService
+import com.yangxj96.saas.server.gateway.utils.RouteUtil
 import jakarta.annotation.Resource
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent
 import org.springframework.cloud.gateway.route.RouteDefinition
@@ -8,8 +9,6 @@ import org.springframework.cloud.gateway.route.RouteDefinitionWriter
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.ApplicationEventPublisherAware
 import org.springframework.context.annotation.Primary
-import org.springframework.data.redis.core.ReactiveHashOperations
-import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
@@ -24,14 +23,11 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
     @Resource
     private lateinit var publisher: ApplicationEventPublisher
 
-    @Resource(name = "reactiveRedisRouteDefinitionTemplate")
-    private lateinit var redisTemplate: ReactiveRedisTemplate<String, RouteDefinition>
-
-    private lateinit var hashOperations: ReactiveHashOperations<String, String, Any>
+    @Resource
+    private lateinit var routeService: SysRouteService
 
     override fun setApplicationEventPublisher(applicationEventPublisher: ApplicationEventPublisher) {
         publisher = applicationEventPublisher
-        hashOperations = redisTemplate.opsForHash()
     }
 
     /**
@@ -41,13 +37,11 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
      */
     override fun save(route: Mono<RouteDefinition>): Mono<Void> {
         return route.flatMap {
-            hashOperations.putIfAbsent(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it.id, it).flatMap { b ->
-                return@flatMap if (b) {
-                    publisher.publishEvent(RefreshRoutesEvent(route))
-                    Mono.empty()
-                } else {
-                    Mono.error(RuntimeException("插入redis失败"))
-                }
+            return@flatMap if (routeService.save(RouteUtil.convertToRoute(it))) {
+                publisher.publishEvent(RefreshRoutesEvent(route))
+                Mono.empty()
+            } else {
+                Mono.error(RuntimeException("插入redis失败"))
             }
         }
     }
@@ -59,13 +53,10 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
      */
     override fun delete(routeId: Mono<String>): Mono<Void> {
         return routeId.flatMap {
-            hashOperations.hasKey(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it).flatMap { b: Boolean ->
-                if (b == java.lang.Boolean.TRUE) {
-                    return@flatMap hashOperations.remove(SystemRedisKey.SYSTEM_GATEWAY_REDIS_KEY, it).flatMap { _ ->
-                        publisher.publishEvent(RefreshRoutesEvent(it))
-                        Mono.empty()
-                    }
-                }
+            return@flatMap if (routeService.removeById(it.toLong())) {
+                publisher.publishEvent(RefreshRoutesEvent(it))
+                Mono.empty()
+            } else {
                 Mono.error(RuntimeException("删除失败"))
             }
         }
@@ -76,7 +67,7 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
      *
      * @param route 路由信息
      */
-    fun update(route: Mono<RouteDefinition?>?) {
+    fun update(route: Mono<RouteDefinition>) {
         // document why this method is empty
     }
 

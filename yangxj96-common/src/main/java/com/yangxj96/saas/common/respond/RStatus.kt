@@ -18,6 +18,7 @@ enum class RStatus(val code: Int, val msg: String) {
     SECURITY_USERNAME_ABSENCE(100002, "用户不存在"),
     SECURITY_PASSWORD_ERROR(100003, "密码错误"),
     SECURITY_TOKEN_CLEAN(100004, "Token自动清理异常"),
+
     GATEWAY_NOT_FOUND(200001, "未找到服务"),
     GATEWAY_RESPONSE_STATUS(200002, "网关响应状态异常"),
     NULL_POINTER(200003, "空指针异常"),
@@ -28,7 +29,8 @@ enum class RStatus(val code: Int, val msg: String) {
     FAILURE_REPEAT(200008, "数据重复"),
     FAILURE_FORMAT(200009, "字段格式错误,请检查"),
     FAILURE_DATA_NULL(200010, "查询不到数据"),
-    NOT_FIND_ROUTE(200011, "未找到路由");
+    NOT_FIND_ROUTE(200011, "未找到路由"),
+    NOT_FIND_TOKEN(200012, "为获取到token");
 
     companion object {
         fun getMsgByCode(code: Int?): String {

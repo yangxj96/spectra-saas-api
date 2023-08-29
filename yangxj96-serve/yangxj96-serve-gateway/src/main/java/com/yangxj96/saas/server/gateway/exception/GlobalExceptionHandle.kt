@@ -6,10 +6,14 @@ import com.yangxj96.saas.common.respond.R
 import com.yangxj96.saas.common.respond.RStatus
 import jakarta.annotation.Resource
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
+import org.springframework.cloud.gateway.support.NotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
+import java.lang.NullPointerException
+import java.lang.RuntimeException
 import java.nio.charset.StandardCharsets
 
 /**
@@ -55,12 +59,13 @@ class GlobalExceptionHandle : ErrorWebExceptionHandler {
      */
     private fun transition(ex: Throwable): R {
         return when (ex.javaClass.getName()) {
-            "org.springframework.cloud.gateway.support.NotFoundException" -> R.specify(RStatus.GATEWAY_NOT_FOUND)
-            "org.springframework.web.server.ResponseStatusException" -> R.specify(RStatus.GATEWAY_RESPONSE_STATUS)
-            "org.springframework.security.access.AccessDeniedException" -> R.specify(RStatus.SECURITY_ACCESS_DENIED)
-            "org.springframework.security.authentication.AuthenticationServiceException" -> R.specify(RStatus.SECURITY_AUTHENTICATION)
-            "java.lang.NullPointerException" -> R.specify(RStatus.NULL_POINTER)
+            // @formatter:off
+            RuntimeException::class.java.name        -> R.specify(RStatus.NOT_FIND_TOKEN)
+            NotFoundException::class.java.name       -> R.specify(RStatus.GATEWAY_NOT_FOUND)
+            ResponseStatusException::class.java.name -> R.specify(RStatus.GATEWAY_RESPONSE_STATUS)
+            NullPointerException::class.java.name    -> R.specify(RStatus.NULL_POINTER)
             else -> R.failure()
+            // @formatter:on
         }
     }
 }

@@ -10,5 +10,3 @@ mybatis-plus:
 yangxj96:
   db:
     redis-enable: true
-  security:
-    enable: false
