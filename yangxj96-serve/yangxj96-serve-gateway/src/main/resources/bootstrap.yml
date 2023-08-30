@@ -3,3 +3,8 @@ server:
 spring:
   application:
     name: yangxj96-serve-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false

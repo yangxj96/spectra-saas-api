@@ -7,6 +7,7 @@ import java.io.Serializable
 
 @TableName(value = "db_system.t_route")
 class Route : BasicEntity(), Serializable {
+
     @TableField(value = "uri")
     var uri: String? = null
 

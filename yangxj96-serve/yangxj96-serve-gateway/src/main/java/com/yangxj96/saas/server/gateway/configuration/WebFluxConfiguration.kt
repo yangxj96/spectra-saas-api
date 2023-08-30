@@ -1,11 +1,13 @@
 package com.yangxj96.saas.server.gateway.configuration
 
 import com.yangxj96.saas.server.gateway.exception.GlobalExceptionHandle
+import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.reactive.function.client.WebClient
 
 /**
  * WebFluxConfigurer,类似SpringMvcConfigurer
@@ -22,6 +24,14 @@ class WebFluxConfiguration : WebFluxConfigurer {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     fun globalExceptionHandle(): GlobalExceptionHandle {
         return GlobalExceptionHandle()
+    }
+
+    @Bean
+    @LoadBalanced
+    fun loadBalancedWebClientBuilder(): WebClient.Builder {
+        return WebClient.builder().defaultHeaders {
+            it["token"] = "true"
+        }
     }
 
 }

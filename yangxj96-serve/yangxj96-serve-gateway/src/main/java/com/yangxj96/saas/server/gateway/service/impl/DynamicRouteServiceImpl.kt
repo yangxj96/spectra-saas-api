@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2021 - 2023
+ *  作者：杨新杰(Jack Young)
+ *  邮箱：yangxj96@gmail.com
+ *  日期：2023-08-30 11:25:13
+ *  Copyright (c) 2021 - 2023
+ */
+
 package com.yangxj96.saas.server.gateway.service.impl
 
 import jakarta.annotation.Resource
@@ -31,7 +39,10 @@ class DynamicRouteServiceImpl : ApplicationEventPublisherAware, RouteDefinitionW
      * @param route 路由信息
      */
     override fun save(route: Mono<RouteDefinition>): Mono<Void> {
-        return Mono.empty()
+        return Mono.defer {
+            publisher.publishEvent(RefreshRoutesEvent(route))
+            Mono.empty()
+        }
     }
 
     /**

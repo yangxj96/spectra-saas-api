@@ -20,7 +20,7 @@ class RouteController protected constructor(bindService: RouteService) :
     /**
      * 给feign使用的获取所有路由信息
      */
-    @GetMapping("/all", headers = ["feign=true"])
+    @GetMapping("/all")
     fun getAllRoute(): MutableList<Route> {
         return bindService.list()
     }
