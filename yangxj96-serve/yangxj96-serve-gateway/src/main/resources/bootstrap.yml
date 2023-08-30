@@ -4,16 +4,21 @@ spring:
   application:
     name: yangxj96-serve-gateway
   cloud:
+    function:
+      definition: saasTenant;saasCommon
     stream:
       rabbit:
         bindings:
+          saasTenant-in-0:
+            consumer:
+              acknowledge-mode: manual
           saasCommon-in-0:
             consumer:
               acknowledge-mode: manual
-      binders:
-        default:
-          type: rabbit
       bindings:
+        saasTenant-in-0:
+          destination: saas.tenant
+          group: ${spring.application.name}
         saasCommon-in-0:
           destination: saas.common
           group: ${spring.application.name}
