@@ -39,7 +39,7 @@ class WebFluxConfiguration : WebFluxConfigurer {
 
     @Bean
     @LoadBalanced
-    fun loadBalancedWebClientBuilder(): WebClient.Builder {
+    fun webClientBuilder(): WebClient.Builder {
         val strategies = ExchangeStrategies
             .builder()
             .codecs {
@@ -55,17 +55,10 @@ class WebFluxConfiguration : WebFluxConfigurer {
     }
 
     @Bean
-    fun systemRemote(loadBalancedWebClientBuilder: WebClient.Builder): SystemRemote {
+    fun systemRemote(webClientBuilder: WebClient.Builder): SystemRemote {
         val factory =
             HttpServiceProxyFactory
-                .builder(
-                    WebClientAdapter
-                        .forClient(
-                            loadBalancedWebClientBuilder
-                                .baseUrl("http://yangxj96-serve-platform")
-                                .build()
-                        )
-                )
+                .builder(WebClientAdapter.forClient(webClientBuilder.baseUrl("http://yangxj96-serve-platform").build()))
                 .build()
         return factory.createClient(SystemRemote::class.java)
     }
