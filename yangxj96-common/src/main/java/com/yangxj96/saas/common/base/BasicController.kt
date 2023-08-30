@@ -59,7 +59,11 @@ abstract class BasicController<O : BasicEntity, S : BasicService<O>> protected c
      * @param pageSize 每页数量
      */
     @GetMapping
-    fun query(obj: O, @RequestParam(defaultValue = "1") pageNum: Long, @RequestParam(defaultValue = "10") pageSize: Long): IPage<O> {
+    fun query(
+        obj: O,
+        @RequestParam(defaultValue = "1") pageNum: Long,
+        @RequestParam(defaultValue = "10") pageSize: Long
+    ): IPage<O> {
         return bindService.select(obj, pageNum, pageSize)
     }
 

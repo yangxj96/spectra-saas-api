@@ -1,5 +1,6 @@
 package com.yangxj96.saas.starter.remote.autoconfigure
 
+import com.yangxj96.saas.starter.remote.fallback.PlatformFeignClientFallback
 import com.yangxj96.saas.starter.remote.fallback.SystemFeignClientFallback
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -19,6 +20,13 @@ class RemoteFallbackAutoConfiguration {
     fun systemFeignClientFallback(): SystemFeignClientFallback {
         log.info("$PREFIX 熔断器加载-SystemFeignClientFallback")
         return SystemFeignClientFallback()
+    }
+
+
+    @Bean
+    fun platformFeignClientFallback(): PlatformFeignClientFallback {
+        log.info("$PREFIX 熔断器加载-PlatformFeignClientFallback")
+        return PlatformFeignClientFallback()
     }
 
 }
