@@ -1,20 +1,28 @@
 server:
   port: 0
 spring:
+  application:
+    name: yangxj96-serve-auth
   datasource:
-    url: jdbc:postgresql://${DB_HOST:175.178.90.140:5432}/yangxj96_saas_db
+    url: jdbc:postgresql://175.178.90.140:5432/yangxj96_saas_db
+  cloud:
+    function:
+      definition: saasTenant;saasCommon
     stream:
       rabbit:
         bindings:
-          tenant-in-0:
+          saasTenant-in-0:
             consumer:
-              acknowledge-mode: MANUAL
-      binders:
-        default:
-          type: rabbit
+              acknowledge-mode: manual
+          saasCommon-in-0:
+            consumer:
+              acknowledge-mode: manual
       bindings:
-        tenant-in-0:
+        saasTenant-in-0:
           destination: saas.tenant
+          group: ${spring.application.name}
+        saasCommon-in-0:
+          destination: saas.common
           group: ${spring.application.name}
     loadbalancer:
       enabled: true

@@ -1,4 +1,4 @@
-package com.yangxj96.saas.server.auth.stream
+package com.yangxj96.saas.server.platform.stream
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.Channel

@@ -12,5 +12,7 @@ class StreamModel {
     var type: String? = null
 
     var message: Any? = null
-
+    override fun toString(): String {
+        return "StreamModel(type=$type, message=$message)"
+    }
 }

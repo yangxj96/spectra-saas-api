@@ -2,12 +2,26 @@ server:
   port: 0
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:175.178.90.140:5432}/yangxj96_saas_db
-  rabbitmq:
-    host: ${MQ_HOST:175.178.90.140}
-    username: ${MQ_USERNAME:root}
-    password: ${MQ_PASSWORD:QuVsKppcWvwwX2Vv}
-    virtual-host: /
+    url: jdbc:postgresql://175.178.90.140:5432/yangxj96_saas_db
+  cloud:
+    function:
+      definition: saasTenant;saasCommon
+    stream:
+      rabbit:
+        bindings:
+          saasTenant-in-0:
+            consumer:
+              acknowledge-mode: manual
+          saasCommon-in-0:
+            consumer:
+              acknowledge-mode: manual
+      bindings:
+        saasTenant-in-0:
+          destination: saas.tenant
+          group: ${spring.application.name}
+        saasCommon-in-0:
+          destination: saas.common
+          group: ${spring.application.name}
 
 mybatis-plus:
   type-aliases-package: com.yangxj96.saas.bean.platform

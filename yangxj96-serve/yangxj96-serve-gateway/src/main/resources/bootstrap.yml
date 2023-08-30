@@ -4,7 +4,16 @@ spring:
   application:
     name: yangxj96-serve-gateway
   cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: false
+    stream:
+      rabbit:
+        bindings:
+          saasCommon-in-0:
+            consumer:
+              acknowledge-mode: manual
+      binders:
+        default:
+          type: rabbit
+      bindings:
+        saasCommon-in-0:
+          destination: saas.common
+          group: ${spring.application.name}

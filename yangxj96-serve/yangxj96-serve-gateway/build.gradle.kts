@@ -1,8 +1,8 @@
 dependencies {
     api(project(":yangxj96-serve")) {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-web")
-        exclude(group = "org.springframework.cloud", module = "spring-cloud-stream")
-        exclude(group = "org.springframework.cloud", module = "spring-cloud-stream-binder-rabbit")
+//        exclude(group = "org.springframework.cloud", module = "spring-cloud-stream")
+//        exclude(group = "org.springframework.cloud", module = "spring-cloud-stream-binder-rabbit")
     }
     api(project(":yangxj96-bean"))
     api(project(":yangxj96-common"))
