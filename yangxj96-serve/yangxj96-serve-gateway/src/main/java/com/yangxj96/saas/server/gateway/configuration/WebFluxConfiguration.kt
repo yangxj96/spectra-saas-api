@@ -1,19 +1,30 @@
 package com.yangxj96.saas.server.gateway.configuration
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.yangxj96.saas.server.gateway.exception.GlobalExceptionHandle
+import com.yangxj96.saas.server.gateway.remote.SystemRemote
+import jakarta.annotation.Resource
 import org.springframework.cloud.client.loadbalancer.LoadBalanced
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
+import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.support.WebClientAdapter
+import org.springframework.web.service.invoker.HttpServiceProxyFactory
 
 /**
  * WebFluxConfigurer,类似SpringMvcConfigurer
  */
 @Configuration
 class WebFluxConfiguration : WebFluxConfigurer {
+
+    @Resource
+    private lateinit var om: ObjectMapper
+
 
     /**
      * 全局异常处理
@@ -29,9 +40,34 @@ class WebFluxConfiguration : WebFluxConfigurer {
     @Bean
     @LoadBalanced
     fun loadBalancedWebClientBuilder(): WebClient.Builder {
-        return WebClient.builder().defaultHeaders {
-            it["token"] = "true"
-        }
+        val strategies = ExchangeStrategies
+            .builder()
+            .codecs {
+                it.defaultCodecs().jackson2JsonDecoder(Jackson2JsonDecoder(om))
+            }
+            .build()
+        return WebClient
+            .builder()
+            .exchangeStrategies(strategies)
+            .defaultHeaders {
+                it["token"] = "true"
+            }
+    }
+
+    @Bean
+    fun systemRemote(loadBalancedWebClientBuilder: WebClient.Builder): SystemRemote {
+        val factory =
+            HttpServiceProxyFactory
+                .builder(
+                    WebClientAdapter
+                        .forClient(
+                            loadBalancedWebClientBuilder
+                                .baseUrl("http://yangxj96-serve-platform")
+                                .build()
+                        )
+                )
+                .build()
+        return factory.createClient(SystemRemote::class.java)
     }
 
 }
