@@ -30,7 +30,7 @@ enum class RStatus(val code: Int, val msg: String) {
     FAILURE_FORMAT(200009, "字段格式错误,请检查"),
     FAILURE_DATA_NULL(200010, "查询不到数据"),
     NOT_FIND_ROUTE(200011, "未找到路由"),
-    NOT_FIND_TOKEN(200012, "为获取到token");
+    NOT_FIND_TOKEN(200012, "未获取到token");
 
     companion object {
         fun getMsgByCode(code: Int?): String {

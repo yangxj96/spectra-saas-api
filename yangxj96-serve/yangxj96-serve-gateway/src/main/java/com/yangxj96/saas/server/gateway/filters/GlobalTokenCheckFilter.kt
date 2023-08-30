@@ -1,6 +1,7 @@
 package com.yangxj96.saas.server.gateway.filters
 
 
+import com.yangxj96.saas.server.gateway.exception.NotFoundTokenException
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter
@@ -37,7 +38,7 @@ class GlobalTokenCheckFilter : GlobalFilter, Ordered {
         if ((token != null && token.size >= 1) || whites.contains(url)) {
             return chain.filter(exchange)
         }
-        throw RuntimeException("获取token异常")
+        throw NotFoundTokenException("未获取到token异常")
     }
 
 }
