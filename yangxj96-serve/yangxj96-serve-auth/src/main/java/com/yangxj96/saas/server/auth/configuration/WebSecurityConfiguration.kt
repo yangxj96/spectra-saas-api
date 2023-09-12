@@ -14,13 +14,13 @@ import com.yangxj96.saas.starter.security.bean.StoreType
 import com.yangxj96.saas.starter.security.exception.handle.AccessDeniedHandlerImpl
 import com.yangxj96.saas.starter.security.exception.handle.AuthenticationEntryPointImpl
 import com.yangxj96.saas.starter.security.filter.UserAuthorizationFilter
-import com.yangxj96.saas.starter.security.props.SecurityProperties
 import com.yangxj96.saas.starter.security.store.TokenStore
 import com.yangxj96.saas.starter.security.store.impl.JdbcTokenStore
 import com.yangxj96.saas.starter.security.store.impl.RedisTokenStore
 import jakarta.annotation.Resource
 import org.mybatis.spring.annotation.MapperScan
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -61,11 +61,9 @@ class WebSecurityConfiguration {
     @Resource
     private lateinit var authenticationConfiguration: AuthenticationConfiguration
 
-    /**
-     * 注入我们自定义的一个安全的相关配置项
-     */
-    @Resource
-    private lateinit var securityProperties: SecurityProperties
+
+    @Value("\${yangxj96.security.store-type}")
+    private lateinit var storeType: StoreType
 
     /**
      * 密码管理器
@@ -86,7 +84,7 @@ class WebSecurityConfiguration {
     @Bean
     fun tokenStore(): TokenStore {
         log.info("{}载入token认证策略", PREFIX)
-        return if (securityProperties.storeType == StoreType.JDBC) {
+        return if (storeType == StoreType.JDBC) {
             JdbcTokenStore()
         } else {
             RedisTokenStore(SpringUtil.getBean(RedisConnectionFactory::class.java))

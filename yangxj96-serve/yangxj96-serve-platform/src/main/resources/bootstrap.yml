@@ -2,7 +2,7 @@ server:
   port: 0
 spring:
   datasource:
-    url: jdbc:postgresql://175.178.90.140:5432/yangxj96_saas_db
+    url: jdbc:postgresql://yangxj96.com:5432/yangxj96_saas_db
   cloud:
     function:
       definition: saasTenant;saasCommon
