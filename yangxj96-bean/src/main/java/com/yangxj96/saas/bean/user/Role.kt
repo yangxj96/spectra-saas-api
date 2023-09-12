@@ -13,14 +13,14 @@ import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import com.yangxj96.saas.common.base.BasicEntity
+import com.yangxj96.saas.common.base.BaseEntity
 import java.io.Serializable
 
 /**
  * 角色表
  */
 @TableName(value = "db_user.t_role")
-class Role : BasicEntity(), Serializable {
+class Role : BaseEntity(), Serializable {
 
     /**
      * 角色名称

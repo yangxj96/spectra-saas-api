@@ -11,7 +11,7 @@ package com.yangxj96.saas.bean.security
 
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableName
-import com.yangxj96.saas.common.base.BasicEntity
+import com.yangxj96.saas.common.base.BaseEntity
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -19,7 +19,7 @@ import java.time.LocalDateTime
  * 存储的access token实体
  */
 @TableName(value = "db_user.t_token_access")
-class TokenAccess : BasicEntity(), Serializable {
+class TokenAccess : BaseEntity(), Serializable {
 
     /**
      * token

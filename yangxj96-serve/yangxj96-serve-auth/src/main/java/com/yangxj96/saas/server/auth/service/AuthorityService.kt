@@ -10,10 +10,10 @@
 package com.yangxj96.saas.server.auth.service
 
 import com.yangxj96.saas.bean.user.Authority
-import com.yangxj96.saas.common.base.BasicService
+import com.yangxj96.saas.common.base.BaseService
 
 
 /**
  * 权限service层
  */
-interface AuthorityService : BasicService<Authority>
+interface AuthorityService : BaseService<Authority>

@@ -12,7 +12,7 @@ package com.yangxj96.saas.bean.user
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.yangxj96.saas.common.base.BasicEntity
+import com.yangxj96.saas.common.base.BaseEntity
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
@@ -21,7 +21,7 @@ import java.io.Serializable
  * 用户表
  */
 @TableName(value = "db_user.t_user")
-class User : BasicEntity(), Serializable, UserDetails {
+class User : BaseEntity(), Serializable, UserDetails {
 
     /**
      * 用户名

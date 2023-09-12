@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*
  * @param <S> 相关的service层,需要继承BasicService
 </S></O> */
 @Validated
-abstract class BasicController<O : BasicEntity, S : BasicService<O>> protected constructor(protected var bindService: S) {
+abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected constructor(protected var bindService: S) {
 
     /**
      * 基础创建数据接口
@@ -81,7 +81,7 @@ abstract class BasicController<O : BasicEntity, S : BasicService<O>> protected c
      *
      * @param id 数据的ID
      */
-    @GetMapping("/byId/{id}")
+    @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): O {
         return bindService.getById(id)
     }

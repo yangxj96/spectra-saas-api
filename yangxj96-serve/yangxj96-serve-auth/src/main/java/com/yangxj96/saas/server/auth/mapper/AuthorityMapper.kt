@@ -9,11 +9,11 @@
 
 package com.yangxj96.saas.server.auth.mapper
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import com.yangxj96.saas.bean.user.Authority
-import com.yangxj96.saas.common.base.BasicMapper
 
 /**
  * 权限mapper层
  *
  */
-interface AuthorityMapper : BasicMapper<Authority>
+interface AuthorityMapper : BaseMapper<Authority>

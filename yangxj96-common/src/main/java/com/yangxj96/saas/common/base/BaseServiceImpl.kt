@@ -9,6 +9,7 @@
 
 package com.yangxj96.saas.common.base
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
@@ -20,8 +21,8 @@ import com.yangxj96.saas.common.exception.PlaceholderException
  * @param <M> 子类对应的mapper
  * @param <O> 子类对应的实体
 </O></M> */
-open class BasicServiceImpl<M : BasicMapper<O>, O : BasicEntity>
-protected constructor(protected val bindMapper: M) : ServiceImpl<M, O>(), BasicService<O> {
+open class BaseServiceImpl<M : BaseMapper<O>, O : BaseEntity>
+protected constructor(protected val bindMapper: M) : ServiceImpl<M, O>(), BaseService<O> {
 
     override fun create(datum: O): O {
         return if (bindMapper.insert(datum) == 1) {

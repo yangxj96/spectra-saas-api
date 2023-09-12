@@ -11,12 +11,12 @@ package com.yangxj96.saas.server.auth.service
 
 import cn.hutool.core.lang.tree.Tree
 import com.yangxj96.saas.bean.user.Role
-import com.yangxj96.saas.common.base.BasicService
+import com.yangxj96.saas.common.base.BaseService
 
 /**
  * 角色service层
  */
-interface RoleService : BasicService<Role> {
+interface RoleService : BaseService<Role> {
 
     /**
      * 关联权限

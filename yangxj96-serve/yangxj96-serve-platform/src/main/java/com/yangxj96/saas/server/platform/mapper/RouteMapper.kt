@@ -6,12 +6,9 @@
  * 日期：2023-09-13 00:04:11
  * Copyright (c) 2018 - 2023
  */
+package com.yangxj96.saas.server.platform.mapper
 
-package com.yangxj96.saas.server.platform.mapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper
+import com.yangxj96.saas.bean.system.Route
 
-import com.yangxj96.saas.bean.system.Route;
-import com.yangxj96.saas.common.base.BasicMapper;
-
-public interface RouteMapper extends BasicMapper<Route> {
-
-}
+interface RouteMapper : BaseMapper<Route>

@@ -11,11 +11,11 @@ package com.yangxj96.saas.bean.system
 
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableName
-import com.yangxj96.saas.common.base.BasicEntity
+import com.yangxj96.saas.common.base.BaseEntity
 import java.io.Serializable
 
 @TableName(value = "db_system.t_route")
-class Route : BasicEntity(), Serializable {
+class Route : BaseEntity(), Serializable {
 
     @TableField(value = "uri")
     var uri: String? = null

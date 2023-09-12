@@ -11,14 +11,14 @@ package com.yangxj96.saas.bean.user
 
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableName
-import com.yangxj96.saas.common.base.BasicEntity
+import com.yangxj96.saas.common.base.BaseEntity
 import java.io.Serializable
 
 /**
  * 权限表实体
  */
 @TableName(value = "db_user.t_authority")
-class Authority : BasicEntity(), Serializable {
+class Authority : BaseEntity(), Serializable {
 
     /**
      * 名称

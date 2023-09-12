@@ -15,7 +15,7 @@ import cn.hutool.core.lang.tree.TreeUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Role
-import com.yangxj96.saas.common.base.BasicServiceImpl
+import com.yangxj96.saas.common.base.BaseServiceImpl
 import com.yangxj96.saas.common.respond.R
 import com.yangxj96.saas.common.respond.RStatus
 import com.yangxj96.saas.server.auth.mapper.RoleMapper
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
-    BasicServiceImpl<RoleMapper, Role>(bindMapper), RoleService {
+    BaseServiceImpl<RoleMapper, Role>(bindMapper), RoleService {
 
     override fun relevance(role: Long, authority: Long): Boolean {
         return bindMapper.relevance(IdWorker.getId(), role, authority) == 1

@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService
  *
  * @param <O> 子类对应的实体
 </O> */
-interface BasicService<O : BasicEntity> : IService<O> {
+interface BaseService<O : BaseEntity> : IService<O> {
 
     fun create(datum: O): O
 

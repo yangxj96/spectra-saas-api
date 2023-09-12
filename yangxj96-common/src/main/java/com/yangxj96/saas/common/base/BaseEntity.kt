@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 /**
  * RESTFul 接口公用数据库实体层
  */
-open class BasicEntity : Serializable {
+open class BaseEntity : Serializable {
 
     /**
      * 数据id
@@ -61,6 +61,9 @@ open class BasicEntity : Serializable {
     @JsonIgnore
     open var updatedTime: LocalDateTime? = null
 
+    /**
+     * 删除标识
+     */
     @TableField(value = "deleted")
     @JsonIgnore
     var deleted: LocalDateTime? = null
