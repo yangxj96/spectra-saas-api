@@ -26,7 +26,11 @@ import java.io.IOException
 class AuthenticationEntryPointImpl : AuthenticationEntryPoint {
 
     @Throws(IOException::class, ServletException::class)
-    override fun commence(request: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException) {
+    override fun commence(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        authException: AuthenticationException
+    ) {
         try {
             val mapper = SpringUtil.getBean(ObjectMapper::class.java)
             response.contentType = "application/json"

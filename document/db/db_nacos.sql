@@ -20,42 +20,44 @@
 -- Sequence structure for config_info_id_seq
 -- ----------------------------
 DROP SEQUENCE IF EXISTS "db_nacos"."config_info_id_seq";
-CREATE SEQUENCE "db_nacos"."config_info_id_seq" 
-INCREMENT 1
-MINVALUE  1
-MAXVALUE 9223372036854775807
-START 1
-CACHE 1;
+CREATE SEQUENCE "db_nacos"."config_info_id_seq"
+    INCREMENT 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    START 1
+    CACHE 1;
 
 -- ----------------------------
 -- Table structure for config_info
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."config_info";
-CREATE TABLE "db_nacos"."config_info" (
-  "id" int8 NOT NULL DEFAULT nextval('"db_nacos".config_info_id_seq'::regclass),
-  "data_id" varchar(255) COLLATE "pg_catalog"."default",
-  "group_id" varchar(255) COLLATE "pg_catalog"."default",
-  "content" text COLLATE "pg_catalog"."default",
-  "md5" varchar(32) COLLATE "pg_catalog"."default",
-  "gmt_create" timestamp(6),
-  "gmt_modified" timestamp(6),
-  "src_user" text COLLATE "pg_catalog"."default",
-  "src_ip" varchar(20) COLLATE "pg_catalog"."default",
-  "app_name" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "c_desc" varchar(256) COLLATE "pg_catalog"."default",
-  "c_use" varchar(64) COLLATE "pg_catalog"."default",
-  "effect" varchar(64) COLLATE "pg_catalog"."default",
-  "type" varchar(64) COLLATE "pg_catalog"."default",
-  "c_schema" text COLLATE "pg_catalog"."default",
-  "encrypted_data_key" text COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."config_info"
+(
+    "id"                 int8 NOT NULL DEFAULT NEXTVAL('"db_nacos".config_info_id_seq'::regclass),
+    "data_id"            VARCHAR(255) COLLATE "pg_catalog"."default",
+    "group_id"           VARCHAR(255) COLLATE "pg_catalog"."default",
+    "content"            TEXT COLLATE "pg_catalog"."default",
+    "md5"                VARCHAR(32) COLLATE "pg_catalog"."default",
+    "gmt_create"         TIMESTAMP(6),
+    "gmt_modified"       TIMESTAMP(6),
+    "src_user"           TEXT COLLATE "pg_catalog"."default",
+    "src_ip"             VARCHAR(20) COLLATE "pg_catalog"."default",
+    "app_name"           VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_id"          VARCHAR(128) COLLATE "pg_catalog"."default",
+    "c_desc"             VARCHAR(256) COLLATE "pg_catalog"."default",
+    "c_use"              VARCHAR(64) COLLATE "pg_catalog"."default",
+    "effect"             VARCHAR(64) COLLATE "pg_catalog"."default",
+    "type"               VARCHAR(64) COLLATE "pg_catalog"."default",
+    "c_schema"           TEXT COLLATE "pg_catalog"."default",
+    "encrypted_data_key" TEXT COLLATE "pg_catalog"."default"
 )
 ;
 
 -- ----------------------------
 -- Records of config_info
 -- ----------------------------
-INSERT INTO "db_nacos"."config_info" VALUES (5, 'yangxj96-saas-common.yml', 'DEFAULT_GROUP', 'spring:
+INSERT INTO "db_nacos"."config_info"
+VALUES (5, 'yangxj96-saas-common.yml', 'DEFAULT_GROUP', 'spring:
   main:
     banner-mode: off
 # 懒加载feign客户端
@@ -91,8 +93,10 @@ feign:
 logging:
   level:
     root: info
-    io.github.yangxj96.starter: debug', '71bfd2064f156d27dec3626e883bb8ba', '2023-08-27 00:02:41.757', '2023-08-27 00:02:41.757', NULL, '182.245.140.30', '', '', NULL, NULL, NULL, 'yaml', NULL, '');
-INSERT INTO "db_nacos"."config_info" VALUES (6, 'yangxj96-saas-datasource.yml', 'DEFAULT_GROUP', 'spring:
+    io.github.yangxj96.starter: debug', '71bfd2064f156d27dec3626e883bb8ba', '2023-08-27 00:02:41.757',
+        '2023-08-27 00:02:41.757', NULL, '182.245.140.30', '', '', NULL, NULL, NULL, 'yaml', NULL, '');
+INSERT INTO "db_nacos"."config_info"
+VALUES (6, 'yangxj96-saas-datasource.yml', 'DEFAULT_GROUP', 'spring:
   datasource:
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:QuVsKppcWvwwX2Vv}
@@ -135,21 +139,23 @@ mybatis-plus:
       id-type: assign_id
       logic-delete-field: deleted
       logic-not-delete-value: false
-      logic-delete-value: true', 'f1ac8d60efe223df78c2fce62e1e2694', '2023-08-27 00:02:58.61', '2023-08-27 00:02:58.61', NULL, '182.245.140.30', '', '', NULL, NULL, NULL, 'yaml', NULL, '');
+      logic-delete-value: true', 'f1ac8d60efe223df78c2fce62e1e2694', '2023-08-27 00:02:58.61', '2023-08-27 00:02:58.61',
+        NULL, '182.245.140.30', '', '', NULL, NULL, NULL, 'yaml', NULL, '');
 
 -- ----------------------------
 -- Table structure for config_info_aggr
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."config_info_aggr";
-CREATE TABLE "db_nacos"."config_info_aggr" (
-  "id" int8,
-  "data_id" varchar(255) COLLATE "pg_catalog"."default",
-  "group_id" varchar(255) COLLATE "pg_catalog"."default",
-  "datum_id" varchar(255) COLLATE "pg_catalog"."default",
-  "content" text COLLATE "pg_catalog"."default",
-  "gmt_modified" timestamp(6),
-  "app_name" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."config_info_aggr"
+(
+    "id"           int8,
+    "data_id"      VARCHAR(255) COLLATE "pg_catalog"."default",
+    "group_id"     VARCHAR(255) COLLATE "pg_catalog"."default",
+    "datum_id"     VARCHAR(255) COLLATE "pg_catalog"."default",
+    "content"      TEXT COLLATE "pg_catalog"."default",
+    "gmt_modified" TIMESTAMP(6),
+    "app_name"     VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_id"    VARCHAR(128) COLLATE "pg_catalog"."default"
 )
 ;
 
@@ -161,20 +167,21 @@ CREATE TABLE "db_nacos"."config_info_aggr" (
 -- Table structure for config_info_beta
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."config_info_beta";
-CREATE TABLE "db_nacos"."config_info_beta" (
-  "id" int8,
-  "data_id" varchar(255) COLLATE "pg_catalog"."default",
-  "group_id" varchar(128) COLLATE "pg_catalog"."default",
-  "app_name" varchar(128) COLLATE "pg_catalog"."default",
-  "content" text COLLATE "pg_catalog"."default",
-  "beta_ips" varchar(1024) COLLATE "pg_catalog"."default",
-  "md5" varchar(32) COLLATE "pg_catalog"."default",
-  "gmt_create" timestamp(6),
-  "gmt_modified" timestamp(6),
-  "src_user" text COLLATE "pg_catalog"."default",
-  "src_ip" varchar(20) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "encrypted_data_key" text COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."config_info_beta"
+(
+    "id"                 int8,
+    "data_id"            VARCHAR(255) COLLATE "pg_catalog"."default",
+    "group_id"           VARCHAR(128) COLLATE "pg_catalog"."default",
+    "app_name"           VARCHAR(128) COLLATE "pg_catalog"."default",
+    "content"            TEXT COLLATE "pg_catalog"."default",
+    "beta_ips"           VARCHAR(1024) COLLATE "pg_catalog"."default",
+    "md5"                VARCHAR(32) COLLATE "pg_catalog"."default",
+    "gmt_create"         TIMESTAMP(6),
+    "gmt_modified"       TIMESTAMP(6),
+    "src_user"           TEXT COLLATE "pg_catalog"."default",
+    "src_ip"             VARCHAR(20) COLLATE "pg_catalog"."default",
+    "tenant_id"          VARCHAR(128) COLLATE "pg_catalog"."default",
+    "encrypted_data_key" TEXT COLLATE "pg_catalog"."default"
 )
 ;
 
@@ -186,19 +193,20 @@ CREATE TABLE "db_nacos"."config_info_beta" (
 -- Table structure for config_info_tag
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."config_info_tag";
-CREATE TABLE "db_nacos"."config_info_tag" (
-  "id" int8,
-  "data_id" varchar(255) COLLATE "pg_catalog"."default",
-  "group_id" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "tag_id" varchar(128) COLLATE "pg_catalog"."default",
-  "app_name" varchar(128) COLLATE "pg_catalog"."default",
-  "content" text COLLATE "pg_catalog"."default",
-  "md5" varchar(32) COLLATE "pg_catalog"."default",
-  "gmt_create" timestamp(6),
-  "gmt_modified" timestamp(6),
-  "src_user" text COLLATE "pg_catalog"."default",
-  "src_ip" varchar(20) COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."config_info_tag"
+(
+    "id"           int8,
+    "data_id"      VARCHAR(255) COLLATE "pg_catalog"."default",
+    "group_id"     VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_id"    VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tag_id"       VARCHAR(128) COLLATE "pg_catalog"."default",
+    "app_name"     VARCHAR(128) COLLATE "pg_catalog"."default",
+    "content"      TEXT COLLATE "pg_catalog"."default",
+    "md5"          VARCHAR(32) COLLATE "pg_catalog"."default",
+    "gmt_create"   TIMESTAMP(6),
+    "gmt_modified" TIMESTAMP(6),
+    "src_user"     TEXT COLLATE "pg_catalog"."default",
+    "src_ip"       VARCHAR(20) COLLATE "pg_catalog"."default"
 )
 ;
 
@@ -210,14 +218,15 @@ CREATE TABLE "db_nacos"."config_info_tag" (
 -- Table structure for config_tags_relation
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."config_tags_relation";
-CREATE TABLE "db_nacos"."config_tags_relation" (
-  "id" int8,
-  "tag_name" varchar(128) COLLATE "pg_catalog"."default",
-  "tag_type" varchar(64) COLLATE "pg_catalog"."default",
-  "data_id" varchar(255) COLLATE "pg_catalog"."default",
-  "group_id" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "nid" int8
+CREATE TABLE "db_nacos"."config_tags_relation"
+(
+    "id"        int8,
+    "tag_name"  VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tag_type"  VARCHAR(64) COLLATE "pg_catalog"."default",
+    "data_id"   VARCHAR(255) COLLATE "pg_catalog"."default",
+    "group_id"  VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_id" VARCHAR(128) COLLATE "pg_catalog"."default",
+    "nid"       int8
 )
 ;
 
@@ -229,17 +238,18 @@ CREATE TABLE "db_nacos"."config_tags_relation" (
 -- Table structure for group_capacity
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."group_capacity";
-CREATE TABLE "db_nacos"."group_capacity" (
-  "id" int8,
-  "group_id" varchar(128) COLLATE "pg_catalog"."default",
-  "quota" int4,
-  "usage" int4,
-  "max_size" int4,
-  "max_aggr_count" int4,
-  "max_aggr_size" int4,
-  "max_history_count" int4,
-  "gmt_create" timestamp(6),
-  "gmt_modified" timestamp(6)
+CREATE TABLE "db_nacos"."group_capacity"
+(
+    "id"                int8,
+    "group_id"          VARCHAR(128) COLLATE "pg_catalog"."default",
+    "quota"             int4,
+    "usage"             int4,
+    "max_size"          int4,
+    "max_aggr_count"    int4,
+    "max_aggr_size"     int4,
+    "max_history_count" int4,
+    "gmt_create"        TIMESTAMP(6),
+    "gmt_modified"      TIMESTAMP(6)
 )
 ;
 
@@ -251,28 +261,30 @@ CREATE TABLE "db_nacos"."group_capacity" (
 -- Table structure for his_config_info
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."his_config_info";
-CREATE TABLE "db_nacos"."his_config_info" (
-  "id" int8,
-  "nid" int8,
-  "data_id" varchar(255) COLLATE "pg_catalog"."default",
-  "group_id" varchar(128) COLLATE "pg_catalog"."default",
-  "app_name" varchar(128) COLLATE "pg_catalog"."default",
-  "content" text COLLATE "pg_catalog"."default",
-  "md5" varchar(32) COLLATE "pg_catalog"."default",
-  "gmt_create" timestamp(6),
-  "gmt_modified" timestamp(6),
-  "src_user" text COLLATE "pg_catalog"."default",
-  "src_ip" varchar(20) COLLATE "pg_catalog"."default",
-  "op_type" char(10) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "encrypted_data_key" text COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."his_config_info"
+(
+    "id"                 int8,
+    "nid"                int8,
+    "data_id"            VARCHAR(255) COLLATE "pg_catalog"."default",
+    "group_id"           VARCHAR(128) COLLATE "pg_catalog"."default",
+    "app_name"           VARCHAR(128) COLLATE "pg_catalog"."default",
+    "content"            TEXT COLLATE "pg_catalog"."default",
+    "md5"                VARCHAR(32) COLLATE "pg_catalog"."default",
+    "gmt_create"         TIMESTAMP(6),
+    "gmt_modified"       TIMESTAMP(6),
+    "src_user"           TEXT COLLATE "pg_catalog"."default",
+    "src_ip"             VARCHAR(20) COLLATE "pg_catalog"."default",
+    "op_type"            CHAR(10) COLLATE "pg_catalog"."default",
+    "tenant_id"          VARCHAR(128) COLLATE "pg_catalog"."default",
+    "encrypted_data_key" TEXT COLLATE "pg_catalog"."default"
 )
 ;
 
 -- ----------------------------
 -- Records of his_config_info
 -- ----------------------------
-INSERT INTO "db_nacos"."his_config_info" VALUES (0, NULL, 'yangxj96-saas-common.yml', 'DEFAULT_GROUP', '', 'spring:
+INSERT INTO "db_nacos"."his_config_info"
+VALUES (0, NULL, 'yangxj96-saas-common.yml', 'DEFAULT_GROUP', '', 'spring:
   main:
     banner-mode: off
 # 懒加载feign客户端
@@ -308,8 +320,10 @@ feign:
 logging:
   level:
     root: info
-    io.github.yangxj96.starter: debug', '71bfd2064f156d27dec3626e883bb8ba', NULL, '2023-08-27 00:02:41.757', NULL, '182.245.140.30', 'I         ', '', '');
-INSERT INTO "db_nacos"."his_config_info" VALUES (0, NULL, 'yangxj96-saas-datasource.yml', 'DEFAULT_GROUP', '', 'spring:
+    io.github.yangxj96.starter: debug', '71bfd2064f156d27dec3626e883bb8ba', NULL, '2023-08-27 00:02:41.757', NULL,
+        '182.245.140.30', 'I         ', '', '');
+INSERT INTO "db_nacos"."his_config_info"
+VALUES (0, NULL, 'yangxj96-saas-datasource.yml', 'DEFAULT_GROUP', '', 'spring:
   datasource:
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:QuVsKppcWvwwX2Vv}
@@ -352,16 +366,18 @@ mybatis-plus:
       id-type: assign_id
       logic-delete-field: deleted
       logic-not-delete-value: false
-      logic-delete-value: true', 'f1ac8d60efe223df78c2fce62e1e2694', NULL, '2023-08-27 00:02:58.61', NULL, '182.245.140.30', 'I         ', '', '');
+      logic-delete-value: true', 'f1ac8d60efe223df78c2fce62e1e2694', NULL, '2023-08-27 00:02:58.61', NULL,
+        '182.245.140.30', 'I         ', '', '');
 
 -- ----------------------------
 -- Table structure for permissions
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."permissions";
-CREATE TABLE "db_nacos"."permissions" (
-  "role" varchar(50) COLLATE "pg_catalog"."default",
-  "resource" varchar(512) COLLATE "pg_catalog"."default",
-  "action" varchar(8) COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."permissions"
+(
+    "role"     VARCHAR(50) COLLATE "pg_catalog"."default",
+    "resource" VARCHAR(512) COLLATE "pg_catalog"."default",
+    "action"   VARCHAR(8) COLLATE "pg_catalog"."default"
 )
 ;
 
@@ -373,32 +389,35 @@ CREATE TABLE "db_nacos"."permissions" (
 -- Table structure for roles
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."roles";
-CREATE TABLE "db_nacos"."roles" (
-  "username" varchar(50) COLLATE "pg_catalog"."default",
-  "role" varchar(50) COLLATE "pg_catalog"."default"
+CREATE TABLE "db_nacos"."roles"
+(
+    "username" VARCHAR(50) COLLATE "pg_catalog"."default",
+    "role"     VARCHAR(50) COLLATE "pg_catalog"."default"
 )
 ;
 
 -- ----------------------------
 -- Records of roles
 -- ----------------------------
-INSERT INTO "db_nacos"."roles" VALUES ('nacos', 'ROLE_ADMIN');
+INSERT INTO "db_nacos"."roles"
+VALUES ('nacos', 'ROLE_ADMIN');
 
 -- ----------------------------
 -- Table structure for tenant_capacity
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."tenant_capacity";
-CREATE TABLE "db_nacos"."tenant_capacity" (
-  "id" int8,
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "quota" int4,
-  "usage" int4,
-  "max_size" int4,
-  "max_aggr_count" int4,
-  "max_aggr_size" int4,
-  "max_history_count" int4,
-  "gmt_create" timestamp(6),
-  "gmt_modified" timestamp(6)
+CREATE TABLE "db_nacos"."tenant_capacity"
+(
+    "id"                int8,
+    "tenant_id"         VARCHAR(128) COLLATE "pg_catalog"."default",
+    "quota"             int4,
+    "usage"             int4,
+    "max_size"          int4,
+    "max_aggr_count"    int4,
+    "max_aggr_size"     int4,
+    "max_history_count" int4,
+    "gmt_create"        TIMESTAMP(6),
+    "gmt_modified"      TIMESTAMP(6)
 )
 ;
 
@@ -410,15 +429,16 @@ CREATE TABLE "db_nacos"."tenant_capacity" (
 -- Table structure for tenant_info
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."tenant_info";
-CREATE TABLE "db_nacos"."tenant_info" (
-  "id" int8,
-  "kp" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_id" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_name" varchar(128) COLLATE "pg_catalog"."default",
-  "tenant_desc" varchar(256) COLLATE "pg_catalog"."default",
-  "create_source" varchar(32) COLLATE "pg_catalog"."default",
-  "gmt_create" int8,
-  "gmt_modified" int8
+CREATE TABLE "db_nacos"."tenant_info"
+(
+    "id"            int8,
+    "kp"            VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_id"     VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_name"   VARCHAR(128) COLLATE "pg_catalog"."default",
+    "tenant_desc"   VARCHAR(256) COLLATE "pg_catalog"."default",
+    "create_source" VARCHAR(32) COLLATE "pg_catalog"."default",
+    "gmt_create"    int8,
+    "gmt_modified"  int8
 )
 ;
 
@@ -430,10 +450,11 @@ CREATE TABLE "db_nacos"."tenant_info" (
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS "db_nacos"."users";
-CREATE TABLE "db_nacos"."users" (
-  "username" varchar(50) COLLATE "pg_catalog"."default",
-  "password" varchar(500) COLLATE "pg_catalog"."default",
-  "enabled" bool
+CREATE TABLE "db_nacos"."users"
+(
+    "username" VARCHAR(50) COLLATE "pg_catalog"."default",
+    "password" VARCHAR(500) COLLATE "pg_catalog"."default",
+    "enabled"  bool
 )
 ;
 
@@ -449,11 +470,12 @@ CREATE TABLE "db_nacos"."users" (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO "db_nacos"."users" VALUES ('nacos', '$2a$10$MEHs8DAfdPYll19e0HB9VOaENAPQuBcAoW0X.xst1/rmn.9JH8fEC', 't');
+INSERT INTO "db_nacos"."users"
+VALUES ('nacos', '$2a$10$MEHs8DAfdPYll19e0HB9VOaENAPQuBcAoW0X.xst1/rmn.9JH8fEC', 't');
 
 -- ----------------------------
 -- Alter sequences owned by
 -- ----------------------------
 ALTER SEQUENCE "db_nacos"."config_info_id_seq"
-OWNED BY "db_nacos"."config_info"."id";
-SELECT setval('"db_nacos"."config_info_id_seq"', 7, true);
+    OWNED BY "db_nacos"."config_info"."id";
+SELECT SETVAL('"db_nacos"."config_info_id_seq"', 7, TRUE);

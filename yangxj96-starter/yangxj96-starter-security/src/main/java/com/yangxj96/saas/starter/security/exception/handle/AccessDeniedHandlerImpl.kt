@@ -26,7 +26,11 @@ import java.io.IOException
 class AccessDeniedHandlerImpl : AccessDeniedHandler {
 
     @Throws(IOException::class, ServletException::class)
-    override fun handle(request: HttpServletRequest, response: HttpServletResponse, accessDeniedException: AccessDeniedException) {
+    override fun handle(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        accessDeniedException: AccessDeniedException
+    ) {
         try {
             val mapper = SpringUtil.getBean(ObjectMapper::class.java)
             response.contentType = "application/json"

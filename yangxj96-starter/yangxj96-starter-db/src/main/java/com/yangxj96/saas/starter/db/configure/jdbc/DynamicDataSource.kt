@@ -19,7 +19,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
 class DynamicDataSource : AbstractRoutingDataSource() {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-动态数据源]:"
+        private const val PREFIX = "[自动配置-动态数据源]:"
 
         private val log = LoggerFactory.getLogger(this::class.java)
     }
@@ -30,7 +30,7 @@ class DynamicDataSource : AbstractRoutingDataSource() {
      * @return 数据源
      */
     override fun determineCurrentLookupKey(): Any {
-        log.info("{}determineCurrentLookupKey - {}", LOG_PREFIX, DynamicDataSourceContextHolder.get())
+        log.info("{}determineCurrentLookupKey - {}", PREFIX, DynamicDataSourceContextHolder.get())
         return DynamicDataSourceContextHolder.get()
     }
 

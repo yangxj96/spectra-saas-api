@@ -74,9 +74,9 @@ class StreamConsumer {
     fun saasCommon(): Consumer<Message<Any>> {
         return Consumer<Message<Any>> {
             try {
-                val channel  = it.headers[AmqpHeaders.CHANNEL, Channel::class.java]
+                val channel = it.headers[AmqpHeaders.CHANNEL, Channel::class.java]
                 val delivery = it.headers[AmqpHeaders.DELIVERY_TAG, java.lang.Long::class.java]
-                val payload  = it.payload
+                val payload = it.payload
                 log.info(payload.toString())
                 if (channel != null && delivery != null) {
                     channel.basicAck(delivery.toLong(), true)

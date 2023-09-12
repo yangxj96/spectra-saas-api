@@ -67,7 +67,7 @@ class DynamicDatasourceAutoConfiguration(
 ) {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-动态数据源]:"
+        private const val PREFIX = "[自动配置-动态数据源]:"
 
         private val log = LoggerFactory.getLogger(this::class.java)
     }
@@ -83,7 +83,7 @@ class DynamicDatasourceAutoConfiguration(
     private val sqlSessionFactoryBeanCustomizers: List<SqlSessionFactoryBeanCustomizer?>
 
     init {
-        log.info("{}开始自动装配动态数据源", LOG_PREFIX)
+        log.info("{}开始自动装配动态数据源", PREFIX)
         this.properties = properties
         this.resourceLoader = resourceLoader
         configurationCustomizers = configurationCustomizersProvider.getIfAvailable()!!
@@ -138,7 +138,7 @@ class DynamicDatasourceAutoConfiguration(
      */
     @Bean
     fun dynamicDatasourceInterceptor(): Filter {
-        log.info("{}载入动态数据源", LOG_PREFIX)
+        log.info("{}载入动态数据源", PREFIX)
         return DynamicDatasourceFilter()
     }
 
@@ -146,7 +146,7 @@ class DynamicDatasourceAutoConfiguration(
     @Throws(Exception::class)
     fun sqlSessionFactory(dataSource: DataSource?): SqlSessionFactory? {
         // 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
-        log.info("{}开始初始化SqlSessionFactory", LOG_PREFIX)
+        log.info("{}开始初始化SqlSessionFactory", PREFIX)
         val factory = MybatisSqlSessionFactoryBean()
         factory.setDataSource(dataSource)
         factory.vfs = SpringBootVFS::class.java

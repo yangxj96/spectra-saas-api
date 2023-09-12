@@ -38,7 +38,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 class RedisAutoConfiguration {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-redis]:"
+        private const val PREFIX = "[自动配置-redis]:"
         private val log = LoggerFactory.getLogger(this::class.java)
     }
 
@@ -54,7 +54,7 @@ class RedisAutoConfiguration {
      */
     @Bean
     fun redisTemplate(@Autowired redisConnectionFactory: RedisConnectionFactory?): RedisTemplate<String, Any> {
-        log.debug("{}配置RedisTemplate<String,Object>的序列化方式", LOG_PREFIX)
+        log.debug("{}配置RedisTemplate<String,Object>的序列化方式", PREFIX)
         val redisTemplate = RedisTemplate<String, Any>()
         redisTemplate.setConnectionFactory(redisConnectionFactory!!)
         return commonConfig(redisTemplate)
@@ -63,7 +63,7 @@ class RedisAutoConfiguration {
     @Bean
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     fun reactiveRedisTemplate(@Autowired connectionFactory: ReactiveRedisConnectionFactory?): ReactiveRedisTemplate<String, Any> {
-        log.debug("{}配置reactiveRedisTemplate<String,Object>的序列化方式", LOG_PREFIX)
+        log.debug("{}配置reactiveRedisTemplate<String,Object>的序列化方式", PREFIX)
         val strSerializer = SerializationPair.fromSerializer(StringRedisSerializer.UTF_8)
         val objSerializer = SerializationPair.fromSerializer(Jackson2JsonRedisSerializer(om, Any::class.java))
         val builder = RedisSerializationContext.newSerializationContext<String, Any>()

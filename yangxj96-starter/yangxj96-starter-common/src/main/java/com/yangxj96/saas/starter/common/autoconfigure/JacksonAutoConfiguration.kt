@@ -47,7 +47,7 @@ import java.util.*
 class JacksonAutoConfiguration(private val properties: JacksonProperties) {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-jackson]:"
+        private const val PREFIX = "[自动配置-jackson]:"
 
         private val log = LoggerFactory.getLogger(this::class.java)
     }
@@ -62,24 +62,41 @@ class JacksonAutoConfiguration(private val properties: JacksonProperties) {
     @Primary
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     fun objectMapper(): ObjectMapper {
-        log.debug("${LOG_PREFIX}SERVLET构建ObjectMapper")
+        log.debug("${PREFIX}SERVLET构建ObjectMapper")
         val om = ObjectMapper()
-        log.debug("${LOG_PREFIX}LocalDateTime序列化/反序列化格式:${properties.localDateTimeFormat}")
-        log.debug("${LOG_PREFIX}LocalDate序列化/反序列化格式:${properties.localDateFormat}")
-        log.debug("${LOG_PREFIX}LocalTime序列化/反序列化格式:${properties.localTimeFormat}")
-        log.debug("${LOG_PREFIX}配置LocalDateTime,LocalDate,LocalTime序列化")
         val javaTimeModule = JavaTimeModule()
-        javaTimeModule.addSerializer(LocalDateTime::class.java, LocalDateTimeSerializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat)))
-        javaTimeModule.addSerializer(LocalDate::class.java, LocalDateSerializer(DateTimeFormatter.ofPattern(properties.localDateFormat)))
-        javaTimeModule.addSerializer(LocalTime::class.java, LocalTimeSerializer(DateTimeFormatter.ofPattern(properties.localTimeFormat)))
-        javaTimeModule.addDeserializer(LocalDateTime::class.java, LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat)))
-        javaTimeModule.addDeserializer(LocalDate::class.java, LocalDateDeserializer(DateTimeFormatter.ofPattern(properties.localDateFormat)))
-        javaTimeModule.addDeserializer(LocalTime::class.java, LocalTimeDeserializer(DateTimeFormatter.ofPattern(properties.localTimeFormat)))
+        log.debug("${PREFIX}LocalDateTime序列化/反序列化格式:${properties.localDateTimeFormat}")
+        javaTimeModule.addSerializer(
+            LocalDateTime::class.java,
+            LocalDateTimeSerializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat))
+        )
+        javaTimeModule.addSerializer(
+            LocalDate::class.java,
+            LocalDateSerializer(DateTimeFormatter.ofPattern(properties.localDateFormat))
+        )
+        log.debug("${PREFIX}LocalDate序列化/反序列化格式:${properties.localDateFormat}")
+        javaTimeModule.addSerializer(
+            LocalTime::class.java,
+            LocalTimeSerializer(DateTimeFormatter.ofPattern(properties.localTimeFormat))
+        )
+        javaTimeModule.addDeserializer(
+            LocalDateTime::class.java,
+            LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat))
+        )
+        log.debug("${PREFIX}LocalTime序列化/反序列化格式:${properties.localTimeFormat}")
+        javaTimeModule.addDeserializer(
+            LocalDate::class.java,
+            LocalDateDeserializer(DateTimeFormatter.ofPattern(properties.localDateFormat))
+        )
+        javaTimeModule.addDeserializer(
+            LocalTime::class.java,
+            LocalTimeDeserializer(DateTimeFormatter.ofPattern(properties.localTimeFormat))
+        )
         // 注册序列化方式
         om.registerModule(javaTimeModule)
-        log.debug(LOG_PREFIX + "配置Jackson返回格式化不显示空值")
+        log.debug(PREFIX + "配置Jackson返回格式化不显示空值")
         om.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        log.debug(LOG_PREFIX + "配置Jackson返回格式化字段为下划线分割")
+        log.debug(PREFIX + "配置Jackson返回格式化字段为下划线分割")
         om.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
         return om
     }
@@ -94,21 +111,39 @@ class JacksonAutoConfiguration(private val properties: JacksonProperties) {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     fun configuration(): Jackson2ObjectMapperBuilderCustomizer {
         return Jackson2ObjectMapperBuilderCustomizer { builder: Jackson2ObjectMapperBuilder ->
-            log.debug("${LOG_PREFIX}REACTIVE构建ObjectMapper")
-            log.debug("${LOG_PREFIX}LocalDateTime序列化/反序列化格式:${properties.localDateTimeFormat}")
-            log.debug("${LOG_PREFIX}LocalDate序列化/反序列化格式:${properties.localDateFormat}")
-            log.debug("${LOG_PREFIX}LocalTime序列化/反序列化格式:${properties.localTimeFormat}")
-            log.debug("${LOG_PREFIX}配置LocalDateTime,LocalDate,LocalTime序列化")
-            builder.serializerByType(LocalDateTime::class.java, LocalDateTimeSerializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat)))
-            builder.serializerByType(LocalDate::class.java, LocalDateSerializer(DateTimeFormatter.ofPattern(properties.localDateFormat)))
-            builder.serializerByType(LocalTime::class.java, LocalTimeSerializer(DateTimeFormatter.ofPattern(properties.localTimeFormat)))
-            log.debug(LOG_PREFIX + "配置LocalDateTime,LocalDate,LocalTime反序列化")
-            builder.deserializerByType(LocalDateTime::class.java, LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat)))
-            builder.deserializerByType(LocalDate::class.java, LocalDateDeserializer(DateTimeFormatter.ofPattern(properties.localDateFormat)))
-            builder.deserializerByType(LocalTime::class.java, LocalTimeDeserializer(DateTimeFormatter.ofPattern(properties.localTimeFormat)))
-            log.debug(LOG_PREFIX + "配置Jackson返回格式化不显示空值")
+            log.debug("${PREFIX}REACTIVE构建ObjectMapper")
+            log.debug("${PREFIX}LocalDateTime序列化/反序列化格式:${properties.localDateTimeFormat}")
+            log.debug("${PREFIX}LocalDate序列化/反序列化格式:${properties.localDateFormat}")
+            log.debug("${PREFIX}LocalTime序列化/反序列化格式:${properties.localTimeFormat}")
+            log.debug("${PREFIX}配置LocalDateTime,LocalDate,LocalTime序列化")
+            builder.serializerByType(
+                LocalDateTime::class.java,
+                LocalDateTimeSerializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat))
+            )
+            builder.serializerByType(
+                LocalDate::class.java,
+                LocalDateSerializer(DateTimeFormatter.ofPattern(properties.localDateFormat))
+            )
+            builder.serializerByType(
+                LocalTime::class.java,
+                LocalTimeSerializer(DateTimeFormatter.ofPattern(properties.localTimeFormat))
+            )
+            log.debug(PREFIX + "配置LocalDateTime,LocalDate,LocalTime反序列化")
+            builder.deserializerByType(
+                LocalDateTime::class.java,
+                LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(properties.localDateTimeFormat))
+            )
+            builder.deserializerByType(
+                LocalDate::class.java,
+                LocalDateDeserializer(DateTimeFormatter.ofPattern(properties.localDateFormat))
+            )
+            builder.deserializerByType(
+                LocalTime::class.java,
+                LocalTimeDeserializer(DateTimeFormatter.ofPattern(properties.localTimeFormat))
+            )
+            log.debug(PREFIX + "配置Jackson返回格式化不显示空值")
             builder.serializationInclusion(JsonInclude.Include.NON_NULL)
-            log.debug(LOG_PREFIX + "配置Jackson返回格式化字段为下划线分割")
+            log.debug(PREFIX + "配置Jackson返回格式化字段为下划线分割")
             builder.propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
         }
     }

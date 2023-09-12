@@ -70,7 +70,11 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
         return ModifyServerHttpResponse(exchange, serverCodecConfigurer, om)
     }
 
-    class ModifyServerHttpResponse(private val exchange: ServerWebExchange, private val serverCodecConfigurer: ServerCodecConfigurer, private val om: ObjectMapper) : ServerHttpResponseDecorator(exchange.response) {
+    class ModifyServerHttpResponse(
+        private val exchange: ServerWebExchange,
+        private val serverCodecConfigurer: ServerCodecConfigurer,
+        private val om: ObjectMapper
+    ) : ServerHttpResponseDecorator(exchange.response) {
         override fun writeWith(body: Publisher<out DataBuffer>): Mono<Void> {
             val httpHeaders = HttpHeaders()
             if (isNotModify(exchange, httpHeaders)) {
@@ -123,7 +127,8 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
          * @return [Boolean] 是|否
          */
         private fun isNotModify(exchange: ServerWebExchange, headers: HttpHeaders): Boolean {
-            val contentType = exchange.getAttribute<String>(ServerWebExchangeUtils.ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR) ?: return false
+            val contentType = exchange.getAttribute<String>(ServerWebExchangeUtils.ORIGINAL_RESPONSE_CONTENT_TYPE_ATTR)
+                ?: return false
             // 先把Content-Type设置为响应类型
             headers.add(HttpHeaders.CONTENT_TYPE, contentType)
             // 响应的是文件流

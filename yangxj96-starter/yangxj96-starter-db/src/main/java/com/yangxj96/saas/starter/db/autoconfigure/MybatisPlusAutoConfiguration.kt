@@ -29,14 +29,14 @@ import org.springframework.context.annotation.Bean
 class MybatisPlusAutoConfiguration {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-mybatis plus]:"
+        private const val PREFIX = "[自动配置-mybatis plus]:"
 
         private val log = LoggerFactory.getLogger(this::class.java)
     }
 
     @Bean
     fun metaObjectHandler(): MetaObjectHandler {
-        log.debug("{}元对象字段填充控制器", LOG_PREFIX)
+        log.debug("{}元对象字段填充控制器", PREFIX)
         return MetaObjectHandlerImpl()
     }
 
@@ -49,7 +49,7 @@ class MybatisPlusAutoConfiguration {
      */
     @Bean
     fun mybatisPlusInterceptor(): MybatisPlusInterceptor {
-        log.debug(LOG_PREFIX + "载入MybatisPlusInterceptor")
+        log.debug(PREFIX + "载入MybatisPlusInterceptor")
         // 分页插件
         val pageInterceptor = PaginationInnerInterceptor()
         pageInterceptor.isOverflow = true

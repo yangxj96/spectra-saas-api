@@ -9,17 +9,18 @@
 
 package com.yangxj96.saas.server.auth.configuration
 
+import cn.hutool.extra.spring.SpringUtil
 import com.yangxj96.saas.starter.security.bean.StoreType
 import com.yangxj96.saas.starter.security.exception.handle.AccessDeniedHandlerImpl
 import com.yangxj96.saas.starter.security.exception.handle.AuthenticationEntryPointImpl
 import com.yangxj96.saas.starter.security.filter.UserAuthorizationFilter
+import com.yangxj96.saas.starter.security.props.SecurityProperties
 import com.yangxj96.saas.starter.security.store.TokenStore
 import com.yangxj96.saas.starter.security.store.impl.JdbcTokenStore
 import com.yangxj96.saas.starter.security.store.impl.RedisTokenStore
 import jakarta.annotation.Resource
 import org.mybatis.spring.annotation.MapperScan
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -49,7 +50,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class WebSecurityConfiguration {
 
     companion object {
-        private const val LOG_PREFIX = "[安全配置] "
+        private const val PREFIX = "[安全配置] "
 
         private val log = LoggerFactory.getLogger(this::class.java)
     }
@@ -60,11 +61,11 @@ class WebSecurityConfiguration {
     @Resource
     private lateinit var authenticationConfiguration: AuthenticationConfiguration
 
-    @Value("\${yangxj96.security.store-type}")
-    private lateinit var storeType: StoreType
-
+    /**
+     * 注入我们自定义的一个安全的相关配置项
+     */
     @Resource
-    private lateinit var connectionFactory: RedisConnectionFactory
+    private lateinit var securityProperties: SecurityProperties
 
     /**
      * 密码管理器
@@ -73,7 +74,7 @@ class WebSecurityConfiguration {
      */
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        log.info("{}创建密码管理器", LOG_PREFIX)
+        log.info("{}创建密码管理器", PREFIX)
         return BCryptPasswordEncoder()
     }
 
@@ -84,11 +85,11 @@ class WebSecurityConfiguration {
      */
     @Bean
     fun tokenStore(): TokenStore {
-        log.info("{}载入token认证策略", LOG_PREFIX)
-        return if (storeType == StoreType.JDBC) {
+        log.info("{}载入token认证策略", PREFIX)
+        return if (securityProperties.storeType == StoreType.JDBC) {
             JdbcTokenStore()
         } else {
-            RedisTokenStore(connectionFactory)
+            RedisTokenStore(SpringUtil.getBean(RedisConnectionFactory::class.java))
         }
     }
 
@@ -97,7 +98,7 @@ class WebSecurityConfiguration {
      */
     @Bean
     fun roleHierarchyImpl(): RoleHierarchyImpl {
-        log.info("{}载入角色继承策略", LOG_PREFIX)
+        log.info("{}载入角色继承策略", PREFIX)
         val hierarchy = RoleHierarchyImpl()
         hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER")
         return hierarchy
@@ -113,7 +114,7 @@ class WebSecurityConfiguration {
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity, tokenStore: TokenStore): SecurityFilterChain {
-        log.info("{}加载核心配置", LOG_PREFIX)
+        log.info("{}加载核心配置", PREFIX)
         // 关闭cors csrf httpBasic formLogin
         http.cors { it.disable() }
             .csrf { it.disable() }
@@ -141,7 +142,7 @@ class WebSecurityConfiguration {
     @Bean
     @Throws(Exception::class)
     fun authenticationManager(): AuthenticationManager {
-        log.info("{}载入认证管理器", LOG_PREFIX)
+        log.info("{}载入认证管理器", PREFIX)
         return authenticationConfiguration.getAuthenticationManager()
     }
 
@@ -152,7 +153,7 @@ class WebSecurityConfiguration {
      */
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        log.info("{}载入跨域配置", LOG_PREFIX)
+        log.info("{}载入跨域配置", PREFIX)
         val configuration = CorsConfiguration()
         //修改为添加而不是设置，* 最好改为实际的需要，我这是非生产配置，所以粗暴了一点
         configuration.addAllowedOriginPattern("*")

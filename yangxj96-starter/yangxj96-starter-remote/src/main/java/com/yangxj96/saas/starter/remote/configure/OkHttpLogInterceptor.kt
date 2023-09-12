@@ -39,7 +39,12 @@ class OkHttpLogInterceptor : Interceptor {
         //因为response.body().string()之后，response中的流会被关闭，程序会报错，我们需要创建出一
         //个新的response给应用层处理
         val responseBody = response.peekBody(1024L * 1024)
-        log.info("接收响应:{},耗时:{}毫秒,响应内容:{}", response.request.url, watch.totalTimeMillis, responseBody.string())
+        log.info(
+            "接收响应:{},耗时:{}毫秒,响应内容:{}",
+            response.request.url,
+            watch.totalTimeMillis,
+            responseBody.string()
+        )
         return response
     }
 }

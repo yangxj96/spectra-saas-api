@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap
 class SpringMvcAutoConfiguration {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-mvc]:"
+        private const val PREFIX = "[自动配置-mvc]:"
 
         private val log = LoggerFactory.getLogger(this::class.java)
     }
@@ -41,8 +41,14 @@ class SpringMvcAutoConfiguration {
     @Bean
     fun requestGetSnakeCaseConverter(): Filter {
         return object : OncePerRequestFilter() {
+
             @Throws(ServletException::class, IOException::class)
-            override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+            override fun doFilterInternal(
+                request: HttpServletRequest,
+                response: HttpServletResponse,
+                filterChain: FilterChain
+            ) {
+                log.debug("$PREFIX 开始处理请求参数下划线转小驼峰命名")
                 // 只处理get请求
                 if (request.method.uppercase(Locale.getDefault()) != "GET") {
                     filterChain.doFilter(request, response)

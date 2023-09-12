@@ -31,7 +31,7 @@ class CorsConfiguration {
             if (!CorsUtils.isCorsRequest(request)) {
                 return@WebFilter chain.filter(exchange)
             }
-            val headers  = exchange.response.headers
+            val headers = exchange.response.headers
             headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
             headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST,GET,OPTIONS,DELETE,PUT")
             headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "content-type")

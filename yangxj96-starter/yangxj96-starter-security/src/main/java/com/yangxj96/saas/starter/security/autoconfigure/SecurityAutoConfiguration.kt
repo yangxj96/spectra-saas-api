@@ -50,7 +50,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityAutoConfiguration(@param:Autowired private val properties: SecurityProperties) {
 
     companion object {
-        private const val LOG_PREFIX = "[自动配置-security]:"
+        private const val PREFIX = "[自动配置-security]:"
         private val log = LoggerFactory.getLogger(this::class.java)
     }
 
@@ -68,17 +68,17 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
      */
     @Bean
     fun passwordEncoder(): PasswordEncoder {
-        log.info("{}初始化密码管理器", LOG_PREFIX)
+        log.info("{}初始化密码管理器", PREFIX)
         return BCryptPasswordEncoder()
     }
 
     @Bean
     fun tokenStore(): TokenStore {
         return if (properties.storeType === StoreType.JDBC) {
-            log.debug("{},store使用jdbc", LOG_PREFIX)
+            log.debug("{},store使用jdbc", PREFIX)
             JdbcTokenStore()
         } else {
-            log.debug("{},store使用redis", LOG_PREFIX)
+            log.debug("{},store使用redis", PREFIX)
             val connectionFactory = SpringUtil.getBean(RedisConnectionFactory::class.java)
             RedisTokenStore(connectionFactory)
         }
@@ -92,7 +92,7 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity, tokenStore: TokenStore): SecurityFilterChain {
-        log.info("{}初始化security核心配置", LOG_PREFIX)
+        log.info("{}初始化security核心配置", PREFIX)
         http
             .securityContext { it.requireExplicitSave(true) }
             // 禁用 cors csrf form httpBasic
@@ -127,7 +127,7 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
      */
     @Bean
     fun roleHierarchy(): RoleHierarchy {
-        log.info("{}初始化角色继承", LOG_PREFIX)
+        log.info("{}初始化角色继承", PREFIX)
         val hierarchy = RoleHierarchyImpl()
         hierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER")
         return hierarchy
@@ -142,7 +142,7 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
     @Bean
     @Throws(Exception::class)
     fun authenticationManager(): AuthenticationManager {
-        log.info("{}载入认证管理器", LOG_PREFIX)
+        log.info("{}载入认证管理器", PREFIX)
         return authenticationConfiguration.getAuthenticationManager()
     }
 

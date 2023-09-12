@@ -11,7 +11,6 @@ package com.yangxj96.saas.server.auth
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Authority
-import io.github.yangxj96.bean.user.Authority
 import io.github.yangxj96.bean.user.Role
 import io.github.yangxj96.bean.user.User
 import io.github.yangxj96.common.utils.AesUtil.decrypt
@@ -59,7 +58,10 @@ internal class ApplicationTest {
         log.info("编码后:{}", encrypt)
         val decrypt = decrypt(encrypt)
         log.info("解码后:{}", decrypt)
-        log.info("解码:{}", decrypt("WUosBCZbAi85ZBBiGVAHDwsoIx9dOC0uEwJHRD9SWkMqWkEvEBICU0RIWSsoM2A1bgMv9wkRuZeKlfWivza9OA=="))
+        log.info(
+            "解码:{}",
+            decrypt("WUosBCZbAi85ZBBiGVAHDwsoIx9dOC0uEwJHRD9SWkMqWkEvEBICU0RIWSsoM2A1bgMv9wkRuZeKlfWivza9OA==")
+        )
     }
 
     @Test
