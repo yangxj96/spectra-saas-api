@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+  ~ Copyright (c) 2018 - 2023
+  ~ 作者：杨新杰(Jack Young)
+  ~ 邮箱：yangxj96@gmail.com
+  ~ 博客：www.yangxj96.com
+  ~ 日期：2023-09-13 00:04:11
+  ~ Copyright (c) 2018 - 2023
+  -->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangxj96.saas.server.auth.mapper.UserMapper">
     <!-- @formatter:off -->

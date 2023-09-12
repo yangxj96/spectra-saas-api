@@ -292,6 +292,15 @@ ALTER TABLE "db_user"."t_user"
 ALTER TABLE "db_user"."t_user"
     ADD CONSTRAINT "t_user_pk" PRIMARY KEY ("id");
 
+/*
+ * Copyright (c) 2018 - 2023
+ * 作者：杨新杰(Jack Young)
+ * 邮箱：yangxj96@gmail.com
+ * 博客：www.yangxj96.com
+ * 日期：2023-09-13 00:04:11
+ * Copyright (c) 2018 - 2023
+ */
+
 -- ----------------------------
 -- Primary Key structure for table t_user_to_role
 -- ----------------------------
