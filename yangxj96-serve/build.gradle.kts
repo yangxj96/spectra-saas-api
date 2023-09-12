@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 /*
  * Copyright (c) 2018 - 2023
  * 作者：杨新杰(Jack Young)
@@ -28,3 +30,4 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-stream")
     api("org.springframework.cloud:spring-cloud-stream-binder-rabbit")
 }
+
