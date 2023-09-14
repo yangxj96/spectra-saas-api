@@ -1,5 +1,3 @@
-import org.springframework.boot.gradle.tasks.run.BootRun
-
 /*
  * Copyright (c) 2018 - 2023
  * 作者：杨新杰(Jack Young)
@@ -25,6 +23,9 @@ dependencies {
     api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     runtimeOnly("org.postgresql:postgresql")
 
+    // 配置加密
+    api("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
+    testApi("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
 
     // 流
     api("org.springframework.cloud:spring-cloud-stream")

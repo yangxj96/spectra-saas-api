@@ -11,14 +11,14 @@ package com.yangxj96.saas.server.auth
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Authority
-import io.github.yangxj96.bean.user.Role
-import io.github.yangxj96.bean.user.User
-import io.github.yangxj96.common.utils.AesUtil.decrypt
-import io.github.yangxj96.common.utils.AesUtil.encrypt
-import io.github.yangxj96.server.auth.service.AuthorityService
-import io.github.yangxj96.server.auth.service.RoleService
-import io.github.yangxj96.server.auth.service.UserService
+import com.yangxj96.saas.bean.user.Role
+import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.common.utils.AesUtil
+import com.yangxj96.saas.server.auth.service.AuthorityService
+import com.yangxj96.saas.server.auth.service.RoleService
+import com.yangxj96.saas.server.auth.service.UserService
 import jakarta.annotation.Resource
+import org.jasypt.encryption.StringEncryptor
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
@@ -51,16 +51,25 @@ internal class ApplicationTest {
     @Resource
     private lateinit var redisTemplate: RedisTemplate<String, Any>
 
+
+    @Resource
+    private lateinit var stringEncryptor: StringEncryptor
+
+    @Test
+    fun configEncrypt(){
+        log.info("通用密码:${stringEncryptor.encrypt("QuVsKppcWvwwX2Vv")}")
+    }
+
     @Test
     fun aesTest() {
         val str = "hello world"
-        val encrypt = encrypt(str)
+        val encrypt = AesUtil.encrypt(str)
         log.info("编码后:{}", encrypt)
-        val decrypt = decrypt(encrypt)
+        val decrypt = AesUtil.decrypt(encrypt)
         log.info("解码后:{}", decrypt)
         log.info(
             "解码:{}",
-            decrypt("WUosBCZbAi85ZBBiGVAHDwsoIx9dOC0uEwJHRD9SWkMqWkEvEBICU0RIWSsoM2A1bgMv9wkRuZeKlfWivza9OA==")
+            AesUtil.decrypt("WUosBCZbAi85ZBBiGVAHDwsoIx9dOC0uEwJHRD9SWkMqWkEvEBICU0RIWSsoM2A1bgMv9wkRuZeKlfWivza9OA==")
         )
     }
 
@@ -77,9 +86,9 @@ internal class ApplicationTest {
             it.id = IdWorker.getId()
             it.username = "admin"
             it.password = passwordEncoder.encode("admin")
-            it.createdBy = 0L
+            it.createdUser = 0L
             it.createdTime = LocalDateTime.now()
-            it.updatedBy = 0L
+            it.updatedUser = 0L
             it.updatedTime = LocalDateTime.now()
         }
 

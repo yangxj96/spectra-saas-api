@@ -31,7 +31,9 @@ class GlobalTokenCheckFilter : GlobalFilter, Ordered {
     }
 
     /** 白名单 **/
-    private var whites: MutableList<String> = mutableListOf()
+    private var whites: MutableList<String> = mutableListOf(
+        "/auth/login"
+    )
 
     /**
      * 优先级最高,用于进入的时候进行判断
@@ -43,8 +45,11 @@ class GlobalTokenCheckFilter : GlobalFilter, Ordered {
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
         val token = exchange.request.headers["Authorization"]
         val url = exchange.request.uri.toString()
-        log.info("token:${token},当前请求地址:${url}")
-        if ((token != null && token.size >= 1) || whites.contains(url)) {
+        var isWhite = false
+        whites.forEach {
+            isWhite = url.contains(it)
+        }
+        if ((token != null && token.size >= 1) || isWhite) {
             return chain.filter(exchange)
         }
         throw NotFoundTokenException("未获取到token异常")
