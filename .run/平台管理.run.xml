@@ -1,19 +1,10 @@
-<!--
-  ~ Copyright (c) 2018 - 2023
-  ~ 作者：杨新杰(Jack Young)
-  ~ 邮箱：yangxj96@gmail.com
-  ~ 博客：www.yangxj96.com
-  ~ 日期：2023-09-13 00:04:11
-  ~ Copyright (c) 2018 - 2023
-  -->
-
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="平台管理" type="SpringBootApplicationConfigurationType"
-                   factoryName="Spring Boot">
-        <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-platform.main"/>
-        <option name="SPRING_BOOT_MAIN_CLASS" value="com.yangxj96.saas.server.platform.ApplicationKt"/>
-        <method v="2">
-            <option name="Make" enabled="true"/>
-        </method>
-    </configuration>
+  <configuration default="false" name="平台管理" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-platform.main" />
+    <option name="SHORTEN_COMMAND_LINE" value="ARGS_FILE" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.yangxj96.saas.server.platform.ApplicationKt" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
 </component>

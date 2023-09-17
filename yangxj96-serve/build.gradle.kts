@@ -22,6 +22,8 @@ dependencies {
     // 数据库
     api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
     runtimeOnly("org.postgresql:postgresql")
+    // 缓存
+    api("org.springframework.boot:spring-boot-starter-cache")
 
     // 配置加密
     api("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
