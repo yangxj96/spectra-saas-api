@@ -11,11 +11,9 @@ package com.yangxj96.saas.server.gateway.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpHeaders
-import org.springframework.web.cors.reactive.CorsUtils
-import org.springframework.web.server.ServerWebExchange
-import org.springframework.web.server.WebFilter
-import org.springframework.web.server.WebFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsWebFilter
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 
 /**
  * 跨域配置
@@ -23,20 +21,17 @@ import org.springframework.web.server.WebFilterChain
 @Configuration
 class CorsConfiguration {
 
-
     @Bean
-    fun corsFilter(): WebFilter {
-        return WebFilter { exchange: ServerWebExchange, chain: WebFilterChain ->
-            val request = exchange.request
-            if (!CorsUtils.isCorsRequest(request)) {
-                return@WebFilter chain.filter(exchange)
-            }
-            val headers = exchange.response.headers
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST,GET,OPTIONS,DELETE,PUT")
-            headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "content-type")
-            headers.add(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "3628800")
-            chain.filter(exchange)
-        }
+    fun corsWebFilter(): CorsWebFilter {
+        val source = UrlBasedCorsConfigurationSource()
+        val config = CorsConfiguration()
+
+        config.addAllowedHeader("*")
+        config.addAllowedMethod("*")
+        config.addAllowedOriginPattern("*")
+        config.allowCredentials = true
+
+        source.registerCorsConfiguration("/**", config)
+        return CorsWebFilter(source)
     }
 }

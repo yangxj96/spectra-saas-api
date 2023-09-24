@@ -78,10 +78,10 @@ class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : T
             val keyCommands = conn.keyCommands()
             keyCommands.expire(wrapKey(accessKey), 3600)
             keyCommands.expire(wrapKey(refreshKey), 7200)
-            keyCommands.expire(wrapKey(accessToUserKey), 3600)
-            keyCommands.expire(wrapKey(accessToRefreshKey), 3600)
-            keyCommands.expire(wrapKey(refreshToAccessKey), 3600)
-            keyCommands.expire(wrapKey(authorityKey), 3600)
+            keyCommands.expire(wrapKey(accessToUserKey), 7200)
+            keyCommands.expire(wrapKey(accessToRefreshKey), 7200)
+            keyCommands.expire(wrapKey(refreshToAccessKey), 7200)
+            keyCommands.expire(wrapKey(authorityKey), 7200)
             conn.closePipeline()
         }
         return token
@@ -120,10 +120,15 @@ class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : T
 
     override fun refresh(refreshToken: String): Token? {
         connectionFactory.connection.use { conn ->
-            if (conn.keyCommands().exists(wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken)) == true) {
+            if (conn.keyCommands().exists(wrapKey(REFRESH_PREFIX + refreshToken)) == true) {
                 val access = deserialize(conn.stringCommands()[wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken)]!!)
-                val auth = deserializeAuthentication(conn.stringCommands()[wrapKey(AUTHORITY_PREFIX + access)]!!)
-                remove(access)
+                val auth   = deserializeAuthentication(conn.stringCommands()[wrapKey(AUTHORITY_PREFIX + access)]!!)
+                // 移除相关剩余的
+                conn.keyCommands().del(wrapKey(REFRESH_PREFIX + refreshToken))
+                conn.keyCommands().del(wrapKey(AUTHORITY_PREFIX + access))
+                conn.keyCommands().del(wrapKey(ACCESS_TO_REFRESH_PREFIX + access))
+                conn.keyCommands().del(wrapKey(ACCESS_TO_USER_PREFIX + auth.name))
+                conn.keyCommands().del(wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken))
                 return create(auth)
             }
         }
@@ -160,6 +165,7 @@ class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : T
         }
         return null
     }
+
 
     /**
      * 根据access token包装token信息

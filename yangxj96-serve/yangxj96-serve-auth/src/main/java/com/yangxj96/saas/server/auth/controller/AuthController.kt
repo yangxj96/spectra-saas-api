@@ -75,11 +75,11 @@ class AuthController {
      * @param token token
      * @return 刷新后的token信息
      */
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/refresh")
-    fun refresh(token: String): Token? {
+    fun refresh(@RequestBody param:Map<String,String>): Token? {
         return try {
             R.success()
+            val token = param["token"] ?: throw RuntimeException("未获取到token")
             tokenStore.refresh(token)
         } catch (e: Exception) {
             R.failure()
@@ -94,8 +94,9 @@ class AuthController {
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/logoff")
-    fun logout(token: String) {
+    fun logout(@RequestBody param:Map<String,String>) {
         try {
+            val token = param["token"] ?: throw RuntimeException("为获取到token")
             tokenStore.remove(token)
             R.success()
         } catch (e: Exception) {
@@ -111,9 +112,10 @@ class AuthController {
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/check_token")
-    fun checkToken(token: String): Token? {
+    fun checkToken(@RequestBody param:Map<String,String>): Token? {
         return try {
             R.success()
+            val token = param["token"] ?: throw RuntimeException("为获取到token")
             tokenStore.check(token)
         } catch (e: Exception) {
             R.failure()

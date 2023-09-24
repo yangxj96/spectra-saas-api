@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono
  * 全局token验证过滤器
  *
  */
-@Component
+//@Component
 class GlobalTokenCheckFilter : GlobalFilter, Ordered {
 
     companion object {
