@@ -10,12 +10,13 @@
 package com.yangxj96.saas.server.auth.controller
 
 import cn.hutool.core.lang.tree.Tree
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BaseController
 import com.yangxj96.saas.server.auth.service.RoleService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import jakarta.validation.constraints.NotBlank
+import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.*
 
 /**
  * 角色操作控制器
@@ -23,6 +24,35 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/role")
 class RoleController protected constructor(bindService: RoleService) : BaseController<Role, RoleService>(bindService) {
+
+    @PostMapping
+    override fun create(@Validated @RequestBody obj: Role): Role {
+        return super.create(obj)
+    }
+
+    @DeleteMapping("/{id}")
+    override fun delete(@PathVariable id: String) {
+        super.delete(id)
+    }
+
+    @PutMapping
+    override fun modify(@Validated @RequestBody obj: Role): Role {
+        return super.modify(obj)
+    }
+
+    @GetMapping
+    override fun query(
+        obj: Role,
+        @RequestParam(defaultValue = "1") pageNum: Long,
+        @RequestParam(defaultValue = "10") pageSize: Long
+    ): IPage<Role> {
+        return super.query(obj, pageNum, pageSize)
+    }
+
+    @GetMapping("/{id}")
+    override fun getById(@PathVariable id: Long): Role {
+        return super.getById(id)
+    }
 
     @GetMapping("/tree")
     fun tree(): List<Tree<String>> {

@@ -23,6 +23,9 @@ findProject(":yangxj96-serve:yangxj96-serve-auth")?.name = "yangxj96-serve-auth"
 include("yangxj96-serve:yangxj96-serve-gateway")
 findProject(":yangxj96-serve:yangxj96-serve-gateway")?.name = "yangxj96-serve-gateway"
 
+include("yangxj96-serve:yangxj96-serve-system")
+findProject(":yangxj96-serve:yangxj96-serve-system")?.name = "yangxj96-serve-system"
+
 /////////////////// starter
 
 include("yangxj96-starter:yangxj96-starter-remote")

@@ -11,9 +11,7 @@ package com.yangxj96.saas.common.base
 
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.common.respond.R
-import jakarta.validation.constraints.NotBlank
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.*
 
 /**
  * RESTFul 接口公用Controller层
@@ -30,8 +28,7 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      * @param obj 数据实体
      * @return 创建后的数据实体
      */
-    @PostMapping
-    fun create(@Validated obj: O): O {
+    fun create(obj: O): O {
         return bindService.create(obj)
     }
 
@@ -40,8 +37,7 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      *
      * @param id 数据id
      */
-    @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: @NotBlank(message = "需要删除的资源id不能为空") String) {
+    fun delete(id: String) {
         if (bindService.delete(id)) {
             R.success()
         } else {
@@ -55,8 +51,7 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      * @param obj 数据实体
      * @return 修改成功返回修改后的数据, 否则返回null
      */
-    @PutMapping
-    fun modify(@Validated obj: O): O {
+    fun modify(obj: O): O {
         return bindService.modify(obj)
     }
 
@@ -67,12 +62,7 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      * @param pageNum 页码
      * @param pageSize 每页数量
      */
-    @GetMapping
-    fun query(
-        obj: O,
-        @RequestParam(defaultValue = "1") pageNum: Long,
-        @RequestParam(defaultValue = "10") pageSize: Long
-    ): IPage<O> {
+    fun query(obj: O, pageNum: Long, pageSize: Long): IPage<O> {
         return bindService.select(obj, pageNum, pageSize)
     }
 
@@ -81,8 +71,7 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      *
      * @param id 数据的ID
      */
-    @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): O {
+    fun getById(id: Long): O {
         return bindService.getById(id)
     }
 

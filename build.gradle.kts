@@ -106,8 +106,8 @@ subprojects {
         // 环境变量
         environment.set(
             mapOf(
-                "HTTP_PROXY" to "http://192.168.31.6:7890",
-                "HTTPS_PROXY" to "http://192.168.31.6:7890",
+                "HTTP_PROXY" to "http://192.168.2.29:8889",
+                "HTTPS_PROXY" to "http://192.168.2.29:8889",
                 "BPE_DELIM_JAVA_TOOL_OPTIONS" to " ",
                 "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m"
             )

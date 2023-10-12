@@ -47,4 +47,5 @@
         (id, role_id, authority_id, created_user, created_time, updated_user, updated_time)
         VALUES (#{id}, #{role}, #{authority}, 0, now(), 0, now())
     </insert>
+
 </mapper>

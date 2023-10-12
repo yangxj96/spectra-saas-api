@@ -16,6 +16,8 @@
         <!--@mbg.generated-->
         <!--@Table db_user.t_authority-->
         <id column="id"               jdbcType="BIGINT"    property="id"/>
+        <result column="pid"          jdbcType="BIGINT"    property="pid"/>
+        <result column="name"         jdbcType="VARCHAR"   property="name"/>
         <result column="code"         jdbcType="VARCHAR"   property="code"/>
         <result column="description"  jdbcType="VARCHAR"   property="description"/>
         <result column="created_user" jdbcType="BIGINT"    property="createdUser"/>
@@ -29,6 +31,8 @@
     <sql id="Base_Column_List">
         <!--@mbg.generated-->
         id,
+        pid,
+        name,
         code,
         description,
         created_user,

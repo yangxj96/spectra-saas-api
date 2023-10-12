@@ -54,14 +54,17 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
 
     override fun tree(): List<Tree<String>> {
         val roles = this.list()
+        if (roles.isNullOrEmpty()) {
+            return mutableListOf()
+        }
         val config = TreeNodeConfig()
         config.setIdKey("id")
         config.setParentIdKey("pid")
         config.setNameKey("name")
         config.setChildrenKey("children")
-        return TreeUtil.build(roles, "0", config) { node: Role?, tree: Tree<String> ->
+        return TreeUtil.build(roles, "0", config) { node: Role, tree: Tree<String> ->
             tree.setId(
-                node!!.id.toString()
+                node.id.toString()
             )
             tree.setParentId(node.pid.toString())
             tree.setName(node.name)

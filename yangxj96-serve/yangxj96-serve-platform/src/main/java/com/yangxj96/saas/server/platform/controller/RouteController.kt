@@ -9,12 +9,13 @@
 
 package com.yangxj96.saas.server.platform.controller
 
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.bean.system.Route
 import com.yangxj96.saas.common.base.BaseController
 import com.yangxj96.saas.server.platform.service.RouteService
-import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import jakarta.validation.constraints.NotBlank
+import org.springframework.validation.annotation.Validated
+import org.springframework.web.bind.annotation.*
 
 
 /**
@@ -22,6 +23,36 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/route")
-@PreAuthorize("hasRole('ROLE_SYSADMIN')")
 class RouteController protected constructor(bindService: RouteService) :
-    BaseController<Route, RouteService>(bindService)
+    BaseController<Route, RouteService>(bindService) {
+
+    @PostMapping
+    override fun create(@Validated @RequestBody obj: Route): Route {
+        return super.create(obj)
+    }
+
+    @DeleteMapping("/{id}")
+    override fun delete(@PathVariable @NotBlank(message = "需要删除的资源id不能为空") id: String) {
+        super.delete(id)
+    }
+
+    @PutMapping
+    override fun modify(@Validated @RequestBody obj: Route): Route {
+        return super.modify(obj)
+    }
+
+    @GetMapping
+    override fun query(
+        obj: Route,
+        @RequestParam(defaultValue = "1") pageNum: Long,
+        @RequestParam(defaultValue = "10") pageSize: Long
+    ): IPage<Route> {
+        return super.query(obj, pageNum, pageSize)
+    }
+
+    @GetMapping("/{id}")
+    override fun getById(@PathVariable id: Long): Route {
+        return super.getById(id)
+    }
+
+}
