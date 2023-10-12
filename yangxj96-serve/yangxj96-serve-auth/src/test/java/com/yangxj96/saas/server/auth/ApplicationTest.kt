@@ -27,7 +27,6 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
-import kotlin.also
 
 @SpringBootTest
 internal class ApplicationTest {
@@ -56,7 +55,7 @@ internal class ApplicationTest {
     private lateinit var stringEncryptor: StringEncryptor
 
     @Test
-    fun configEncrypt(){
+    fun configEncrypt() {
         log.info("通用密码:${stringEncryptor.encrypt("QuVsKppcWvwwX2Vv")}")
     }
 
@@ -123,18 +122,19 @@ internal class ApplicationTest {
     @Test
     fun addAuthority() {
         try {
-            val authority = arrayOf(
-                "SYS:CONFIGURE:INSERT", "SYS:CONFIGURE:DELETE", "SYS:CONFIGURE:UPDATE", "SYS:CONFIGURE:SELECT",
-                "USER:INSERT", "USER:DELETE", "USER:UPDATE", "USER:SELECT"
-            )
-            val descriptions = arrayOf(
-                "系统配置:插入", "系统配置:删除", "系统配置:修改", "系统配置:查询",
-                "用户:插入", "用户:删除", "用户:修改", "用户:查询"
-            )
+            val root = Authority().also {
+                it.name = "用户管理"
+                it.code = "USER_ALL"
+            }
+            authorityService.save(root)
+
+            val authority    = arrayOf("USER:INSERT", "USER:DELETE", "USER:UPDATE", "USER:SELECT")
+            val descriptions = arrayOf("用户:插入", "用户:删除", "用户:修改", "用户:查询")
             var count = 0
             for (i in authority.indices) {
-                val datum: Authority = Authority().also {
+                val datum = Authority().also {
                     it.code = authority[i]
+                    it.pid  = root.id
                     it.description = descriptions[i]
                 }
 
@@ -145,6 +145,7 @@ internal class ApplicationTest {
         } catch (e: Exception) {
             Assertions.assertEquals(true, "插入失败")
         }
+
     }
 
     /**
