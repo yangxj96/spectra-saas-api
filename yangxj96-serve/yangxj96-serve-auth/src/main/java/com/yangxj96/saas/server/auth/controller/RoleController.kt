@@ -11,10 +11,11 @@ package com.yangxj96.saas.server.auth.controller
 
 import cn.hutool.core.lang.tree.Tree
 import com.baomidou.mybatisplus.core.metadata.IPage
+import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BaseController
+import com.yangxj96.saas.server.auth.domain.RoleRelevance
 import com.yangxj96.saas.server.auth.service.RoleService
-import jakarta.validation.constraints.NotBlank
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -57,5 +58,21 @@ class RoleController protected constructor(bindService: RoleService) : BaseContr
     @GetMapping("/tree")
     fun tree(): List<Tree<String>> {
         return bindService.tree()
+    }
+
+    @PostMapping("/relevance")
+    fun relevance(@Validated @RequestBody params: RoleRelevance) {
+        return bindService.relevance(params)
+    }
+
+    /**
+     * 获取角色拥有的权限
+     *
+     * @param id 角色ID
+     * @return 拥有的权限
+     */
+    @GetMapping("/ownerAuthority/{id}")
+    fun getAuthority(@PathVariable id: Long): MutableList<Authority> {
+        return bindService.ownerAuthority(id)
     }
 }

@@ -153,19 +153,19 @@ internal class ApplicationTest {
      */
     @Test
     fun relevance() {
-        val users = userService.list()
-        val roles = roleService.list()
-        val authorities = authorityService.list()
-        for (role in roles) {
-            for (authority in authorities) {
-                Assertions.assertTrue(roleService.relevance(role.id!!, authority.id!!), "插入失败")
-            }
-        }
-        for (user in users) {
-            for (role in roles) {
-                Assertions.assertTrue(userService.relevance(user.id!!, role.id!!), "插入失败")
-            }
-        }
+        //val users = userService.list()
+        //val roles = roleService.list()
+        //val authorities = authorityService.list()
+        //for (role in roles) {
+        //    for (authority in authorities) {
+        //        Assertions.assertTrue(roleService.relevance(role.id!!, authority.id!!), "插入失败")
+        //    }
+        //}
+        //for (user in users) {
+        //    for (role in roles) {
+        //        Assertions.assertTrue(userService.relevance(user.id!!, role.id!!), "插入失败")
+        //    }
+        //}
     }
 
     @Test

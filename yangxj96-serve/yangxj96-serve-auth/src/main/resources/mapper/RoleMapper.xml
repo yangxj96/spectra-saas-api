@@ -45,7 +45,17 @@
     <insert id="relevance">
         INSERT INTO db_user.t_role_to_authority
         (id, role_id, authority_id, created_user, created_time, updated_user, updated_time)
-        VALUES (#{id}, #{role}, #{authority}, 0, now(), 0, now())
+        VALUES
+        <foreach collection="coll" item="item" separator="," open="(" close=")">
+            #{item.id}, #{item.roleId}, #{item.authorityId}, #{item.createdUser}, #{item.createdTime}, #{item.updatedUser}, #{item.updatedTime}
+        </foreach>
     </insert>
+
+    <select id="ownerAuthority" resultType="com.yangxj96.saas.bean.user.Authority">
+        SELECT ta.*
+        FROM db_user.t_authority AS ta,
+             db_user.t_role_to_authority AS trta
+        WHERE trta.role_id = #{role_id}
+    </select>
 
 </mapper>
