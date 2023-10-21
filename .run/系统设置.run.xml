@@ -2,6 +2,7 @@
   <configuration default="false" name="系统设置" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-system.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.yangxj96.saas.server.system.ApplicationKt" />
+    <option name="VM_PARAMETERS" value="-Xms256m -Xmx256m -Xmn100m" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
