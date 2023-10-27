@@ -10,13 +10,14 @@
 package com.yangxj96.saas.server.auth
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
-import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.utils.AesUtil
+import com.yangxj96.saas.server.auth.service.AccountService
 import com.yangxj96.saas.server.auth.service.AuthorityService
 import com.yangxj96.saas.server.auth.service.RoleService
-import com.yangxj96.saas.server.auth.service.AccountService
 import jakarta.annotation.Resource
 import org.jasypt.encryption.StringEncryptor
 import org.junit.jupiter.api.Assertions
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
@@ -128,13 +131,13 @@ internal class ApplicationTest {
             }
             authorityService.save(root)
 
-            val authority    = arrayOf("USER:INSERT", "USER:DELETE", "USER:UPDATE", "USER:SELECT")
+            val authority = arrayOf("USER:INSERT", "USER:DELETE", "USER:UPDATE", "USER:SELECT")
             val descriptions = arrayOf("用户:插入", "用户:删除", "用户:修改", "用户:查询")
             var count = 0
             for (i in authority.indices) {
                 val datum = Authority().also {
                     it.code = authority[i]
-                    it.pid  = root.id
+                    it.pid = root.id
                     it.description = descriptions[i]
                 }
 
@@ -174,4 +177,62 @@ internal class ApplicationTest {
         val set = redisTemplate.opsForValue().setIfAbsent("demo01", key)
         Assertions.assertEquals(true, set)
     }
+
+}
+
+fun main() {
+    val auth = object : Authentication {
+        val datum = Account().also {
+            it.id = 123L
+            it.username = "admin"
+            it.password = "admin"
+            it.accessEnable = true
+            it.accessExpired = true
+            it.credentialsExpired = true
+            it.accessLocked = true
+            it.authorities = mutableListOf(
+                GrantedAuthority { "admin1" },
+                GrantedAuthority { "admin2" },
+                GrantedAuthority { "admin3" },
+                GrantedAuthority { "admin4" }
+            )
+        }
+
+        override fun getName(): String {
+            return datum.username
+        }
+
+        override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+            return datum.authorities
+        }
+
+        override fun getCredentials(): Any {
+            return datum
+        }
+
+        override fun getDetails(): Any {
+            return datum
+        }
+
+        override fun getPrincipal(): Any {
+            return datum
+        }
+
+        override fun isAuthenticated(): Boolean {
+            return false
+        }
+
+        override fun setAuthenticated(isAuthenticated: Boolean) {
+
+        }
+    }
+
+    val om = ObjectMapper()
+
+    val json = om.writeValueAsString(auth)
+
+    println(json)
+
+    val authentication = om.readValue(json, Authentication::class.java)
+    println(authentication)
 }

@@ -92,7 +92,7 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
             return bodyInserter
                 .insert(cachedBodyOutputMessage, BodyInserterContext())
                 .then(Mono.defer {
-                    val result = R(RStatus.FAILURE.code, RStatus.FAILURE.msg)
+                    val result = R<Any>(RStatus.FAILURE.code, RStatus.FAILURE.msg)
                     val headers = exchange.response.headers
                     // val code = headers.getFirst(RHttpHeadersExpand.RESULT_CODE)
                     val code = headers.getFirst("result-code")
@@ -141,7 +141,7 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
          * @param result 响应结果
          * @return 返回响应
          */
-        private fun emptyBody(result: R): Flux<DataBuffer> {
+        private fun emptyBody(result: R<Any>): Flux<DataBuffer> {
             return try {
                 Flux.just(delegate.bufferFactory().wrap(om.writeValueAsBytes(result)))
             } catch (e: JsonProcessingException) {
@@ -156,7 +156,7 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
          * @param result [DataBuffer] 响应内容
          * @return [DataBuffer]
          */
-        private fun modify(buffer: DataBuffer, result: R): DataBuffer {
+        private fun modify(buffer: DataBuffer, result: R<Any>): DataBuffer {
             var bytes: ByteArray?
             val str = StandardCharsets.UTF_8.decode(buffer.toByteBuffer()).toString()
             try {

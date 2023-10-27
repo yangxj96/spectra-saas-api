@@ -14,37 +14,48 @@ import java.io.Serializable
 /**
  * 通用响应
  */
-class R(var code: Int, var msg: String) : Serializable {
+class R<T> : Serializable {
 
-    var data: Any? = null
+    var code: Int? = null
 
-    constructor(code: Int, msg: String, data: Any?) : this(code, msg) {
+    var msg: String? = null
+
+    var data: T? = null
+
+    constructor()
+
+    constructor(code: Int, msg: String) {
+        this.code = code
+        this.msg = msg
+    }
+
+    constructor(code: Int, msg: String, data: T?) : this(code, msg) {
         this.data = data
     }
 
     companion object {
 
-        fun success(): R {
+        fun success(): R<Any> {
             return R(RStatus.SUCCESS.code, RStatus.SUCCESS.msg)
         }
 
-        fun success(data: Any?): R {
+        fun <T> success(data: T?): R<T> {
             return R(RStatus.SUCCESS.code, RStatus.SUCCESS.msg, data)
         }
 
-        fun failure(): R {
+        fun failure(): R<Any> {
             return R(RStatus.FAILURE.code, RStatus.FAILURE.msg)
         }
 
-        fun failure(status: RStatus): R {
+        fun failure(status: RStatus): R<Any> {
             return R(status.code, status.msg)
         }
 
-        fun failure(message: String): R {
+        fun failure(message: String): R<Any> {
             return R(RStatus.FAILURE.code, message)
         }
 
-        fun failure(status: RStatus, data: Any?): R {
+        fun <T> failure(status: RStatus, data: T?): R<T> {
             return R(status.code, status.msg, data)
         }
     }

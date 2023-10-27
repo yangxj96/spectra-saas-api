@@ -37,7 +37,15 @@ class RouteServiceImpl : RouteService {
 
     override fun refresh() {
         systemRemote.getRoutes()
-            .map { RouteUtil.toDefinition(it) }
+            .flatMapIterable {
+                if (it.code != 0) {
+                    throw RuntimeException("请求路由响应异常")
+                }
+                it.data!!
+            }
+            .map {
+                RouteUtil.toDefinition(it)
+            }
             .doOnComplete { publisher.publishEvent(RefreshRoutesEvent(this)) }
             .subscribe { routeDefinitionWriter.save(Mono.just(it)).subscribe() }
     }

@@ -64,7 +64,7 @@ class GlobalExceptionHandle : ErrorWebExceptionHandler {
      * @param ex 异常
      * @return 翻译后的 [R]
      */
-    private fun transition(ex: Throwable): R {
+    private fun transition(ex: Throwable): R<Any> {
         return when (ex.javaClass.getName()) {
             // @formatter:off
             NotFoundTokenException::class.java.name  -> R.failure(RStatus.NOT_FIND_TOKEN)

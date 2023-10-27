@@ -28,8 +28,3 @@ yangxj96:
     connect-time-out: 10000
   security:
     enable: true
-
-logging:
-  level:
-    com:
-      alibaba: error

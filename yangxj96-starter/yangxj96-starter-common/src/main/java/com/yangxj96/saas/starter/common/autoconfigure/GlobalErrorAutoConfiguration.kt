@@ -30,7 +30,7 @@ class GlobalErrorAutoConfiguration {
      */
     @ResponseBody
     @ExceptionHandler(BindException::class)
-    fun bindException(resp: HttpServletResponse, e: BindException): R {
+    fun bindException(resp: HttpServletResponse, e: BindException): R<Any> {
         return R.failure(e.bindingResult.allErrors[0].defaultMessage ?: "参数验证失败")
     }
 
@@ -39,7 +39,7 @@ class GlobalErrorAutoConfiguration {
      */
     @ResponseBody
     @ExceptionHandler(AuthException::class)
-    fun authException(resp: HttpServletResponse, e: AuthException): R {
+    fun authException(resp: HttpServletResponse, e: AuthException): R<Any> {
         return R.failure(e.status)
     }
 
