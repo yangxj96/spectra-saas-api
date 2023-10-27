@@ -13,7 +13,6 @@ import cn.hutool.json.JSONUtil
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.yangxj96.saas.common.respond.R
-import com.yangxj96.saas.common.respond.RHttpHeadersExpand
 import com.yangxj96.saas.common.respond.RStatus
 import jakarta.annotation.Resource
 import org.apache.commons.lang3.StringUtils
@@ -32,7 +31,6 @@ import org.springframework.http.MediaType
 import org.springframework.http.codec.ServerCodecConfigurer
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator
-import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.server.ServerWebExchange
@@ -96,7 +94,8 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
                 .then(Mono.defer {
                     val result = R(RStatus.FAILURE.code, RStatus.FAILURE.msg)
                     val headers = exchange.response.headers
-                    val code = headers.getFirst(RHttpHeadersExpand.RESULT_CODE)
+                    // val code = headers.getFirst(RHttpHeadersExpand.RESULT_CODE)
+                    val code = headers.getFirst("result-code")
                     if (StringUtils.isNotEmpty(code)) {
                         result.code = code!!.toInt()
                         result.msg = RStatus.getMsgByCode(result.code)
@@ -112,7 +111,8 @@ class GlobalResponseModifyFilter : GlobalFilter, Ordered {
                         .doOnNext { data: DataBuffer ->
                             headers.contentLength = data.readableByteCount().toLong()
                             // 移除认证用的code
-                            headers.remove(RHttpHeadersExpand.RESULT_CODE)
+                            // headers.remove(RHttpHeadersExpand.RESULT_CODE)
+                            headers.remove("result-code")
                         }
                     delegate.writeWith(flux)
                 })

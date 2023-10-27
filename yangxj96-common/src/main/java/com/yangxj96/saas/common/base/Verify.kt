@@ -12,7 +12,7 @@ package com.yangxj96.saas.common.base
 /**
  * 校验分组
  */
-class ValidationGroups {
+class Verify {
     /**
      * 校验新增分组
      */

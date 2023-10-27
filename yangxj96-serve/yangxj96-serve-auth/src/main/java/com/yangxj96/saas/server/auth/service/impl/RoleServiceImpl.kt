@@ -14,16 +14,16 @@ import cn.hutool.core.lang.tree.TreeNodeConfig
 import cn.hutool.core.lang.tree.TreeUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.bean.user.RoleToAuthority
-import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.base.BaseServiceImpl
 import com.yangxj96.saas.common.exception.DataNotExistException
 import com.yangxj96.saas.common.respond.R
 import com.yangxj96.saas.common.respond.RStatus
-import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance
 import com.yangxj96.saas.server.auth.mapper.RoleMapper
+import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance
 import com.yangxj96.saas.server.auth.service.RoleService
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -37,7 +37,6 @@ import java.time.LocalDateTime
 @Service
 class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
     BaseServiceImpl<RoleMapper, Role>(bindMapper), RoleService {
-
 
     @Transactional(rollbackFor = [Exception::class])
     override fun create(datum: Role): Role {

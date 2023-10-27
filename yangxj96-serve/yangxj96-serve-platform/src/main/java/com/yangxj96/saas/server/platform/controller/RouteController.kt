@@ -42,12 +42,12 @@ class RouteController protected constructor(bindService: RouteService) :
     }
 
     @GetMapping
-    override fun query(
+    override fun page(
         obj: Route,
         @RequestParam(defaultValue = "1") pageNum: Long,
         @RequestParam(defaultValue = "10") pageSize: Long
     ): IPage<Route> {
-        return super.query(obj, pageNum, pageSize)
+        return super.page(obj, pageNum, pageSize)
     }
 
     @GetMapping("/{id}")

@@ -25,6 +25,6 @@ interface BaseService<O : BaseEntity> : IService<O> {
 
     fun modify(datum: O): O
 
-    fun select(datum: O, pageNum: Long, pageSize: Long): IPage<O>
+    fun page(datum: O, pageNum: Long, pageSize: Long): IPage<O>
 
 }

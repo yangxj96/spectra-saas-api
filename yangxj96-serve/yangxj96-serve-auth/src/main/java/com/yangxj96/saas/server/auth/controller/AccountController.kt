@@ -45,10 +45,10 @@ class AccountController protected constructor(bindService: AccountService) : Bas
 
     @PreAuthorize("hasAnyAuthority('USER_ALL','USER_QUERY')")
     @GetMapping
-    override fun query(obj: Account,
-                       @RequestParam(defaultValue = "1") pageNum: Long,
-                       @RequestParam(defaultValue = "10") pageSize: Long): IPage<Account> {
-        return super.query(obj, pageNum, pageSize)
+    override fun page(obj: Account,
+                      @RequestParam(defaultValue = "1") pageNum: Long,
+                      @RequestParam(defaultValue = "10") pageSize: Long): IPage<Account> {
+        return super.page(obj, pageNum, pageSize)
     }
 
     @PreAuthorize("hasAnyAuthority('USER_ALL','USER_QUERY')")

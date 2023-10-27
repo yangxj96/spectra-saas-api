@@ -41,12 +41,12 @@ class AuthorityController protected constructor(bindService: AuthorityService) :
     }
 
     @GetMapping
-    override fun query(
+    override fun page(
         obj: Authority,
         @RequestParam(defaultValue = "1") pageNum: Long,
         @RequestParam(defaultValue = "10") pageSize: Long
     ): IPage<Authority> {
-        return super.query(obj, pageNum, pageSize)
+        return super.page(obj, pageNum, pageSize)
     }
 
     @GetMapping("/{id}")

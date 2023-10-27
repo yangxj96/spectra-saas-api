@@ -9,7 +9,7 @@
 
 package com.yangxj96.saas.server.auth.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.server.auth.service.AccountService
 import jakarta.annotation.Resource
@@ -35,8 +35,8 @@ class UserDetailsServiceImpl : UserDetailsService {
                 throw NullPointerException("用户名为空")
             }
 
-            val wrapper = QueryWrapper<Account>()
-                .eq("username", username)
+            val wrapper = KtQueryWrapper(Account::class.java)
+                .eq(Account::username, username)
                 .last("LIMIT 1")
 
             val user = accountService.getOne(wrapper) ?: throw UsernameNotFoundException("用户不存在")

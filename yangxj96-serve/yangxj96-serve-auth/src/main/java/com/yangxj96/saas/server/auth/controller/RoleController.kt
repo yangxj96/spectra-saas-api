@@ -42,12 +42,12 @@ class RoleController protected constructor(bindService: RoleService) : BaseContr
     }
 
     @GetMapping
-    override fun query(
+    override fun page(
         obj: Role,
         @RequestParam(defaultValue = "1") pageNum: Long,
         @RequestParam(defaultValue = "10") pageSize: Long
     ): IPage<Role> {
-        return super.query(obj, pageNum, pageSize)
+        return super.page(obj, pageNum, pageSize)
     }
 
     @GetMapping("/{id}")

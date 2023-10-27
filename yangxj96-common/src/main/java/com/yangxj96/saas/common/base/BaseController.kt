@@ -62,8 +62,8 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      * @param pageNum 页码
      * @param pageSize 每页数量
      */
-    fun query(obj: O, pageNum: Long, pageSize: Long): IPage<O> {
-        return bindService.select(obj, pageNum, pageSize)
+    fun page(obj: O, pageNum: Long, pageSize: Long): IPage<O> {
+        return bindService.page(obj, pageNum, pageSize)
     }
 
     /**

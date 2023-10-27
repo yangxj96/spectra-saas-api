@@ -221,9 +221,23 @@ class DynamicDatasourceAutoConfiguration(
      */
     private fun applyConfiguration(factory: MybatisSqlSessionFactoryBean) {
         // 使用 MybatisConfiguration
-        var configuration = properties.configuration
-        if (configuration == null && !StringUtils.hasText(properties.configLocation)) {
+        //var configuration = properties.configuration
+        //if (configuration == null && !StringUtils.hasText(properties.configLocation)) {
+        //    configuration = MybatisPlusProperties()
+        //}
+        //if (configuration != null && !CollectionUtils.isEmpty(configurationCustomizers)) {
+        //    for (customizer in configurationCustomizers) {
+        //        customizer!!.customize(configuration)
+        //    }
+        //}
+        //factory.configuration = configuration
+        val coreConfiguration = properties.configuration
+        var configuration: MybatisConfiguration? = null
+        if (coreConfiguration != null || !StringUtils.hasText(properties.configLocation)) {
             configuration = MybatisConfiguration()
+        }
+        if (configuration != null && coreConfiguration != null) {
+            coreConfiguration.applyTo(configuration)
         }
         if (configuration != null && !CollectionUtils.isEmpty(configurationCustomizers)) {
             for (customizer in configurationCustomizers) {
