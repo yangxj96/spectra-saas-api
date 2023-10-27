@@ -7,7 +7,7 @@
  * Copyright (c) 2018 - 2023
  */
 
-package com.yangxj96.saas.server.auth.domain
+package com.yangxj96.saas.server.auth.pojo.vo
 
 import jakarta.validation.constraints.NotBlank
 

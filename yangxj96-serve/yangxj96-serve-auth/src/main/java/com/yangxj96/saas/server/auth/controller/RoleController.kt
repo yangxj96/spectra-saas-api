@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BaseController
-import com.yangxj96.saas.server.auth.domain.RoleRelevance
+import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance
 import com.yangxj96.saas.server.auth.service.RoleService
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*

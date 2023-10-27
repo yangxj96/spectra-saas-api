@@ -13,7 +13,7 @@ import cn.hutool.core.lang.tree.Tree
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BaseService
-import com.yangxj96.saas.server.auth.domain.RoleRelevance
+import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance
 
 /**
  * 角色service层

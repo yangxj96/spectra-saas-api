@@ -22,7 +22,7 @@ import com.yangxj96.saas.common.base.BaseServiceImpl
 import com.yangxj96.saas.common.exception.DataNotExistException
 import com.yangxj96.saas.common.respond.R
 import com.yangxj96.saas.common.respond.RStatus
-import com.yangxj96.saas.server.auth.domain.RoleRelevance
+import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance
 import com.yangxj96.saas.server.auth.mapper.RoleMapper
 import com.yangxj96.saas.server.auth.service.RoleService
 import org.springframework.security.authentication.AnonymousAuthenticationToken

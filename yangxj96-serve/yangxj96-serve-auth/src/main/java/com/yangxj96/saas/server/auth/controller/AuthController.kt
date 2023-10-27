@@ -13,8 +13,8 @@ import com.alibaba.csp.sentinel.annotation.SentinelResource
 import com.yangxj96.saas.bean.security.Token
 import com.yangxj96.saas.common.exception.AuthException
 import com.yangxj96.saas.common.respond.RStatus
-import com.yangxj96.saas.server.auth.domain.AuthLogin
-import com.yangxj96.saas.server.auth.domain.AuthRefreshToken
+import com.yangxj96.saas.server.auth.pojo.vo.AuthLogin
+import com.yangxj96.saas.server.auth.pojo.vo.AuthRefreshToken
 import com.yangxj96.saas.starter.security.store.TokenStore
 import jakarta.annotation.Resource
 import jakarta.servlet.http.HttpServletRequest

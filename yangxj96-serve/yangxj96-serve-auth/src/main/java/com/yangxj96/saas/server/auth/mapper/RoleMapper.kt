@@ -13,7 +13,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.bean.user.RoleToAuthority
-import com.yangxj96.saas.server.auth.domain.RoleRelevance
 import org.apache.ibatis.annotations.Param
 
 /**
