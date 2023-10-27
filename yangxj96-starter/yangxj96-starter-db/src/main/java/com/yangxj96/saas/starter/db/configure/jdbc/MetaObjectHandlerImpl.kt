@@ -10,7 +10,7 @@
 package com.yangxj96.saas.starter.db.configure.jdbc
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import org.apache.ibatis.reflection.MetaObject
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AnonymousAuthenticationToken
@@ -37,7 +37,7 @@ class MetaObjectHandlerImpl : MetaObjectHandler {
         private val log = LoggerFactory.getLogger(this::class.java)
     }
 
-    private val currentUserId: Long?
+    private val currentAccountId: Long?
         /**
          * 获取当前用户ID
          *
@@ -46,21 +46,21 @@ class MetaObjectHandlerImpl : MetaObjectHandler {
         get() {
             val authentication = SecurityContextHolder.getContext().authentication
             return if (authentication != null && authentication !is AnonymousAuthenticationToken) {
-                (authentication.principal as User).id
+                (authentication.principal as Account).id
             } else 0L
         }
 
     override fun insertFill(metaObject: MetaObject) {
         log.debug("[自动配置-MyBatisPlus] insert 填充字段开始")
-        setFieldValByName(CREATED_USER, currentUserId, metaObject)
+        setFieldValByName(CREATED_USER, currentAccountId, metaObject)
         setFieldValByName(CREATED_TIME, LocalDateTime.now(), metaObject)
-        setFieldValByName(UPDATED_USER, currentUserId, metaObject)
+        setFieldValByName(UPDATED_USER, currentAccountId, metaObject)
         setFieldValByName(UPDATED_TIME, LocalDateTime.now(), metaObject)
     }
 
     override fun updateFill(metaObject: MetaObject) {
         log.debug("[自动配置-MyBatisPlus] update 填充字段开始")
-        setFieldValByName(UPDATED_USER, currentUserId, metaObject)
+        setFieldValByName(UPDATED_USER, currentAccountId, metaObject)
         setFieldValByName(UPDATED_TIME, LocalDateTime.now(), metaObject)
     }
 

@@ -11,11 +11,11 @@ package com.yangxj96.saas.server.auth.service.impl
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Authority
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.base.BaseEntity
 import com.yangxj96.saas.common.base.BaseServiceImpl
 import com.yangxj96.saas.server.auth.mapper.UserMapper
-import com.yangxj96.saas.server.auth.service.UserService
+import com.yangxj96.saas.server.auth.service.AccountService
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service
@@ -25,8 +25,8 @@ import java.util.function.Consumer
  * 用户service的实现
  */
 @Service
-class UserServiceImpl protected constructor(bindMapper: UserMapper) :
-    BaseServiceImpl<UserMapper, User>(bindMapper), UserService {
+class AccountServiceImpl protected constructor(bindMapper: UserMapper) :
+    BaseServiceImpl<UserMapper, Account>(bindMapper), AccountService {
 
     override fun relevance(user: Long, role: Long): Boolean {
         return bindMapper.relevance(IdWorker.getId(), user, role)

@@ -12,7 +12,7 @@ package com.yangxj96.saas.starter.security.store.impl
 import com.yangxj96.saas.bean.security.Token
 import com.yangxj96.saas.bean.security.TokenAccess
 import com.yangxj96.saas.bean.security.TokenRefresh
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.utils.ConvertUtil
 import com.yangxj96.saas.starter.security.store.TokenStore
 import com.yangxj96.saas.starter.security.store.redis.JdkSerializationStrategy
@@ -158,7 +158,7 @@ class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : T
      */
     private fun exists(auth: Authentication): Token? {
         connectionFactory.connection.use { conn ->
-            val username = (auth.principal as User).getUsername()
+            val username = (auth.principal as Account).getUsername()
             if (conn.keyCommands().exists(wrapKey(ACCESS_TO_USER_PREFIX + username)) == true) {
                 return wrap(username)
             }

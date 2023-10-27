@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS db_user.t_user;
-CREATE TABLE db_user.t_user
+DROP TABLE IF EXISTS db_user.t_account;
+CREATE TABLE db_user.t_account
 (
     id                  BIGINT       NOT NULL PRIMARY KEY,
     username            VARCHAR(255) NOT NULL,
@@ -15,24 +15,20 @@ CREATE TABLE db_user.t_user
     deleted             TIMESTAMP(6)
 );
 -- 用户名唯一KEY
-CREATE UNIQUE INDEX t_user_username_pk ON db_user.t_user (username);
-COMMENT ON TABLE db_user.t_user IS '用户表';
-COMMENT ON COLUMN db_user.t_user.id IS '主键ID';
-COMMENT ON COLUMN db_user.t_user.created_user IS '创建人';
-COMMENT ON COLUMN db_user.t_user.created_time IS '创建时间';
-COMMENT ON COLUMN db_user.t_user.updated_user IS '最后更新人';
-COMMENT ON COLUMN db_user.t_user.updated_time IS '最后更新时间';
-COMMENT ON COLUMN db_user.t_user.deleted IS '删除标识,null-未删除,非null-删除时间';
-COMMENT ON COLUMN db_user.t_user.username IS '用户名';
-COMMENT ON COLUMN db_user.t_user.password IS '密码';
-COMMENT ON COLUMN db_user.t_user.access_expired IS '账号是否过期';
-COMMENT ON COLUMN db_user.t_user.access_locked IS '账号是否锁定';
-COMMENT ON COLUMN db_user.t_user.access_enable IS '账号是否启用';
-COMMENT ON COLUMN db_user.t_user.credentials_expired IS '密码是否过期';
-
-INSERT INTO db_user.t_user
-VALUES (1600691095698763778, 'sysadmin', '$2a$10$IUnre3Om8pH5Iax0DdTNB.Ns6D2rym/0ggitroOevVyUehzuwTFoy', 'f', 'f', 't',
-        'f', 0, '2022-12-08 11:17:51.343771', 0, '2022-12-08 11:17:51.343771', NULL);
+CREATE UNIQUE INDEX t_account_username_pk ON db_user.t_account (username);
+COMMENT ON TABLE db_user.t_account IS '用户表';
+COMMENT ON COLUMN db_user.t_account.id IS '主键ID';
+COMMENT ON COLUMN db_user.t_account.created_user IS '创建人';
+COMMENT ON COLUMN db_user.t_account.created_time IS '创建时间';
+COMMENT ON COLUMN db_user.t_account.updated_user IS '最后更新人';
+COMMENT ON COLUMN db_user.t_account.updated_time IS '最后更新时间';
+COMMENT ON COLUMN db_user.t_account.deleted IS '删除标识,null-未删除,非null-删除时间';
+COMMENT ON COLUMN db_user.t_account.username IS '用户名';
+COMMENT ON COLUMN db_user.t_account.password IS '密码';
+COMMENT ON COLUMN db_user.t_account.access_expired IS '账号是否过期';
+COMMENT ON COLUMN db_user.t_account.access_locked IS '账号是否锁定';
+COMMENT ON COLUMN db_user.t_account.access_enable IS '账号是否启用';
+COMMENT ON COLUMN db_user.t_account.credentials_expired IS '密码是否过期';
 
 
 DROP TABLE IF EXISTS db_user.t_role;
@@ -61,11 +57,11 @@ COMMENT ON COLUMN db_user.t_role.name IS '角色名称';
 COMMENT ON COLUMN db_user.t_role.code IS '角色CODE';
 COMMENT ON COLUMN db_user.t_role.description IS '角色说明';
 
-DROP TABLE IF EXISTS db_user.t_user_to_role;
-CREATE TABLE db_user.t_user_to_role
+DROP TABLE IF EXISTS db_user.t_account_to_role;
+CREATE TABLE db_user.t_account_to_role
 (
     id           BIGINT       NOT NULL PRIMARY KEY,
-    user_id      BIGINT       NOT NULL,
+    account_id      BIGINT       NOT NULL,
     role_id      BIGINT       NOT NULL,
     created_user BIGINT       NOT NULL DEFAULT 0,
     created_time TIMESTAMP(6) NOT NULL DEFAULT NOW(),
@@ -73,15 +69,15 @@ CREATE TABLE db_user.t_user_to_role
     updated_time TIMESTAMP(6) NOT NULL DEFAULT NOW(),
     deleted      TIMESTAMP(6)
 );
-COMMENT ON TABLE db_user.t_user_to_role IS '用户<->角色';
-COMMENT ON COLUMN db_user.t_user_to_role.id IS '主键ID';
-COMMENT ON COLUMN db_user.t_user_to_role.created_user IS '创建人';
-COMMENT ON COLUMN db_user.t_user_to_role.created_time IS '创建时间';
-COMMENT ON COLUMN db_user.t_user_to_role.updated_user IS '最后更新人';
-COMMENT ON COLUMN db_user.t_user_to_role.updated_time IS '最后更新时间';
-COMMENT ON COLUMN db_user.t_user_to_role.deleted IS '删除标识,null-未删除,非null-删除时间';
-COMMENT ON COLUMN db_user.t_user_to_role.user_id IS '用户ID';
-COMMENT ON COLUMN db_user.t_user_to_role.role_id IS '角色ID';
+COMMENT ON TABLE db_user.t_account_to_role IS '用户<->角色';
+COMMENT ON COLUMN db_user.t_account_to_role.id IS '主键ID';
+COMMENT ON COLUMN db_user.t_account_to_role.created_user IS '创建人';
+COMMENT ON COLUMN db_user.t_account_to_role.created_time IS '创建时间';
+COMMENT ON COLUMN db_user.t_account_to_role.updated_user IS '最后更新人';
+COMMENT ON COLUMN db_user.t_account_to_role.updated_time IS '最后更新时间';
+COMMENT ON COLUMN db_user.t_account_to_role.deleted IS '删除标识,null-未删除,非null-删除时间';
+COMMENT ON COLUMN db_user.t_account_to_role.account_id IS '用户ID';
+COMMENT ON COLUMN db_user.t_account_to_role.role_id IS '角色ID';
 
 
 DROP TABLE IF EXISTS db_user.t_authority;

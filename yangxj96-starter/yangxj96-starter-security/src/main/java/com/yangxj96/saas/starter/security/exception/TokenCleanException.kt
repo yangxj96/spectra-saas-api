@@ -18,19 +18,19 @@ import com.yangxj96.saas.common.respond.RStatus
  */
 class TokenCleanException : SecurityException {
     constructor() : super() {
-        R.specify(RStatus.SECURITY_TOKEN_CLEAN)
+        R.failure(RStatus.SECURITY_TOKEN_CLEAN)
     }
 
     constructor(message: String?) : super(message) {
-        R.specify(RStatus.SECURITY_TOKEN_CLEAN)
+        R.failure(RStatus.SECURITY_TOKEN_CLEAN)
     }
 
     constructor(message: String?, cause: Throwable?) : super(message, cause) {
-        R.specify(RStatus.SECURITY_TOKEN_CLEAN)
+        R.failure(RStatus.SECURITY_TOKEN_CLEAN)
     }
 
     constructor(cause: Throwable?) : super(cause) {
-        R.specify(RStatus.SECURITY_TOKEN_CLEAN)
+        R.failure(RStatus.SECURITY_TOKEN_CLEAN)
     }
 
     protected constructor(
@@ -39,6 +39,6 @@ class TokenCleanException : SecurityException {
         enableSuppression: Boolean,
         writableStackTrace: Boolean
     ) : super(message, cause, enableSuppression, writableStackTrace) {
-        R.specify(RStatus.SECURITY_TOKEN_CLEAN)
+        R.failure(RStatus.SECURITY_TOKEN_CLEAN)
     }
 }

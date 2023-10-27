@@ -17,7 +17,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.bean.user.RoleToAuthority
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.base.BaseServiceImpl
 import com.yangxj96.saas.common.exception.DataNotExistException
 import com.yangxj96.saas.common.respond.R
@@ -42,7 +42,7 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
     @Transactional(rollbackFor = [Exception::class])
     override fun create(datum: Role): Role {
         if (!datum.code?.startsWith("ROLE_")!!) {
-            R.specify(RStatus.FAILURE_FORMAT)
+            R.failure(RStatus.FAILURE_FORMAT)
             return datum
         }
 
@@ -52,7 +52,7 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
 
         val db = this.getOne(wrapper)
         if (this.getOne(wrapper) != null) {
-            R.specify(RStatus.FAILURE_REPEAT)
+            R.failure(RStatus.FAILURE_REPEAT)
             return db!!
         }
         return super.create(datum)
@@ -67,7 +67,7 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
 
         val authentication = SecurityContextHolder.getContext().authentication
         val currentId = if (authentication != null && authentication !is AnonymousAuthenticationToken) {
-            (authentication.principal as User).id
+            (authentication.principal as Account).id
         } else 0L
 
         params.authorityIds?.forEach {

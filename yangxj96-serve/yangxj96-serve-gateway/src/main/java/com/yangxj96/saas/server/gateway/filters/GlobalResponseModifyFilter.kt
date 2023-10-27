@@ -43,7 +43,7 @@ import java.nio.charset.StandardCharsets
 /**
  * 全局响应修改器
  */
-@Component
+//@Component
 class GlobalResponseModifyFilter : GlobalFilter, Ordered {
 
     companion object {

@@ -10,8 +10,8 @@
 package com.yangxj96.saas.server.auth.service.impl
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.yangxj96.saas.bean.user.User
-import com.yangxj96.saas.server.auth.service.UserService
+import com.yangxj96.saas.bean.user.Account
+import com.yangxj96.saas.server.auth.service.AccountService
 import jakarta.annotation.Resource
 import org.apache.commons.lang3.StringUtils
 import org.springframework.security.core.userdetails.UserDetails
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service
 class UserDetailsServiceImpl : UserDetailsService {
 
     @Resource
-    private lateinit var userService: UserService
+    private lateinit var accountService: AccountService
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(username: String): UserDetails {
@@ -35,13 +35,13 @@ class UserDetailsServiceImpl : UserDetailsService {
                 throw NullPointerException("用户名为空")
             }
 
-            val wrapper = QueryWrapper<User>()
+            val wrapper = QueryWrapper<Account>()
                 .eq("username", username)
                 .last("LIMIT 1")
 
-            val user = userService.getOne(wrapper) ?: throw UsernameNotFoundException("用户不存在")
+            val user = accountService.getOne(wrapper) ?: throw UsernameNotFoundException("用户不存在")
 
-            user.authorities = userService.getAuthoritiesByUserId(user.id!!)
+            user.authorities = accountService.getAuthoritiesByUserId(user.id!!)
 
             return user
         } catch (e: Exception) {

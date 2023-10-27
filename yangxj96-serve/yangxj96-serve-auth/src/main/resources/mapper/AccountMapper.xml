@@ -12,9 +12,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangxj96.saas.server.auth.mapper.UserMapper">
     <!-- @formatter:off -->
-    <resultMap id="BaseResultMap" type="com.yangxj96.saas.bean.user.User">
+    <resultMap id="BaseResultMap" type="com.yangxj96.saas.bean.user.Account">
         <!--@mbg.generated-->
-        <!--@Table db_user.t_user-->
+        <!--@Table db_user.t_account-->
         <id column="id"                      jdbcType="BIGINT"    property="id"/>
         <result column="username"            jdbcType="VARCHAR"   property="username"/>
         <result column="password"            jdbcType="VARCHAR"   property="password"/>
@@ -47,18 +47,18 @@
     </sql>
 
     <insert id="relevance">
-        INSERT INTO db_user.t_user_to_role(id, user_id, role_id, created_user, created_time, updated_user, updated_time)
+        INSERT INTO db_user.t_account_to_role(id, account_id, role_id, created_user, created_time, updated_user, updated_time)
         VALUES (#{id}, #{user}, #{role}, 0, now(), 0, now())
     </insert>
 
     <select id="getRoleByUserId" resultType="com.yangxj96.saas.bean.user.Role">
         SELECT r.*
         FROM db_user.t_role r,
-        db_user.t_user_to_role tr,
-        db_user.t_user u
+        db_user.t_account_to_role tr,
+        db_user.t_account u
         WHERE u.id = #{userId}
         AND r.id = tr.role_id
-        AND tr.user_id = u.id
+        AND tr.account_id = u.id
     </select>
 
     <select id="getAuthorityByRoleIds" resultType="com.yangxj96.saas.bean.user.Authority">

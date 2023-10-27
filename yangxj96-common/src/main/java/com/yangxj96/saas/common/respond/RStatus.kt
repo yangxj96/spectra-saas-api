@@ -20,13 +20,20 @@ enum class RStatus(val code: Int, val msg: String) {
     认证相关: 100000 - 199999
     服务异常: 200000 - 299999
      */
-    SUCCESS(0, "success"),
-    FAILURE(-1, "failure"),
+    SUCCESS(0, "请求成功"),
+    FAILURE(-1, "请求失败"),
+    UNKNOWN(-2, "未知错误"),
     SECURITY_AUTHENTICATION(100000, "认证异常"),
     SECURITY_ACCESS_DENIED(100001, "无权限"),
     SECURITY_USERNAME_ABSENCE(100002, "用户不存在"),
     SECURITY_PASSWORD_ERROR(100003, "密码错误"),
     SECURITY_TOKEN_CLEAN(100004, "Token自动清理异常"),
+    SECURITY_ACCESS_LOCKED(100004, "账号被锁定"),
+    SECURITY_ACCESS_DISABLED(100004, "账号被禁用"),
+    SECURITY_ACCESS_CREDENTIALS_EXPIRED(100004, "密码已过期"),
+    SECURITY_ACCESS_BAD_CREDENTIALS(100004, "密码错误"),
+    SECURITY_TOKEN_REFRESH(100004, "token刷新失败"),
+    SECURITY_TOKEN_LOGOFF(100004, "退出登录失败"),
 
     GATEWAY_NOT_FOUND(200001, "未找到服务"),
     GATEWAY_RESPONSE_STATUS(200002, "网关响应状态异常"),

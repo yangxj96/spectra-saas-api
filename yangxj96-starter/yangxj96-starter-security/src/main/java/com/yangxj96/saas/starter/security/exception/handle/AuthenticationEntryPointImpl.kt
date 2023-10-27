@@ -35,7 +35,7 @@ class AuthenticationEntryPointImpl : AuthenticationEntryPoint {
             val mapper = SpringUtil.getBean(ObjectMapper::class.java)
             response.contentType = "application/json"
             response.status = HttpServletResponse.SC_OK
-            mapper.writeValue(response.outputStream, R.specify(RStatus.SECURITY_AUTHENTICATION))
+            mapper.writeValue(response.outputStream, R.failure(RStatus.SECURITY_AUTHENTICATION))
         } catch (e: Exception) {
             throw ServletException("格式化异常")
         }

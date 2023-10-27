@@ -67,10 +67,10 @@ class GlobalExceptionHandle : ErrorWebExceptionHandler {
     private fun transition(ex: Throwable): R {
         return when (ex.javaClass.getName()) {
             // @formatter:off
-            NotFoundTokenException::class.java.name  -> R.specify(RStatus.NOT_FIND_TOKEN)
-            NotFoundException::class.java.name       -> R.specify(RStatus.GATEWAY_NOT_FOUND)
-            ResponseStatusException::class.java.name -> R.specify(RStatus.GATEWAY_RESPONSE_STATUS)
-            NullPointerException::class.java.name    -> R.specify(RStatus.NULL_POINTER)
+            NotFoundTokenException::class.java.name  -> R.failure(RStatus.NOT_FIND_TOKEN)
+            NotFoundException::class.java.name       -> R.failure(RStatus.GATEWAY_NOT_FOUND)
+            ResponseStatusException::class.java.name -> R.failure(RStatus.GATEWAY_RESPONSE_STATUS)
+            NullPointerException::class.java.name    -> R.failure(RStatus.NULL_POINTER)
             else -> R.failure()
             // @formatter:on
         }

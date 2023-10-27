@@ -12,11 +12,11 @@ package com.yangxj96.saas.server.auth
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.utils.AesUtil
 import com.yangxj96.saas.server.auth.service.AuthorityService
 import com.yangxj96.saas.server.auth.service.RoleService
-import com.yangxj96.saas.server.auth.service.UserService
+import com.yangxj96.saas.server.auth.service.AccountService
 import jakarta.annotation.Resource
 import org.jasypt.encryption.StringEncryptor
 import org.junit.jupiter.api.Assertions
@@ -36,7 +36,7 @@ internal class ApplicationTest {
     }
 
     @Resource
-    private lateinit var userService: UserService
+    private lateinit var accountService: AccountService
 
     @Resource
     private lateinit var passwordEncoder: PasswordEncoder
@@ -81,7 +81,7 @@ internal class ApplicationTest {
 
     @Test
     fun addAdminUser() {
-        val user: User = User().also {
+        val account: Account = Account().also {
             it.id = IdWorker.getId()
             it.username = "admin"
             it.password = passwordEncoder.encode("admin")
@@ -92,7 +92,7 @@ internal class ApplicationTest {
         }
 
 
-        Assertions.assertTrue(userService.save(user), "插入失败")
+        Assertions.assertTrue(accountService.save(account), "插入失败")
     }
 
     @Test

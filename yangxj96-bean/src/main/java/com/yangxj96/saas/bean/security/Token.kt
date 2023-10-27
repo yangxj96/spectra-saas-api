@@ -10,7 +10,7 @@
 package com.yangxj96.saas.bean.security
 
 import cn.hutool.core.util.IdUtil
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import org.springframework.security.core.Authentication
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -57,7 +57,7 @@ class Token : Serializable {
         @JvmStatic
         fun generate(auth: Authentication): Token {
             // 获取必须的数据
-            val principal = auth.principal as User
+            val principal = auth.principal as Account
             val authorities: MutableList<String> = ArrayList()
             for (authority in principal.authorities) {
                 authorities.add(authority.authority)

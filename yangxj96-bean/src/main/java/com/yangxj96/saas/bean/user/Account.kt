@@ -20,8 +20,8 @@ import java.io.Serializable
 /**
  * 用户表
  */
-@TableName(value = "db_user.t_user")
-class User : BaseEntity(), Serializable, UserDetails {
+@TableName(value = "db_user.t_account")
+class Account : BaseEntity(), Serializable, UserDetails {
 
     /**
      * 用户名

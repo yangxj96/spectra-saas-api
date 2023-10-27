@@ -9,14 +9,14 @@
 
 package com.yangxj96.saas.server.auth.service
 
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.base.BaseService
 import org.springframework.security.core.GrantedAuthority
 
 /**
  * 用户service层
  */
-interface UserService : BaseService<User> {
+interface AccountService : BaseService<Account> {
 
     /**
      * 关联用户和角色

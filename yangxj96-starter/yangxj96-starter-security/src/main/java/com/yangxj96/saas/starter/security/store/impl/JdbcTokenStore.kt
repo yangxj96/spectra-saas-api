@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper
 import com.yangxj96.saas.bean.security.Token
 import com.yangxj96.saas.bean.security.TokenAccess
 import com.yangxj96.saas.bean.security.TokenRefresh
-import com.yangxj96.saas.bean.user.User
+import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.utils.ConvertUtil.byteToObject
 import com.yangxj96.saas.common.utils.ConvertUtil.objectToByte
 import com.yangxj96.saas.starter.security.mapper.TokenAccessMapper
@@ -156,7 +156,7 @@ open class JdbcTokenStore : TokenStore {
      */
     private fun exists(auth: Authentication): Token? {
         // 如果token存在,则返回已经存在的token
-        val username = (auth.principal as User).getUsername()
+        val username = (auth.principal as Account).getUsername()
         // 先检查是否已经有token了
         val accessTokenWrapper = LambdaQueryWrapper<TokenAccess>()
         accessTokenWrapper

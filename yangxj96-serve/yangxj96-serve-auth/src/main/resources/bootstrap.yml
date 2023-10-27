@@ -3,12 +3,6 @@ server:
 spring:
   application:
     name: yangxj96-serve-auth
-  datasource:
-    url: jdbc:postgresql://yangxj96.com:5432/yangxj96_saas_db
-    hikari:
-      connection-test-query: select 1
-      max-lifetime: 300000
-
   cloud:
     function:
       definition: saasTenant;saasCommon

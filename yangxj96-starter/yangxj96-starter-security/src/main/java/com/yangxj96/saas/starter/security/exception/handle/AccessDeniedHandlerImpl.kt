@@ -35,7 +35,7 @@ class AccessDeniedHandlerImpl : AccessDeniedHandler {
             val mapper = SpringUtil.getBean(ObjectMapper::class.java)
             response.contentType = "application/json"
             response.status = HttpServletResponse.SC_OK
-            mapper.writeValue(response.outputStream, R.specify(RStatus.SECURITY_ACCESS_DENIED))
+            mapper.writeValue(response.outputStream, R.failure(RStatus.SECURITY_ACCESS_DENIED))
         } catch (e: Exception) {
             throw ServletException("格式化异常")
         }

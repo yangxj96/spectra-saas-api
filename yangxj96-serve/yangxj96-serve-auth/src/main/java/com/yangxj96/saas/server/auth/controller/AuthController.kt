@@ -11,14 +11,18 @@ package com.yangxj96.saas.server.auth.controller
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource
 import com.yangxj96.saas.bean.security.Token
-import com.yangxj96.saas.common.respond.R
-import com.yangxj96.saas.server.auth.domain.Login
+import com.yangxj96.saas.common.exception.AuthException
+import com.yangxj96.saas.common.respond.RStatus
+import com.yangxj96.saas.server.auth.domain.AuthLogin
+import com.yangxj96.saas.server.auth.domain.AuthRefreshToken
 import com.yangxj96.saas.starter.security.store.TokenStore
 import jakarta.annotation.Resource
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.*
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -49,77 +53,76 @@ class AuthController {
      */
     @SentinelResource(value = "login")
     @PostMapping(value = ["/login"])
-    fun login(@RequestBody param: Login): Token? {
+    fun login(@Validated @RequestBody param: AuthLogin): Token? {
         log.info("用户:${param.username}开始登录,输入的密码为:${param.password}")
-        var token: Token? = null
-        // 构建后认证
-        val authenticationToken = UsernamePasswordAuthenticationToken(param.username, param.password)
-        val authenticate = authenticationManager.authenticate(authenticationToken)
-        // 判断是否登录成功,进行创建token且响应
         try {
+            // 构建后认证
+            val authenticationToken = UsernamePasswordAuthenticationToken(param.username, param.password)
+            val authenticate = authenticationManager.authenticate(authenticationToken)
+            // 判断是否登录成功,进行创建token且响应
             if (authenticate.isAuthenticated) {
-                token = tokenStore.create(authenticate)
-                R.success()
+                return tokenStore.create(authenticate)
             } else {
-                R.failure()
+                throw AuthException(RStatus.FAILURE)
             }
+        } catch (e: UsernameNotFoundException) {
+            throw AuthException(RStatus.SECURITY_USERNAME_ABSENCE)
+        } catch (e: BadCredentialsException) {
+            throw AuthException(RStatus.SECURITY_ACCESS_BAD_CREDENTIALS)
+        } catch (e: LockedException) {
+            throw AuthException(RStatus.SECURITY_ACCESS_LOCKED)
+        } catch (e: DisabledException) {
+            throw AuthException(RStatus.SECURITY_ACCESS_DISABLED)
+        } catch (e: CredentialsExpiredException) {
+            throw AuthException(RStatus.SECURITY_ACCESS_CREDENTIALS_EXPIRED)
+        } catch (e: AccountExpiredException) {
+            throw AuthException(RStatus.SECURITY_ACCESS_DENIED)
         } catch (e: Exception) {
-            R.failure()
-        }
-        return token
-    }
-
-    /**
-     * 刷新token
-     *
-     * @param token token
-     * @return 刷新后的token信息
-     */
-    @PostMapping("/refresh")
-    fun refresh(@RequestBody param:Map<String,String>): Token? {
-        return try {
-            R.success()
-            val token = param["token"] ?: throw RuntimeException("未获取到token")
-            tokenStore.refresh(token)
-        } catch (e: Exception) {
-            R.failure()
-            null
-        }
-    }
-
-    /**
-     * 通用退出方法
-     *
-     * @param token token
-     */
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/logoff")
-    fun logout(@RequestBody param:Map<String,String>) {
-        try {
-            val token = param["token"] ?: throw RuntimeException("为获取到token")
-            tokenStore.remove(token)
-            R.success()
-        } catch (e: Exception) {
-            R.failure()
+            throw AuthException(RStatus.UNKNOWN)
         }
     }
 
     /**
      * 检查token状态
      *
-     * @param token token
      * @return token信息
      */
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/check_token")
-    fun checkToken(@RequestBody param:Map<String,String>): Token? {
+    fun checkToken(request: HttpServletRequest): Token? {
         return try {
-            R.success()
-            val token = param["token"] ?: throw RuntimeException("为获取到token")
-            tokenStore.check(token)
+            tokenStore.check(request.getHeader("Authorization"))
         } catch (e: Exception) {
-            R.failure()
             throw RuntimeException("获取auth状态异常")
         }
     }
+
+    /**
+     * 刷新token
+     *
+     * @return 刷新后的token信息
+     */
+    @PostMapping("/refresh")
+    fun refresh(@Validated @RequestBody params: AuthRefreshToken): Token? {
+        return try {
+            tokenStore.refresh(params.token!!)
+        } catch (e: Exception) {
+            throw AuthException(RStatus.SECURITY_TOKEN_REFRESH)
+        }
+    }
+
+    /**
+     * 通用退出方法
+     */
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/logoff")
+    fun logout(request: HttpServletRequest) {
+        try {
+            tokenStore.remove(request.getHeader("Authorization"))
+        } catch (e: Exception) {
+            throw AuthException(RStatus.SECURITY_TOKEN_LOGOFF)
+        }
+    }
+
+
 }
