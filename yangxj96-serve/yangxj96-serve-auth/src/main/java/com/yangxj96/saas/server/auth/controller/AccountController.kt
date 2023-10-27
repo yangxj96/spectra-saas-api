@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.*
  * 用户信息控制器
  */
 @RestController
-@RequestMapping("/user")
-class UserController protected constructor(bindService: AccountService) : BaseController<Account, AccountService>(bindService) {
+@RequestMapping("/account")
+class AccountController protected constructor(bindService: AccountService) : BaseController<Account, AccountService>(bindService) {
 
     @PreAuthorize("hasAnyAuthority('USER_ALL','USER_INSERT')")
     @PostMapping
