@@ -13,18 +13,23 @@ import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.bean.system.Route
 import com.yangxj96.saas.common.base.BaseController
 import com.yangxj96.saas.server.platform.service.RouteService
-import jakarta.validation.constraints.NotBlank
+import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.LoggerFactory
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 
 /**
- * 注解
+ * 路由操作相关内容
  */
 @RestController
 @RequestMapping("/route")
 class RouteController protected constructor(bindService: RouteService) :
     BaseController<Route, RouteService>(bindService) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
 
     @PostMapping
     override fun create(@Validated @RequestBody obj: Route): Route {
@@ -32,7 +37,7 @@ class RouteController protected constructor(bindService: RouteService) :
     }
 
     @DeleteMapping("/{id}")
-    override fun delete(@PathVariable @NotBlank(message = "需要删除的资源id不能为空") id: String) {
+    override fun delete(@PathVariable id: String) {
         super.delete(id)
     }
 
@@ -53,6 +58,15 @@ class RouteController protected constructor(bindService: RouteService) :
     @GetMapping("/{id}")
     override fun getById(@PathVariable id: Long): Route {
         return super.getById(id)
+    }
+
+    /**
+     * 获取所有路由信息
+     */
+    @GetMapping("/all", headers = ["token=7C89F229-332D-FD9E-43D6-582F91FD8DE8"])
+    fun getAllRoute(request: HttpServletRequest): MutableList<Route> {
+        log.debug("获取所有路由信息")
+        return bindService.list()
     }
 
 }

@@ -59,7 +59,7 @@ class WebFluxConfiguration : WebFluxConfigurer {
             .builder()
             .exchangeStrategies(strategies)
             .defaultHeaders {
-                it["token"] = "true"
+                it["token"] = "7C89F229-332D-FD9E-43D6-582F91FD8DE8"
             }
     }
 

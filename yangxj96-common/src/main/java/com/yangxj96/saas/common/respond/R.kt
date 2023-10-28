@@ -33,6 +33,8 @@ class R<T> : Serializable {
         this.data = data
     }
 
+
+
     companion object {
 
         fun success(): R<Any> {
@@ -58,5 +60,9 @@ class R<T> : Serializable {
         fun <T> failure(status: RStatus, data: T?): R<T> {
             return R(status.code, status.msg, data)
         }
+    }
+
+    override fun toString(): String {
+        return "R(code=$code, msg=$msg, data=$data)"
     }
 }

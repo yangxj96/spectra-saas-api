@@ -9,9 +9,14 @@
 
 package com.yangxj96.saas.starter.remote.autoconfigure
 
-import com.yangxj96.saas.starter.remote.configure.OkHttpLogInterceptor
+import com.yangxj96.saas.starter.remote.interceptor.OkHttpLogInterceptor
+import com.yangxj96.saas.starter.remote.interceptor.RequestInterceptor
+import com.yangxj96.saas.starter.remote.interceptor.ResponseInterceptor
 import com.yangxj96.saas.starter.remote.props.RemoteProperties
-import feign.*
+import feign.Contract
+import feign.Logger
+import feign.Request
+import feign.Retryer
 import jakarta.annotation.PreDestroy
 import jakarta.annotation.Resource
 import okhttp3.ConnectionPool
@@ -27,7 +32,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.cloud.openfeign.loadbalancer.FeignBlockingLoadBalancerClient
 import org.springframework.cloud.openfeign.loadbalancer.FeignLoadBalancerAutoConfiguration
 import org.springframework.cloud.openfeign.loadbalancer.LoadBalancerFeignRequestTransformer
-import org.springframework.cloud.openfeign.support.FeignHttpClientProperties
 import org.springframework.cloud.openfeign.support.PageJacksonModule
 import org.springframework.cloud.openfeign.support.SortJacksonModule
 import org.springframework.cloud.openfeign.support.SpringMvcContract
@@ -35,7 +39,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.annotation.Order
 import java.util.concurrent.TimeUnit
 
-@Order()
+@Order
 @EnableFeignClients("com.yangxj96.saas.starter.remote.clients")
 @AutoConfiguration(before = [FeignLoadBalancerAutoConfiguration::class])
 @EnableConfigurationProperties(RemoteProperties::class)
@@ -99,41 +103,27 @@ class RemoteAutoConfiguration(@Resource private val properties: RemoteProperties
         return properties.retryer
     }
 
-    /**
-     * openfeign请求拦截器
-     */
-    @Bean
-    fun requestInterceptor(): RequestInterceptor {
-        log.debug("$PREFIX 配置feign请求拦截器")
-        return RequestInterceptor { template: RequestTemplate -> template.header("feign", "true") }
-    }
-
     /////////////////////////////// okhttp3
 
     /**
-     * http客户端连接池
-     */
-    @Bean
-    fun httpClientConnectionPool(httpClientProperties: FeignHttpClientProperties): ConnectionPool {
-        log.debug("$PREFIX 配置feign okhttp连接池")
-        // 最大连接数,默认活动时间,活动时间单位
-        return ConnectionPool(200, 900L, TimeUnit.SECONDS)
-    }
-
-    /**
      * okhttp客户端
-     * @param connectionPool 连接池
      */
     @Bean
     @LoadBalanced
-    fun okHttpClient(connectionPool: ConnectionPool): OkHttpClient {
+    fun okHttpClient(): OkHttpClient {
         log.debug("$PREFIX 配置feign okhttp客户端")
         val build = OkHttpClient.Builder()
             .connectTimeout(properties.connectTimeOut, TimeUnit.MILLISECONDS)
             .readTimeout(properties.readTimeOut, TimeUnit.MILLISECONDS)
             .writeTimeout(properties.writeTimeout, TimeUnit.MILLISECONDS)
+            // 请求拦截器
+            .addInterceptor(RequestInterceptor())
+            // 响应拦截器
+            .addInterceptor(ResponseInterceptor())
+             // 日志拦截器
             .addInterceptor(OkHttpLogInterceptor())
-            .connectionPool(connectionPool)
+            // 连接池配置
+            .connectionPool(ConnectionPool(200, 900L, TimeUnit.SECONDS))
         this.client = build.build()
         return this.client
     }
