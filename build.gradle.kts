@@ -11,6 +11,7 @@ import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.buildpack.platform.build.PullPolicy
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     java
@@ -90,7 +91,6 @@ subprojects {
         }
     }
 
-
     // 官方提供的打包为OCI镜像的配置
     tasks.named<BootBuildImage>("bootBuildImage") {
         // 是否发布到docker
@@ -108,7 +108,6 @@ subprojects {
             mapOf(
                 "HTTP_PROXY" to "http://192.168.31.6:7890",
                 "HTTPS_PROXY" to "http://192.168.31.6:7890",
-                "BPE_DELIM_JAVA_TOOL_OPTIONS" to " ",
                 "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m"
             )
         )
