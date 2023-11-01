@@ -40,7 +40,7 @@ class AuthorityController protected constructor(bindService: AuthorityService) :
         return super.modify(obj)
     }
 
-    @GetMapping
+    @GetMapping("/page")
     override fun page(
         obj: Authority,
         @RequestParam(defaultValue = "1") pageNum: Long,

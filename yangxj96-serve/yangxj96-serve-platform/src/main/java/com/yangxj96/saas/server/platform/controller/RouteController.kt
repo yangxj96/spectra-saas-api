@@ -46,7 +46,7 @@ class RouteController protected constructor(bindService: RouteService) :
         return super.modify(obj)
     }
 
-    @GetMapping
+    @GetMapping("/page")
     override fun page(
         obj: Route,
         @RequestParam(defaultValue = "1") pageNum: Long,

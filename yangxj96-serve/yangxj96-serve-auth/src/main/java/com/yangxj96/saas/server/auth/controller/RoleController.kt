@@ -41,7 +41,7 @@ class RoleController protected constructor(bindService: RoleService) : BaseContr
         return super.modify(obj)
     }
 
-    @GetMapping
+    @GetMapping("/page")
     override fun page(
         obj: Role,
         @RequestParam(defaultValue = "1") pageNum: Long,
