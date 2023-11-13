@@ -38,7 +38,7 @@ class CacheAutoConfiguration {
                 for (param in params) {
                     if (param.javaClass.isArray) {
                         val arrStr = StringBuilder("[")
-                        (param as List<Any>).forEach { arrStr.append(it).append(",") }
+                        (param as List<*>).forEach { arrStr.append(it).append(",") }
                         str.append(arrStr.substring(0, arrStr.length - 1)).append("]&")
                     } else {
                         str.append(param).append("&")

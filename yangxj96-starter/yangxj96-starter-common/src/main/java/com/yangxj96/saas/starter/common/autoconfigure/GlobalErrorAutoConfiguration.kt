@@ -35,7 +35,7 @@ class GlobalErrorAutoConfiguration {
     }
 
     /**
-     * 参数验证
+     * 认证异常
      */
     @ResponseBody
     @ExceptionHandler(AuthException::class)

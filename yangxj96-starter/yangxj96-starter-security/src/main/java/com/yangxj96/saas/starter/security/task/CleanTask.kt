@@ -43,8 +43,7 @@ class CleanTask {
     fun tokenAutoClean() {
         if (tokenStore is RedisTokenStore) {
             log.debug("当前为Redis为存储介质,取消当前自动执行任务")
-            val tasks = postProcessor.getScheduledTasks()
-            tasks.forEach(Consumer { task: ScheduledTask ->
+            postProcessor.scheduledTasks.forEach(Consumer { task: ScheduledTask ->
                 val t = task.task
                 val runnable = t.runnable as ScheduledMethodRunnable
                 if (runnable.method.name == "tokenAutoClean") {

@@ -9,7 +9,7 @@
 
 package com.yangxj96.saas.starter.security.autoconfigure
 
-import cn.hutool.extra.spring.SpringUtil
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.yangxj96.saas.starter.security.bean.StoreType
 import com.yangxj96.saas.starter.security.exception.handle.AccessDeniedHandlerImpl
 import com.yangxj96.saas.starter.security.exception.handle.AuthenticationEntryPointImpl
@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
-import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.authentication.AuthenticationManager
@@ -61,6 +61,12 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
     @Resource
     private lateinit var authenticationConfiguration: AuthenticationConfiguration
 
+    @Resource
+    private lateinit var redisTemplate: RedisTemplate<String, Any>
+
+    @Resource
+    private lateinit var om: ObjectMapper
+
     /**
      * 密码管理器
      *
@@ -79,8 +85,7 @@ class SecurityAutoConfiguration(@param:Autowired private val properties: Securit
             JdbcTokenStore()
         } else {
             log.debug("{},store使用redis", PREFIX)
-            val connectionFactory = SpringUtil.getBean(RedisConnectionFactory::class.java)
-            RedisTokenStore(connectionFactory)
+            RedisTokenStore(redisTemplate, om)
         }
     }
 
