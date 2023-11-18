@@ -1,11 +1,3 @@
-/*
- *  Copyright (c) 2021 - 2023
- *  作者：杨新杰(Jack Young)
- *  邮箱：yangxj96@gmail.com
- *  日期：2023-10-13 16:38:12
- *  Copyright (c) 2021 - 2023
- */
-
 package com.yangxj96.saas.server.auth.pojo.vo
 
 import jakarta.validation.constraints.NotNull

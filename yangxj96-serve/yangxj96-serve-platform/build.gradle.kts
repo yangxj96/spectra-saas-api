@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2018 - 2023
- * 作者：杨新杰(Jack Young)
- * 邮箱：yangxj96@gmail.com
- * 博客：www.yangxj96.com
- * 日期：2023-09-13 00:04:11
- * Copyright (c) 2018 - 2023
- */
-
 dependencies {
     // 本服务主要处理平台相关的内容,不需要流处理,也不需要动态数据库
     api(project(":yangxj96-serve"))
