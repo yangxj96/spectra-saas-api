@@ -9,7 +9,7 @@
 
 package com.yangxj96.saas.server.auth.configuration
 
-import cn.hutool.extra.spring.SpringUtil
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.yangxj96.saas.starter.security.bean.StoreType
 import com.yangxj96.saas.starter.security.exception.handle.AccessDeniedHandlerImpl
 import com.yangxj96.saas.starter.security.exception.handle.AuthenticationEntryPointImpl
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
@@ -65,6 +65,12 @@ class WebSecurityConfiguration {
     @Value("\${yangxj96.security.store-type}")
     private lateinit var storeType: StoreType
 
+    @Resource
+    private lateinit var redisTemplate: RedisTemplate<String, Any>
+
+    @Resource
+    private lateinit var om: ObjectMapper
+
     /**
      * 密码管理器
      *
@@ -87,7 +93,7 @@ class WebSecurityConfiguration {
         return if (storeType == StoreType.JDBC) {
             JdbcTokenStore()
         } else {
-            RedisTokenStore(SpringUtil.getBean(RedisConnectionFactory::class.java))
+            RedisTokenStore(redisTemplate, om)
         }
     }
 

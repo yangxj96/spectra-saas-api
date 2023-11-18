@@ -9,147 +9,146 @@
 
 package com.yangxj96.saas.starter.security.store.impl
 
+import cn.hutool.core.util.RandomUtil
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.yangxj96.saas.bean.security.Token
 import com.yangxj96.saas.bean.security.TokenAccess
 import com.yangxj96.saas.bean.security.TokenRefresh
 import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.utils.ConvertUtil
 import com.yangxj96.saas.starter.security.store.TokenStore
-import com.yangxj96.saas.starter.security.store.redis.JdkSerializationStrategy
-import com.yangxj96.saas.starter.security.store.redis.RedisTokenStoreSerializationStrategy
-import org.springframework.data.redis.connection.RedisConnectionFactory
-import org.springframework.data.redis.serializer.StringRedisSerializer
+import org.slf4j.LoggerFactory
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import java.util.concurrent.TimeUnit
 
 
 /**
  * redis 存储token的实现
  */
-class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : TokenStore {
+class RedisTokenStore(private val redis: RedisTemplate<String, Any>, private val om: ObjectMapper) : TokenStore {
 
     companion object {
-        private const val ACCESS_PREFIX = "access:"
-        private const val ACCESS_TO_USER_PREFIX = "access_to_user:"
-        private const val REFRESH_PREFIX = "refresh:"
-        private const val ACCESS_TO_REFRESH_PREFIX = "access_to_refresh:"
-        private const val REFRESH_TO_ACCESS_PREFIX = "refresh_to_access:"
-        private const val AUTHORITY_PREFIX = "authority_token:"
+        // @formatter:off
+        private const val ACCESS_PREFIX            = "AUTH::access:"
+        private const val ACCESS_TO_USER_PREFIX    = "AUTH::access_to_user:"
+        private const val REFRESH_PREFIX           = "AUTH::refresh:"
+        private const val ACCESS_TO_REFRESH_PREFIX = "AUTH::access_to_refresh:"
+        private const val REFRESH_TO_ACCESS_PREFIX = "AUTH::refresh_to_access:"
+        private const val AUTHORITY_PREFIX         = "AUTH::authority_token:"
+        // @formatter:on
+
+        private val log = LoggerFactory.getLogger(this::class.java)
     }
 
-    private val valueSerializer: RedisTokenStoreSerializationStrategy = JdkSerializationStrategy()
-    private val keySerializer = StringRedisSerializer()
-    override fun create(auth: Authentication): Token {
-        // token存在则返回已存在的token信息,否则创建token
-        var token = exists(auth)
-        token = if (token != null) {
-            return token
-        } else {
-            Token.generate(auth)
-        }
 
-        val accessKey = ACCESS_PREFIX + token.accessToken
-        val refreshKey = REFRESH_PREFIX + token.refreshToken
-        val accessToUserKey = ACCESS_TO_USER_PREFIX + token.username
+    override fun create(auth: Authentication): Token {
+        var token = exists(auth)
+        if (token == null) {
+            log.atDebug().log("生成token")
+            token = Token.generate(auth)
+        }
+        // @formatter:off
+        val accessKey          = ACCESS_PREFIX + token.accessToken
+        val refreshKey         = REFRESH_PREFIX + token.refreshToken
+        val accessToUserKey    = ACCESS_TO_USER_PREFIX + token.username
         val accessToRefreshKey = ACCESS_TO_REFRESH_PREFIX + token.accessToken
         val refreshToAccessKey = REFRESH_TO_ACCESS_PREFIX + token.refreshToken
-        val authorityKey = AUTHORITY_PREFIX + token.accessToken
+        val authorityKey       = AUTHORITY_PREFIX + token.accessToken
+        // @formatter:on
 
-        val access = TokenAccess()
-        access.token = token.accessToken
-        access.username = token.username
-        access.authentication = ConvertUtil.objectToByte(auth)
-        access.expirationTime = token.expirationTime
-
-        val refresh = TokenRefresh()
-        refresh.accessId = access.id
-        refresh.token = token.refreshToken
-        refresh.expirationTime = token.expirationTime!!.plusHours(1)
-
-        connectionFactory.connection.use { conn ->
-            conn.openPipeline()
-            val commands = conn.stringCommands()
-            commands[wrapKey(accessKey)] = wrapValue(access)
-            commands[wrapKey(refreshKey)] = wrapValue(refresh)
-            commands[wrapKey(accessToUserKey)] = wrapValue(token.accessToken!!)
-            commands[wrapKey(accessToRefreshKey)] = wrapValue(token.refreshToken!!)
-            commands[wrapKey(refreshToAccessKey)] = wrapValue(token.accessToken!!)
-            commands[wrapKey(authorityKey)] = wrapValue(auth)
-            val keyCommands = conn.keyCommands()
-            keyCommands.expire(wrapKey(accessKey), 3600)
-            keyCommands.expire(wrapKey(refreshKey), 7200)
-            keyCommands.expire(wrapKey(accessToUserKey), 7200)
-            keyCommands.expire(wrapKey(accessToRefreshKey), 7200)
-            keyCommands.expire(wrapKey(refreshToAccessKey), 7200)
-            keyCommands.expire(wrapKey(authorityKey), 7200)
-            conn.closePipeline()
+        val access = TokenAccess().also {
+            // @formatter:off
+            //it.userId         = token.id
+            //it.wxId           = token.wxId
+            it.token          = token.accessToken
+            it.username       = token.username
+            it.authentication = ConvertUtil.objectToByte(auth)
+            it.expirationTime = token.expirationTime
+            // @formatter:on
         }
+
+        val refresh = TokenRefresh().also {
+            // @formatter:off
+            it.token          = token.refreshToken
+            it.expirationTime = token.expirationTime!!.plusHours(1)
+            // @formatter:on
+        }
+
+        // 随机差值,防止redis雪崩
+        val diff = RandomUtil.randomLong(0, 100)
+        val node = om.readTree(om.writeValueAsString(auth)) as ObjectNode
+        node.put("class", auth::class.java.name)
+        // @formatter:off
+        set(accessKey         ,encoding(access)!!  ,3600 + diff)
+        set(refreshKey        ,encoding(refresh)!! ,7200 + diff)
+        set(accessToUserKey   ,token.accessToken!! ,3600 + diff)
+        set(accessToRefreshKey,token.refreshToken!!,3600 + diff)
+        set(refreshToAccessKey,token.accessToken!! ,3600 + diff)
+        set(authorityKey      ,encoding(node)!!    ,3600 + diff)
+        // @formatter:on
+        log.atDebug().log("保存token成功")
         return token
     }
 
     override fun read(token: String): Authentication? {
-        connectionFactory.connection.use { connection ->
-            if (connection.keyCommands().exists(wrapKey(ACCESS_PREFIX + token)) == true) {
-                val bytes = connection.stringCommands()[wrapKey(AUTHORITY_PREFIX + token)]
-                return deserializeAuthentication(bytes!!)
-            }
+        if (redis.hasKey(ACCESS_PREFIX + token)) {
+            log.atDebug().log("token:${token}存在,读取authentication")
+            val authStr = redis.boundValueOps(AUTHORITY_PREFIX + token).get() as String
+            return decodeAuthentication(authStr)
         }
         return null
     }
 
     override fun remove(token: String) {
-        connectionFactory.connection.use { connection ->
-            if (connection.keyCommands().exists(wrapKey(ACCESS_TO_REFRESH_PREFIX + token)) == true) {
-
-                val commands = connection.stringCommands()
-                val refreshBytes = commands[wrapKey(ACCESS_TO_REFRESH_PREFIX + token)]
-                val refresh = deserialize(refreshBytes!!)
-                val accessBytes = commands[wrapKey(ACCESS_PREFIX + token)]
-                val access = deserializeTokenAccess(accessBytes!!)
-                connection.openPipeline()
-                connection.keyCommands().del(wrapKey(ACCESS_PREFIX + token))
-                connection.keyCommands().del(wrapKey(REFRESH_PREFIX + refresh))
-                connection.keyCommands().del(wrapKey(AUTHORITY_PREFIX + token))
-                connection.keyCommands().del(wrapKey(ACCESS_TO_REFRESH_PREFIX + token))
-                connection.keyCommands().del(wrapKey(ACCESS_TO_USER_PREFIX + access.username))
-                connection.keyCommands().del(wrapKey(REFRESH_TO_ACCESS_PREFIX + refresh))
-                connection.closePipeline()
-            }
+        if (redis.hasKey(ACCESS_TO_REFRESH_PREFIX + token)) {
+            val refresh = get(ACCESS_TO_REFRESH_PREFIX + token)?.toString()
+            val access = om.readValue(get(ACCESS_PREFIX + token)?.toString(), TokenAccess::class.java)
+            redis.delete(
+                mutableListOf(
+                    ACCESS_PREFIX + token,
+                    REFRESH_PREFIX + refresh,
+                    AUTHORITY_PREFIX + token,
+                    ACCESS_TO_REFRESH_PREFIX + token,
+                    ACCESS_TO_USER_PREFIX + access.username,
+                    REFRESH_TO_ACCESS_PREFIX + refresh,
+                )
+            )
+            log.atDebug().log("删除token:${token}完成")
         }
     }
 
     override fun refresh(refreshToken: String): Token? {
-        connectionFactory.connection.use { conn ->
-            if (conn.keyCommands().exists(wrapKey(REFRESH_PREFIX + refreshToken)) == true) {
-                val access = deserialize(conn.stringCommands()[wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken)]!!)
-                val auth   = deserializeAuthentication(conn.stringCommands()[wrapKey(AUTHORITY_PREFIX + access)]!!)
-                // 移除相关剩余的
-                conn.keyCommands().del(wrapKey(REFRESH_PREFIX + refreshToken))
-                conn.keyCommands().del(wrapKey(AUTHORITY_PREFIX + access))
-                conn.keyCommands().del(wrapKey(ACCESS_TO_REFRESH_PREFIX + access))
-                conn.keyCommands().del(wrapKey(ACCESS_TO_USER_PREFIX + auth.name))
-                conn.keyCommands().del(wrapKey(REFRESH_TO_ACCESS_PREFIX + refreshToken))
-                return create(auth)
-            }
+        if (redis.hasKey(REFRESH_TO_ACCESS_PREFIX + refreshToken)) {
+            log.atDebug().log("刷新token:${refreshToken}存在,准备执行刷新操作")
+            val access = get(REFRESH_TO_ACCESS_PREFIX + refreshToken).toString()
+            val authStr = redis.boundValueOps(AUTHORITY_PREFIX + access).get()?.toString()
+            val auth = decodeAuthentication(authStr!!)
+            remove(access)
+            return create(auth)
         }
         return null
     }
 
     override fun check(token: String): Token? {
-        val key = ACCESS_PREFIX + token
-        connectionFactory.connection.use { conn ->
-            if (conn.keyCommands().exists(wrapKey(key)) == true) {
-                val access = deserializeTokenAccess(conn.stringCommands()[wrapKey(key)]!!)
-                return wrap(access.username)
-            }
+        if (redis.hasKey(ACCESS_PREFIX + token)) {
+            log.atDebug().log("token:${token}存在,准备读取并包装token")
+            val access = om.readValue(get(ACCESS_PREFIX + token)?.toString(), TokenAccess::class.java)
+            return wrap(access.username)
         }
         return null
     }
 
+
     override fun autoClean() {
-        //  redis有自己的过期策略
+        // Redis有自己的过期实现,无需处理
     }
+
     /////////////////////// 私有方法区 //////////////////////////////////////
+
     /**
      * 根据[Authentication]判断token是否存在
      *
@@ -157,15 +156,13 @@ class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : T
      * @return 存在返回token信息, 否则返回null
      */
     private fun exists(auth: Authentication): Token? {
-        connectionFactory.connection.use { conn ->
-            val username = (auth.principal as Account).getUsername()
-            if (conn.keyCommands().exists(wrapKey(ACCESS_TO_USER_PREFIX + username)) == true) {
-                return wrap(username)
-            }
+        val username = (auth.principal as Account).getUsername()
+        if (redis.hasKey(ACCESS_TO_USER_PREFIX + username)) {
+            log.atDebug().log("token已经存在,直接包装后响应")
+            return wrap(username)
         }
         return null
     }
-
 
     /**
      * 根据access token包装token信息
@@ -174,57 +171,63 @@ class RedisTokenStore(private val connectionFactory: RedisConnectionFactory) : T
      * @return token信息
      */
     private fun wrap(username: String?): Token {
-        connectionFactory.connection.use { conn ->
-            // access token
-            val accessToken = deserialize(conn.stringCommands()[wrapKey(ACCESS_TO_USER_PREFIX + username)]!!)
-            val access = deserializeTokenAccess(conn.stringCommands()[wrapKey(ACCESS_PREFIX + accessToken)]!!)
-            // refresh token
-            val refreshToken = deserialize(conn.stringCommands()[wrapKey(ACCESS_TO_REFRESH_PREFIX + accessToken)]!!)
-            val refresh = deserializeTokenRefresh(conn.stringCommands()[wrapKey(REFRESH_PREFIX + refreshToken)]!!)
-            // 获取权限
-            val authority = ArrayList<String>()
-            val authentication =
-                deserializeAuthentication(conn.stringCommands()[wrapKey(AUTHORITY_PREFIX + accessToken)]!!)
-            authentication.authorities.forEach { item: GrantedAuthority? -> authority.add(item!!.authority) }
-            // 构建
-            val token = Token()
-            token.username = access.username
-            token.accessToken = access.token
-            token.refreshToken = refresh.token
-            token.authorities = authority
-            token.expirationTime = access.expirationTime
-
-            return token
+        log.atDebug().log("username:${username}的信息在包装")
+        // @formatter:off
+        // 获取认证token对象
+        val accessToken = get(ACCESS_TO_USER_PREFIX + username)?.toString()
+        val access      = om.readValue(get(ACCESS_PREFIX + accessToken)?.toString(), TokenAccess::class.java)
+        // 获取刷新token对象
+        val refreshToken = get(ACCESS_TO_REFRESH_PREFIX + accessToken)?.toString()
+        val refresh      = om.readValue(get(REFRESH_PREFIX + refreshToken)?.toString(), TokenRefresh::class.java)
+        // 获取Authentication对象
+        val authority      = arrayListOf<String>()
+        val authStr        = get(AUTHORITY_PREFIX + accessToken)?.toString()
+        val authentication = decodeAuthentication(authStr!!)
+        authentication.authorities.forEach { item -> authority.add(item.authority) }
+        return Token().also {
+            //it.id             = access.userId
+            //it.wxId           = access.wxId
+            it.username       = access.username
+            it.accessToken    = access.token
+            it.refreshToken   = refresh.token
+            it.authorities    = authority
+            it.expirationTime = access.expirationTime
         }
+        // @formatter:on
     }
 
-    private fun wrapKey(key: String): ByteArray {
-        return keySerializer.serialize(key)
+    /**
+     * 解码[Authentication]字符串
+     *
+     * @param str Authentication的字符串表示
+     * @return [Authentication]
+     */
+    private fun decodeAuthentication(str: String): Authentication {
+        val node = om.readTree(str)
+        val principal = om.readValue(node["principal"].toPrettyString(), Account::class.java)
+        val authorities = mutableListOf<GrantedAuthority>()
+        node["authorities"].forEach {
+            authorities.add(SimpleGrantedAuthority(it["authority"].asText()))
+        }
+        val clz = node["class"].asText()
+        return Class.forName(clz)
+            .getDeclaredConstructor(Any::class.java, Any::class.java, Collection::class.java)
+            .newInstance(principal, null, authorities) as Authentication
     }
 
-    private fun wrapValue(obj: Any): ByteArray {
-        return valueSerializer.serialize(obj)!!
+    /**
+     * 编码对象
+     */
+    private fun encoding(obj: Any): String? {
+        return om.writeValueAsString(obj)
     }
 
-    private fun wrapValue(obj: String): ByteArray {
-        return valueSerializer.serialize(obj)!!
+    private fun get(key: String): Any? {
+        return redis.boundValueOps(key).get()
     }
 
-    private fun deserializeAuthentication(bytes: ByteArray): Authentication {
-        return valueSerializer.deserialize(bytes, Authentication::class.java)!!
+    private fun set(key: String, value: Any, expire: Long) {
+        redis.boundValueOps(key)[value, expire] = TimeUnit.SECONDS
     }
-
-    private fun deserializeTokenAccess(bytes: ByteArray): TokenAccess {
-        return valueSerializer.deserialize(bytes, TokenAccess::class.java)!!
-    }
-
-    private fun deserializeTokenRefresh(bytes: ByteArray): TokenRefresh {
-        return valueSerializer.deserialize(bytes, TokenRefresh::class.java)!!
-    }
-
-    private fun deserialize(bytes: ByteArray): String {
-        return valueSerializer.deserializeString(bytes)!!
-    }
-
 
 }
