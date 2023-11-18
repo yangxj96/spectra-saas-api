@@ -37,4 +37,10 @@ class Role : BaseEntity(), Serializable {
      */
     @TableField(value = "description")
     var description: String? = null
+
+    /**
+     * 是否内置,内置则不能修改
+     */
+    @TableField(value = "internal")
+    var internal: Boolean? = null
 }

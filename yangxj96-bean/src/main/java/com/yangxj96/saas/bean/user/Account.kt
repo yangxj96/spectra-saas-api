@@ -1,5 +1,6 @@
 package com.yangxj96.saas.bean.user
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -17,40 +18,41 @@ class Account : BaseEntity(), Serializable, UserDetails {
     /**
      * 用户名
      */
-    @TableField(value = "username")
+    @TableField(value = "username", whereStrategy = FieldStrategy.NOT_EMPTY)
     @get:JvmName("username")
     var username: String = ""
 
     /**
      * 密码
      */
-    @TableField(value = "\"password\"")
+    @TableField(value = "\"password\"", whereStrategy = FieldStrategy.NOT_EMPTY)
     @get:JvmName("password")
+    @JsonIgnore
     var password: String = ""
 
     /**
-     * 账号是否过期
+     * 账号是否未过期
      */
-    @TableField(value = "access_expired")
-    var accessExpired: Boolean? = null
+    @TableField(value = "account_non_expired", whereStrategy = FieldStrategy.NEVER)
+    var accountNonExpired: Boolean? = null
 
     /**
-     * 账号是否锁定
+     * 账号是否未锁定
      */
-    @TableField(value = "access_locked")
-    var accessLocked: Boolean? = null
+    @TableField(value = "account_non_locked", whereStrategy = FieldStrategy.NEVER)
+    var accountNonLocked: Boolean? = null
 
     /**
      * 账号是否启用
      */
-    @TableField(value = "access_enable")
-    var accessEnable: Boolean? = null
+    @TableField(value = "enabled", whereStrategy = FieldStrategy.NEVER)
+    var enabled: Boolean? = null
 
     /**
-     * 密码是否过期
+     * 密码是否未过期
      */
-    @TableField(value = "credentials_expired")
-    var credentialsExpired: Boolean? = null
+    @TableField(value = "credentials_non_expired", whereStrategy = FieldStrategy.NEVER)
+    var credentialsNonExpired: Boolean? = null
 
     /**
      * 权限列表
@@ -73,18 +75,18 @@ class Account : BaseEntity(), Serializable, UserDetails {
     }
 
     override fun isAccountNonExpired(): Boolean {
-        return !accessExpired!!
+        return accountNonExpired!!
     }
 
     override fun isAccountNonLocked(): Boolean {
-        return !accessLocked!!
+        return accountNonLocked!!
     }
 
     override fun isCredentialsNonExpired(): Boolean {
-        return !credentialsExpired!!
+        return credentialsNonExpired!!
     }
 
     override fun isEnabled(): Boolean {
-        return accessEnable!!
+        return enabled!!
     }
 }

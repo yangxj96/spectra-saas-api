@@ -11,6 +11,7 @@
         <result column="code"         jdbcType="VARCHAR"   property="code"/>
         <result column="pid"          jdbcType="VARCHAR"   property="pid"/>
         <result column="description"  jdbcType="VARCHAR"   property="description"/>
+        <result column="internal"     jdbcType="VARCHAR"   property="internal"/>
         <result column="created_user" jdbcType="BIGINT"    property="createdUser"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
         <result column="updated_user" jdbcType="BIGINT"    property="updatedUser"/>
@@ -26,6 +27,7 @@
         code,
         pid,
         description,
+        internal,
         created_user,
         created_time,
         updated_user,

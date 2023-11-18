@@ -53,8 +53,6 @@ class RedisTokenStore(private val redis: RedisTemplate<String, Any>, private val
 
         val access = TokenAccess().also {
             // @formatter:off
-            //it.userId         = token.id
-            //it.wxId           = token.wxId
             it.token          = token.accessToken
             it.username       = token.username
             it.authentication = ConvertUtil.objectToByte(auth)

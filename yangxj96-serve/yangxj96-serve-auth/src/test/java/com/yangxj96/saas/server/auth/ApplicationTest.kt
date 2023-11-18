@@ -178,9 +178,9 @@ fun main() {
             it.username = "admin"
             it.password = "admin"
             it.accessEnable = true
-            it.accessExpired = true
-            it.credentialsExpired = true
-            it.accessLocked = true
+            it.accountNonExpired = true
+            it.credentialsNonExpired = true
+            it.accountNonLocked = true
             it.authorities = mutableListOf(
                 GrantedAuthority { "admin1" },
                 GrantedAuthority { "admin2" },

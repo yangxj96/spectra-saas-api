@@ -15,35 +15,38 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/account")
-class AccountController protected constructor(bindService: AccountService) : BaseController<Account, AccountService>(bindService) {
+class AccountController protected constructor(bindService: AccountService) :
+    BaseController<Account, AccountService>(bindService) {
 
-    @PreAuthorize("hasAnyAuthority('USER_ALL','USER_INSERT')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_INSERT')")
     @PostMapping
     override fun create(@Validated @RequestBody obj: Account): Account {
         return super.create(obj)
     }
 
-    @PreAuthorize("hasAnyAuthority('USER_ALL','USER_DELETE')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_DELETE')")
     @DeleteMapping("/{id}")
-    override fun delete(@PathVariable @NotBlank(message = "需要删除的资源id不能为空") id: String) {
+    override fun delete(@PathVariable id: String) {
         super.delete(id)
     }
 
-    @PreAuthorize("hasAnyAuthority('USER_ALL','USER_MODIFY')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_MODIFY')")
     @PutMapping
     override fun modify(@Validated @RequestBody obj: Account): Account {
         return super.modify(obj)
     }
 
-    @PreAuthorize("hasAnyAuthority('USER_ALL','USER_QUERY')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_QUERY')")
     @GetMapping("/page")
-    override fun page(obj: Account,
-                      @RequestParam(defaultValue = "1") pageNum: Long,
-                      @RequestParam(defaultValue = "10") pageSize: Long): IPage<Account> {
+    override fun page(
+        obj: Account,
+        @RequestParam(defaultValue = "1") pageNum: Long,
+        @RequestParam(defaultValue = "10") pageSize: Long
+    ): IPage<Account> {
         return super.page(obj, pageNum, pageSize)
     }
 
-    @PreAuthorize("hasAnyAuthority('USER_ALL','USER_QUERY')")
+    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_QUERY')")
     @GetMapping("/{id}")
     override fun getById(@PathVariable id: Long): Account {
         return super.getById(id)

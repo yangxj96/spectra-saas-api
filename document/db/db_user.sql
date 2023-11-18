@@ -1,18 +1,18 @@
 DROP TABLE IF EXISTS db_user.t_account;
 CREATE TABLE db_user.t_account
 (
-    id                  BIGINT       NOT NULL PRIMARY KEY,
-    username            VARCHAR(255) NOT NULL,
-    password            VARCHAR(255) NOT NULL,
-    access_expired      BOOLEAN      NOT NULL DEFAULT FALSE,
-    access_locked       BOOLEAN      NOT NULL DEFAULT FALSE,
-    access_enable       BOOLEAN      NOT NULL DEFAULT TRUE,
-    credentials_expired BOOLEAN      NOT NULL DEFAULT FALSE,
-    created_user        BIGINT       NOT NULL DEFAULT 0,
-    created_time        TIMESTAMP(6) NOT NULL DEFAULT NOW(),
-    updated_user        BIGINT       NOT NULL DEFAULT 0,
-    updated_time        TIMESTAMP(6) NOT NULL DEFAULT NOW(),
-    deleted             TIMESTAMP(6)
+    id                      BIGINT       NOT NULL PRIMARY KEY,
+    username                VARCHAR(255) NOT NULL,
+    password                VARCHAR(255) NOT NULL,
+    account_non_expired     BOOLEAN      NOT NULL DEFAULT TRUE,
+    account_non_locked      BOOLEAN      NOT NULL DEFAULT TRUE,
+    enabled                 BOOLEAN      NOT NULL DEFAULT TRUE,
+    credentials_non_expired BOOLEAN      NOT NULL DEFAULT TRUE,
+    created_user            BIGINT       NOT NULL DEFAULT 0,
+    created_time            TIMESTAMP(6) NOT NULL DEFAULT NOW(),
+    updated_user            BIGINT       NOT NULL DEFAULT 0,
+    updated_time            TIMESTAMP(6) NOT NULL DEFAULT NOW(),
+    deleted                 TIMESTAMP(6)
 );
 -- 用户名唯一KEY
 CREATE UNIQUE INDEX t_account_username_pk ON db_user.t_account (username);
@@ -25,10 +25,10 @@ COMMENT ON COLUMN db_user.t_account.updated_time IS '最后更新时间';
 COMMENT ON COLUMN db_user.t_account.deleted IS '删除标识,null-未删除,非null-删除时间';
 COMMENT ON COLUMN db_user.t_account.username IS '用户名';
 COMMENT ON COLUMN db_user.t_account.password IS '密码';
-COMMENT ON COLUMN db_user.t_account.access_expired IS '账号是否过期';
-COMMENT ON COLUMN db_user.t_account.access_locked IS '账号是否锁定';
-COMMENT ON COLUMN db_user.t_account.access_enable IS '账号是否启用';
-COMMENT ON COLUMN db_user.t_account.credentials_expired IS '密码是否过期';
+COMMENT ON COLUMN db_user.t_account.account_non_expired IS '账号是否未过期';
+COMMENT ON COLUMN db_user.t_account.account_non_locked IS '账号是否未锁定';
+COMMENT ON COLUMN db_user.t_account.enabled IS '账号是否启用';
+COMMENT ON COLUMN db_user.t_account.credentials_non_expired IS '密码是否未过期';
 
 
 DROP TABLE IF EXISTS db_user.t_role;
@@ -39,6 +39,7 @@ CREATE TABLE db_user.t_role
     name         VARCHAR(255) NOT NULL,
     code         VARCHAR(255) NOT NULL,
     description  VARCHAR(255),
+    internal     VARCHAR(255) NOT NULL DEFAULT FALSE,
     created_user BIGINT       NOT NULL DEFAULT 0,
     created_time TIMESTAMP(6) NOT NULL DEFAULT NOW(),
     updated_user BIGINT       NOT NULL DEFAULT 0,
@@ -56,12 +57,13 @@ COMMENT ON COLUMN db_user.t_role.pid IS '父级ID';
 COMMENT ON COLUMN db_user.t_role.name IS '角色名称';
 COMMENT ON COLUMN db_user.t_role.code IS '角色CODE';
 COMMENT ON COLUMN db_user.t_role.description IS '角色说明';
+COMMENT ON COLUMN db_user.t_role.internal IS '是否内置,内置则不可以修改';
 
 DROP TABLE IF EXISTS db_user.t_account_to_role;
 CREATE TABLE db_user.t_account_to_role
 (
     id           BIGINT       NOT NULL PRIMARY KEY,
-    account_id      BIGINT       NOT NULL,
+    account_id   BIGINT       NOT NULL,
     role_id      BIGINT       NOT NULL,
     created_user BIGINT       NOT NULL DEFAULT 0,
     created_time TIMESTAMP(6) NOT NULL DEFAULT NOW(),
