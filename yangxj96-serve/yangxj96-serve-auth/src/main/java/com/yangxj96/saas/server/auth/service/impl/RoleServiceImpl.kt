@@ -4,7 +4,10 @@ import cn.hutool.core.lang.tree.Tree
 import cn.hutool.core.lang.tree.TreeNodeConfig
 import cn.hutool.core.lang.tree.TreeUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
+import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
@@ -46,6 +49,13 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
             return db!!
         }
         return super.create(datum)
+    }
+
+    override fun page(datum: Role, pageNum: Long, pageSize: Long): IPage<Role> {
+        val wrapper = KtQueryWrapper(Role::class.java)
+            .setEntity(datum)
+            .orderByAsc(Role::createdTime)
+        return this.page(Page(pageNum, pageSize), wrapper)
     }
 
     @Transactional(rollbackFor = [Exception::class])
