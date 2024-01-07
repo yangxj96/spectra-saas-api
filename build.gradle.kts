@@ -1,4 +1,5 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+import org.codehaus.groovy.tools.shell.util.Logger.io
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.buildpack.platform.build.PullPolicy
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
@@ -6,10 +7,10 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     java
-    id("org.springframework.boot") version "3.1.3" apply false
-    id("io.spring.dependency-management") version "1.1.3" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
-    id("org.jetbrains.kotlin.plugin.spring") version "1.8.22" apply false
+    id("org.springframework.boot") version "3.2.1" apply false
+    id("io.spring.dependency-management") version "1.1.4" apply false
+    id("org.jetbrains.kotlin.jvm") version "1.9.21" apply false
+    id("org.jetbrains.kotlin.plugin.spring") version "1.9.21" apply false
 }
 
 allprojects {
@@ -56,11 +57,13 @@ subprojects {
         }
     }
 
+    val jetbrainsVer = "23.1.0"
+
     dependencies {
         // 测试 begin
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
-        compileOnly("org.jetbrains:annotations:23.1.0")
+        compileOnly("org.jetbrains:annotations:${jetbrainsVer}")
         // kotlin支持
         implementation("org.jetbrains.kotlin:kotlin-reflect")
     }
@@ -95,11 +98,12 @@ subprojects {
         runImage.set("paketobuildpacks/run:1.3.128-tiny-cnb")
 
         // 环境变量
+        // -Duser.timezone=Asia/Shanghai
         environment.set(
             mapOf(
-                "HTTP_PROXY" to "http://192.168.31.6:7890",
-                "HTTPS_PROXY" to "http://192.168.31.6:7890",
-                "BPE_APPEND_JAVA_TOOL_OPTIONS" to "-Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m"
+                "HTTP_PROXY" to "http://192.168.2.29:7890",
+                "HTTPS_PROXY" to "http://192.168.2.29:7890",
+                "BPE_APPEND_JAVA_TOOL_OPTIONS" to " -Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m"
             )
         )
 
