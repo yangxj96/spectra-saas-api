@@ -1,13 +1,11 @@
 import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
-import org.codehaus.groovy.tools.shell.util.Logger.io
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.buildpack.platform.build.PullPolicy
 import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
-import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     java
-    id("org.springframework.boot") version "3.2.1" apply false
+    id("org.springframework.boot") version "3.1.7" apply false
     id("io.spring.dependency-management") version "1.1.4" apply false
     id("org.jetbrains.kotlin.jvm") version "1.9.21" apply false
     id("org.jetbrains.kotlin.plugin.spring") version "1.9.21" apply false
@@ -46,7 +44,7 @@ subprojects {
     // 定义的变量,可以再全局使用
     extra["springCloudVersion"] = "2022.0.4"
     extra["springCloudAlibabaVersion"] = "2022.0.0.0-RC1"
-    extra["mybatisPlusVersion"] = "3.5.4"
+    extra["mybatisPlusVersion"] = "3.5.5"
 
 
     // 等同于dependencyManagement {}
