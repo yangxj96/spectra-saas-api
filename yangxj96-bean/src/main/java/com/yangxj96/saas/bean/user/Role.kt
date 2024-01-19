@@ -43,4 +43,8 @@ class Role : BaseEntity(), Serializable {
      */
     @TableField(value = "internal")
     var internal: Boolean? = null
+
+    override fun toString(): String {
+        return "Role(name=$name, code=$code, pid=$pid, description=$description, internal=$internal)"
+    }
 }

@@ -46,4 +46,8 @@ class Dictionaries : BaseEntity(), Serializable {
     @TableField(value = "pid")
     var pid: Long? = null
 
+    override fun toString(): String {
+        return "Dictionaries(code=$code, name=$name, enable=$enable, internal=$internal, type=$type, pid=$pid)"
+    }
+
 }

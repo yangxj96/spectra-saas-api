@@ -22,4 +22,9 @@ class Configure : BaseEntity(), Serializable {
      */
     @TableField(value = "\"value\"")
     var value: String? = null
+
+    override fun toString(): String {
+        return "Configure(key=$key, value=$value)"
+    }
+
 }

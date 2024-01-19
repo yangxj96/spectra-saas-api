@@ -35,4 +35,9 @@ class TokenAccess : BaseEntity(), Serializable {
      */
     @TableField(value = "expiration_time")
     var expirationTime: LocalDateTime? = null
+
+    override fun toString(): String {
+        return "TokenAccess(token=$token, username=$username, authentication=${authentication?.contentToString()}, expirationTime=$expirationTime)"
+    }
+
 }

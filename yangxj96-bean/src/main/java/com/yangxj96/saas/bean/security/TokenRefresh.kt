@@ -30,4 +30,8 @@ class TokenRefresh : BaseEntity(), Serializable {
     @TableField(value = "expiration_time")
     var expirationTime: LocalDateTime? = null
 
+    override fun toString(): String {
+        return "TokenRefresh(accessId=$accessId, token=$token, expirationTime=$expirationTime)"
+    }
+
 }

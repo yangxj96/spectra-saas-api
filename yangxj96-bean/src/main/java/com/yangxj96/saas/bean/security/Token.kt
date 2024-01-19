@@ -65,4 +65,8 @@ class Token : Serializable {
             return token
         }
     }
+
+    override fun toString(): String {
+        return "Token(username=$username, accessToken=$accessToken, refreshToken=$refreshToken, authorities=$authorities, expirationTime=$expirationTime)"
+    }
 }

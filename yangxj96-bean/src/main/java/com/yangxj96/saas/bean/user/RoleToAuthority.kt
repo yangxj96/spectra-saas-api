@@ -22,4 +22,9 @@ class RoleToAuthority : BaseEntity(), Serializable {
      */
     @TableField(value = "authority_id")
     var authorityId: Long? = null
+
+    override fun toString(): String {
+        return "RoleToAuthority(roleId=$roleId, authorityId=$authorityId)"
+    }
+
 }

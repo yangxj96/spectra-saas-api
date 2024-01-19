@@ -89,4 +89,9 @@ class Account : BaseEntity(), Serializable, UserDetails {
     override fun isEnabled(): Boolean {
         return enabled!!
     }
+
+    override fun toString(): String {
+        return "Account(accountNonExpired=$accountNonExpired, accountNonLocked=$accountNonLocked, enabled=$enabled, credentialsNonExpired=$credentialsNonExpired)"
+    }
+
 }

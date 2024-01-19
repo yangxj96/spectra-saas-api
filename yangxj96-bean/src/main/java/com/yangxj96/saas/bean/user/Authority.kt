@@ -37,4 +37,9 @@ class Authority : BaseEntity(), Serializable {
      */
     @TableField(value = "description")
     var description: String? = null
+
+    override fun toString(): String {
+        return "Authority(name=$name, code=$code, pid=$pid, description=$description)"
+    }
+
 }

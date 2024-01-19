@@ -45,6 +45,7 @@ class DubboAutoConfigure(private val props: DubboProps) {
             it.address = props.address
             it.username = props.username
             it.password = props.password
+            it.group = "DEFAULT_GROUP"
             it.parameters = mutableMapOf(
                 "namespace" to props.namespace
             )
@@ -59,6 +60,20 @@ class DubboAutoConfigure(private val props: DubboProps) {
         protocolConfig.name = "dubbo"
         protocolConfig.port = port
         return protocolConfig
+    }
+
+    @Bean
+    fun metadataConfig(): MetadataReportConfig {
+        return MetadataReportConfig().also {
+            it.protocol = props.protocol
+            it.address = props.address
+            it.username = props.username
+            it.password = props.password
+            it.group = "DEFAULT_GROUP"
+            it.parameters = mutableMapOf(
+                "namespace" to props.namespace
+            )
+        }
     }
 
     @Bean
