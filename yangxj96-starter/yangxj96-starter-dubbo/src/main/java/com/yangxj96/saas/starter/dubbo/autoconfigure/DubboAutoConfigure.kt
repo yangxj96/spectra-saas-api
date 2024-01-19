@@ -1,71 +1,84 @@
 package com.yangxj96.saas.starter.dubbo.autoconfigure
 
-import org.apache.dubbo.config.ApplicationConfig
-import org.apache.dubbo.config.RegistryConfig
+import cn.hutool.core.util.RandomUtil
+import com.yangxj96.saas.starter.dubbo.props.DubboProps
+import com.yangxj96.saas.starter.dubbo.service.RoleDubboService
+import org.apache.dubbo.config.*
 import org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 
 
 @AutoConfiguration(
     before = [DubboAutoConfiguration::class]
 )
-class DubboAutoConfigure {
+@EnableConfigurationProperties(DubboProps::class)
+class DubboAutoConfigure(private val props: DubboProps) {
+
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+
+        private const val PREFIX = "[远程调用]: "
+
+    }
 
     @Value("\${spring.application.name}")
     private lateinit var name: String
 
     @Bean
     fun applicationConfig(): ApplicationConfig {
-        println("123123")
-        val applicationConfig = ApplicationConfig()
-        applicationConfig.name = "${name}-provider"
-        return applicationConfig
+        log.atDebug().log("$PREFIX 配置dubbo应用app相关配置")
+        return ApplicationConfig().also {
+            it.name = "${name}-provider"
+        }
     }
 
     @Bean
     fun registryConfig(): RegistryConfig {
-        println("123123")
-        val registryConfig = RegistryConfig()
-        registryConfig.protocol = "nacos"
-        registryConfig.address = "175.178.90.140:8848"
-        registryConfig.username = "nacos"
-        registryConfig.password = "QuVsKppcWvwwX2Vv"
-        registryConfig.parameters = mutableMapOf(
-            "namespace" to "489961c7-8385-452f-b853-380f0eaf6df2"
-        )
-        return registryConfig
+        log.atDebug().log("$PREFIX 配置dubbo注册配置")
+        return RegistryConfig().also {
+            it.protocol = props.protocol
+            it.address = props.address
+            it.username = props.username
+            it.password = props.password
+            it.parameters = mutableMapOf(
+                "namespace" to props.namespace
+            )
+        }
     }
 
-    //@Bean
-    //fun protocolConfig(): ProtocolConfig {
-    //    val protocolConfig = ProtocolConfig()
-    //    protocolConfig.name = "dubbo"
-    //    protocolConfig.port = 20882
-    //    return protocolConfig
-    //}
+    @Bean
+    fun protocolConfig(): ProtocolConfig {
+        val port = RandomUtil.randomInt(10000, 20000)
+        log.atDebug().log("$PREFIX 配置dubbo协议配置,端口为:${port}")
+        val protocolConfig = ProtocolConfig()
+        protocolConfig.name = "dubbo"
+        protocolConfig.port = port
+        return protocolConfig
+    }
 
+    @Bean
+    @ConditionalOnBean(RoleDubboService::class)
+    fun roleServiceConfig(service: RoleDubboService): ServiceConfig<RoleDubboService> {
+        val config = ServiceConfig<RoleDubboService>()
+        config.setInterface(RoleDubboService::class.java)
+        config.ref = service
+        config.version = "1.0.0"
 
-    //@Bean
-    //fun userServiceConfig(userService: UserService?): ServiceConfig<UserService> {
-    //    val serviceConfig: ServiceConfig<UserService> = ServiceConfig()
-    //    serviceConfig.setInterface(UserService::class.java)
-    //    serviceConfig.setRef(userService)
-    //    serviceConfig.setVersion("1.0.0")
-    //
-    //    //配置每一个method的信息
-    //    val methodConfig: MethodConfig = MethodConfig()
-    //    methodConfig.setName("getUserAddressList")
-    //    methodConfig.setTimeout(1000)
-    //
-    //    //将method的设置关联到service配置中
-    //    val methods: MutableList<MethodConfig> = ArrayList<MethodConfig>()
-    //    methods.add(methodConfig)
-    //    serviceConfig.setMethods(methods)
-    //
-    //    //ProviderConfig
-    //    //MonitorConfig
-    //    return serviceConfig
-    //}
+        val methods = mutableListOf<MethodConfig>()
+
+        // 可以针对每个方法进行配置
+        methods.add(MethodConfig().also {
+            it.name = "getAll"
+            it.timeout = 1000
+            it.retries = 3
+        })
+
+        config.methods = methods
+        return config
+    }
 }
