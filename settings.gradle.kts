@@ -19,9 +19,6 @@ findProject(":yangxj96-serve:yangxj96-serve-system")?.name = "yangxj96-serve-sys
 
 /////////////////// starter
 
-include("yangxj96-starter:yangxj96-starter-remote")
-findProject(":yangxj96-starter:yangxj96-starter-remote")?.name = "yangxj96-starter-remote"
-
 include("yangxj96-starter:yangxj96-starter-dubbo")
 findProject(":yangxj96-starter:yangxj96-starter-dubbo")?.name = "yangxj96-starter-dubbo"
 
