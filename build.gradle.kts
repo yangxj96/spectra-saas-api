@@ -11,6 +11,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.spring") version "1.9.21" apply false
 }
 
+// 获取预编译的ver信息
+val ver = libs.versions
+
 allprojects {
     group = "com.yangxj96.saas"
     version = "0.0.1-SNAPSHOT"
@@ -41,27 +44,19 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // 定义的变量,可以再全局使用
-    extra["springCloudVersion"] = "2022.0.4"
-    extra["springCloudAlibabaVersion"] = "2022.0.0.0-RC1"
-    extra["mybatisPlusVersion"] = "3.5.5"
-
-
     // 等同于dependencyManagement {}
     configure<DependencyManagementExtension> {
         imports {
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${property("springCloudAlibabaVersion")}")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${ver.springCloud.get()}")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${ver.springCloudAlibaba.get()}")
         }
     }
-
-    val jetbrainsVer = "23.1.0"
 
     dependencies {
         // 测试 begin
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
-        compileOnly("org.jetbrains:annotations:${jetbrainsVer}")
+        compileOnly("org.jetbrains:annotations:${ver.jetbrains.get()}")
         // kotlin支持
         implementation("org.jetbrains.kotlin:kotlin-reflect")
     }

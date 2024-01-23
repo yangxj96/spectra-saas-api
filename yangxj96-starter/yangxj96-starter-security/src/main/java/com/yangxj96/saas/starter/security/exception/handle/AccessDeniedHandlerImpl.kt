@@ -17,16 +17,12 @@ import java.io.IOException
 class AccessDeniedHandlerImpl : AccessDeniedHandler {
 
     @Throws(IOException::class, ServletException::class)
-    override fun handle(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        accessDeniedException: AccessDeniedException
-    ) {
+    override fun handle(req: HttpServletRequest, res: HttpServletResponse, e: AccessDeniedException) {
         try {
             val mapper = SpringUtil.getBean(ObjectMapper::class.java)
-            response.contentType = "application/json"
-            response.status = HttpServletResponse.SC_OK
-            mapper.writeValue(response.outputStream, R.failure(RStatus.SECURITY_ACCESS_DENIED))
+            res.contentType = "application/json"
+            res.status = HttpServletResponse.SC_OK
+            mapper.writeValue(res.outputStream, R.failure(RStatus.SECURITY_ACCESS_DENIED))
         } catch (e: Exception) {
             throw ServletException("格式化异常")
         }

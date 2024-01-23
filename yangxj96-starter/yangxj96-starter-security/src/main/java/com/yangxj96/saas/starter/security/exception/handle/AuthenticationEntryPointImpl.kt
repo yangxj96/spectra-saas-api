@@ -17,16 +17,12 @@ import java.io.IOException
 class AuthenticationEntryPointImpl : AuthenticationEntryPoint {
 
     @Throws(IOException::class, ServletException::class)
-    override fun commence(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        authException: AuthenticationException
-    ) {
+    override fun commence(req: HttpServletRequest, res: HttpServletResponse, e: AuthenticationException) {
         try {
             val mapper = SpringUtil.getBean(ObjectMapper::class.java)
-            response.contentType = "application/json"
-            response.status = HttpServletResponse.SC_OK
-            mapper.writeValue(response.outputStream, R.failure(RStatus.SECURITY_AUTHENTICATION))
+            res.contentType = "application/json"
+            res.status = HttpServletResponse.SC_OK
+            mapper.writeValue(res.outputStream, R.failure(RStatus.SECURITY_AUTHENTICATION))
         } catch (e: Exception) {
             throw ServletException("格式化异常")
         }

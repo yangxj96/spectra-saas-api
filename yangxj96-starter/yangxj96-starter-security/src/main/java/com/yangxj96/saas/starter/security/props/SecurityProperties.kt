@@ -33,6 +33,6 @@ class SecurityProperties {
         /**
          * 刷新token过期时长
          */
-        var refreshExpire = 3600L
+        var refreshExpire = 7200L
     }
 }

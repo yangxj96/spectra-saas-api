@@ -1,5 +1,6 @@
 package com.yangxj96.saas.starter.security.filter
 
+import com.yangxj96.saas.starter.security.constant.EnvCons
 import com.yangxj96.saas.starter.security.store.TokenStore
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -24,13 +25,13 @@ class UserAuthorizationFilter(authenticationManager: AuthenticationManager, priv
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
-        val authorization = request.getHeader("Authorization")
+        val authorization = request.getHeader(EnvCons.TOKEN_PREFIX)
         if (StringUtils.isNotEmpty(authorization)) {
             try {
                 // 放入security上下文,就可以进行认证了
                 SecurityContextHolder.getContext().authentication = tokenStore.read(authorization)
             } catch (e: Exception) {
-                log.debug("读取认证信息错误")
+                log.atError().log("读取认证信息错误")
             }
         }
         super.doFilterInternal(request, response, chain)

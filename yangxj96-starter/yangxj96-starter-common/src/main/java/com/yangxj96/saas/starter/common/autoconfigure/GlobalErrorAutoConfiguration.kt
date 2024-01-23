@@ -34,4 +34,24 @@ class GlobalErrorAutoConfiguration {
         return R.failure(e.status)
     }
 
+    /**
+     * 空指针异常
+     */
+    @ResponseBody
+    @ExceptionHandler(NullPointerException::class)
+    fun nullPointerException(res: HttpServletResponse, e: NullPointerException): R<Any> {
+        e.printStackTrace()
+        return R.failure("空指针异常")
+    }
+
+    /**
+     * 运行时异常
+     */
+    @ResponseBody
+    @ExceptionHandler(java.lang.RuntimeException::class)
+    fun runtimeException(res: HttpServletResponse, e: RuntimeException): R<Any> {
+        e.printStackTrace()
+        return R.failure("运行时异常")
+    }
+
 }

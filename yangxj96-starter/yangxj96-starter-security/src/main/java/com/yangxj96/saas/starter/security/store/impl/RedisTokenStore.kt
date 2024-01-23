@@ -1,6 +1,9 @@
 package com.yangxj96.saas.starter.security.store.impl
 
+import cn.hutool.core.convert.Convert
+import cn.hutool.core.lang.TypeReference
 import cn.hutool.core.util.RandomUtil
+import cn.hutool.extra.spring.SpringUtil
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.yangxj96.saas.bean.security.Token
@@ -8,7 +11,10 @@ import com.yangxj96.saas.bean.security.TokenAccess
 import com.yangxj96.saas.bean.security.TokenRefresh
 import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.utils.ConvertUtil
+import com.yangxj96.saas.starter.security.constant.EnvCons
+import com.yangxj96.saas.starter.security.props.SecurityProperties
 import com.yangxj96.saas.starter.security.store.TokenStore
+import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.security.core.Authentication
@@ -20,19 +26,29 @@ import java.util.concurrent.TimeUnit
 /**
  * redis 存储token的实现
  */
-class RedisTokenStore(private val redis: RedisTemplate<String, Any>, private val om: ObjectMapper) : TokenStore {
+class RedisTokenStore : TokenStore {
 
     companion object {
         // @formatter:off
-        private const val ACCESS_PREFIX            = "AUTH::access:"
-        private const val ACCESS_TO_USER_PREFIX    = "AUTH::access_to_user:"
-        private const val REFRESH_PREFIX           = "AUTH::refresh:"
-        private const val ACCESS_TO_REFRESH_PREFIX = "AUTH::access_to_refresh:"
-        private const val REFRESH_TO_ACCESS_PREFIX = "AUTH::refresh_to_access:"
-        private const val AUTHORITY_PREFIX         = "AUTH::authority_token:"
+        private const val ACCESS_PREFIX            = "${EnvCons.TOKEN_PREFIX}:access:"
+        private const val ACCESS_TO_USER_PREFIX    = "${EnvCons.TOKEN_PREFIX}:access_to_user:"
+        private const val REFRESH_PREFIX           = "${EnvCons.TOKEN_PREFIX}:refresh:"
+        private const val ACCESS_TO_REFRESH_PREFIX = "${EnvCons.TOKEN_PREFIX}:access_to_refresh:"
+        private const val REFRESH_TO_ACCESS_PREFIX = "${EnvCons.TOKEN_PREFIX}:refresh_to_access:"
+        private const val AUTHORITY_PREFIX         = "${EnvCons.TOKEN_PREFIX}:authority_token:"
         // @formatter:on
 
         private val log = LoggerFactory.getLogger(this::class.java)
+    }
+
+    private lateinit var redis: RedisTemplate<String, Any>
+
+    private lateinit var om: ObjectMapper
+
+    @PostConstruct
+    fun init() {
+        this.redis = SpringUtil.getBean(object : TypeReference<RedisTemplate<String, Any>>() {})
+        this.om = SpringUtil.getBean(ObjectMapper::class.java)
     }
 
 
@@ -67,17 +83,19 @@ class RedisTokenStore(private val redis: RedisTemplate<String, Any>, private val
             // @formatter:on
         }
 
+        val properties = SpringUtil.getBean(SecurityProperties::class.java)
+
         // 随机差值,防止redis雪崩
         val diff = RandomUtil.randomLong(0, 100)
         val node = om.readTree(om.writeValueAsString(auth)) as ObjectNode
         node.put("class", auth::class.java.name)
         // @formatter:off
-        set(accessKey         ,encoding(access)!!  ,3600 + diff)
-        set(refreshKey        ,encoding(refresh)!! ,7200 + diff)
-        set(accessToUserKey   ,token.accessToken!! ,3600 + diff)
-        set(accessToRefreshKey,token.refreshToken!!,3600 + diff)
-        set(refreshToAccessKey,token.accessToken!! ,3600 + diff)
-        set(authorityKey      ,encoding(node)!!    ,3600 + diff)
+        set(accessKey         ,encoding(access)!!  ,properties.tokenOptions.accessExpire + diff)
+        set(refreshKey        ,encoding(refresh)!! ,properties.tokenOptions.refreshExpire + diff)
+        set(accessToUserKey   ,token.accessToken!! ,properties.tokenOptions.accessExpire + diff)
+        set(accessToRefreshKey,token.refreshToken!!,properties.tokenOptions.accessExpire + diff)
+        set(refreshToAccessKey,token.accessToken!! ,properties.tokenOptions.accessExpire + diff)
+        set(authorityKey      ,encoding(node)!!    ,properties.tokenOptions.accessExpire + diff)
         // @formatter:on
         log.atDebug().log("保存token成功")
         return token

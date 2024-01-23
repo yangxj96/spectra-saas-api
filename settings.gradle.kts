@@ -1,3 +1,11 @@
+// 引入依赖文件
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+            from(files("./project.version.toml"))
+        }
+    }
+}
 rootProject.name = "yangxj96-saas-api"
 
 include("yangxj96-bean")

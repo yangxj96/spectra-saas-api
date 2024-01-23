@@ -8,5 +8,5 @@ dependencies {
     compileOnly("org.springframework.boot:spring-boot-starter-security")
 
     api("org.springframework.boot:spring-boot-starter-data-redis")
-    api("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
+    api(libs.mybatisPlus.get())
 }

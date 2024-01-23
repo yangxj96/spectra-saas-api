@@ -50,17 +50,17 @@ class JacksonAutoConfiguration(private val properties: JacksonProperties) {
     @Primary
     fun configuration(): Jackson2ObjectMapperBuilderCustomizer {
         return Jackson2ObjectMapperBuilderCustomizer {
-            log.atDebug().log("$PREFIX build ObjectMapper")
+            log.atDebug().log("$PREFIX 构建ObjectMapper")
             val om = it.createXmlMapper(false).build<ObjectMapper>()
-            log.atDebug().log("$PREFIX register java8 time module")
+            log.atDebug().log("$PREFIX 注册java8时间模块")
             om.registerModule(JavaTimeModule())
-            log.atDebug().log("$PREFIX Do not display null")
+            log.atDebug().log("$PREFIX 不显示null元素")
             om.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            log.atDebug().log("$PREFIX response format SNAKE_CASE")
+            log.atDebug().log("$PREFIX 格式化响应字段为下划线分割")
             om.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-            log.atDebug().log("$PREFIX time zone")
+            log.atDebug().log("$PREFIX 设置时区为UTC")
             om.setTimeZone(TimeZone.getTimeZone("UTC"))
-            log.atDebug().log("$PREFIX date format")
+            log.atDebug().log("$PREFIX 加载时间格式化")
             om.dateFormat = SimpleDateFormat(properties.localDateTimeFormat).also { format ->
                 format.timeZone = TimeZone.getTimeZone("UTC")
             }

@@ -8,5 +8,5 @@ dependencies {
     // 编译的时候不打包这些依赖,具体的依赖服务会提供
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
-    compileOnly("com.baomidou:mybatis-plus-boot-starter:${property("mybatisPlusVersion")}")
+    compileOnly(libs.mybatisPlus.get())
 }

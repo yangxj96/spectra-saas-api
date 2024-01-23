@@ -1,0 +1,13 @@
+# 版本
+[versions]
+springCloud = "2022.0.4"
+springCloudAlibaba = "2022.0.0.0-RC1"
+mybatisPlus = "3.5.5"
+jetbrains = "23.1.0"
+
+# 依赖
+[libraries]
+mybatisPlus = { module = "com.baomidou:mybatis-plus-boot-starter", version.ref = "mybatisPlus" }
+
+# 组合
+# [bundles]
