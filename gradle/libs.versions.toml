@@ -11,3 +11,6 @@ mybatisPlus = { module = "com.baomidou:mybatis-plus-boot-starter", version.ref =
 
 # 组合
 # [bundles]
+
+# 插件
+# [plugins]
