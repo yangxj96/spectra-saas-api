@@ -9,5 +9,6 @@ dependencies {
     api("org.apache.commons:commons-collections4:4.4")
     api("org.apache.commons:commons-pool2:2.11.1")
     api("cn.hutool:hutool-all:5.8.25")
-
+    // 加密扩展
+    implementation("org.bouncycastle:bcprov-jdk15on:1.70")
 }

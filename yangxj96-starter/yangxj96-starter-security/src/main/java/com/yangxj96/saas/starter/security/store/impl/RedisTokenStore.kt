@@ -47,7 +47,8 @@ class RedisTokenStore : TokenStore {
 
     @PostConstruct
     fun init() {
-        this.redis = SpringUtil.getBean(object : TypeReference<RedisTemplate<String, Any>>() {})
+        // this.redis = SpringUtil.getBean(object : TypeReference<RedisTemplate<String, Any>>() {})
+        this.redis = SpringUtil.getBean("redisTemplate")
         this.om = SpringUtil.getBean(ObjectMapper::class.java)
     }
 

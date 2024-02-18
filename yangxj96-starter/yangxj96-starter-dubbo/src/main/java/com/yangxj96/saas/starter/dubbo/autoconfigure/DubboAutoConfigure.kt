@@ -46,6 +46,7 @@ class DubboAutoConfigure(private val props: DubboProps) {
             it.username = props.username
             it.password = props.password
             it.group = "DEFAULT_GROUP"
+            it.registerMode = "instance"
             it.parameters = mutableMapOf(
                 "namespace" to props.namespace
             )

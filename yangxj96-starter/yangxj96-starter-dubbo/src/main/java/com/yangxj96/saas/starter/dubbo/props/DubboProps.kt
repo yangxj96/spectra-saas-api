@@ -15,5 +15,4 @@ class DubboProps {
     var password: String = "QuVsKppcWvwwX2Vv"
     var namespace: String = "962cb3a9-ef75-41ee-b2c6-d1a0e49d66d8"
 
-
 }
