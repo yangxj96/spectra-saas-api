@@ -1,8 +1,8 @@
 package com.yangxj96.saas.server.auth.service
 
 import com.yangxj96.saas.bean.user.Account
+import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BaseService
-import org.springframework.security.core.GrantedAuthority
 
 /**
  * 用户service层
@@ -19,10 +19,19 @@ interface AccountService : BaseService<Account> {
     fun relevance(user: Long, role: Long): Boolean
 
     /**
-     * 根据用户id查询用户权限列表
+     * 获取账号拥有的角色列表
      *
-     * @param userId 用户id
-     * @return 权限列表
+     * @param uid 用户ID
+     * @return 角色列表
      */
-    fun getAuthoritiesByUserId(userId: Long): MutableList<GrantedAuthority>
+    fun getRoles(uid: Long): List<Role>
+
+    /**
+     * 根据用户名查询账户信息
+     *
+     * @param username 用户名
+     * @return 账户信息,不存在返回null
+     */
+    fun getByUsername(username: String): Account?
+
 }

@@ -5,25 +5,18 @@ import cn.hutool.core.lang.tree.TreeNodeConfig
 import cn.hutool.core.lang.tree.TreeUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.metadata.IPage
-import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
-import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
-import com.yangxj96.saas.bean.user.RoleToAuthority
 import com.yangxj96.saas.common.base.BaseServiceImpl
-import com.yangxj96.saas.common.exception.DataNotExistException
 import com.yangxj96.saas.common.respond.R
 import com.yangxj96.saas.common.respond.RStatus
 import com.yangxj96.saas.server.auth.mapper.RoleMapper
 import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance
 import com.yangxj96.saas.server.auth.service.RoleService
-import org.springframework.security.authentication.AnonymousAuthenticationToken
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
 
 /**
  * 角色service的实现
@@ -61,27 +54,6 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
     @Transactional(rollbackFor = [Exception::class])
     override fun relevance(params: RoleRelevance) {
 
-        this.getById(params.roleId) ?: throw DataNotExistException("数据不存在异常")
-
-        val coll = mutableListOf<RoleToAuthority>()
-
-        val authentication = SecurityContextHolder.getContext().authentication
-        val currentId = if (authentication != null && authentication !is AnonymousAuthenticationToken) {
-            (authentication.principal as Account).id
-        } else 0L
-
-        params.authorityIds?.forEach {
-            coll.add(RoleToAuthority().also { datum ->
-                datum.id = IdWorker.getId()
-                datum.roleId = params.roleId
-                datum.authorityId = it
-                datum.createdUser = currentId
-                datum.createdTime = LocalDateTime.now()
-                datum.updatedUser = currentId
-                datum.updatedTime = LocalDateTime.now()
-            })
-        }
-        bindMapper.relevance(coll)
     }
 
     override fun tree(): List<Tree<String>> {
@@ -107,5 +79,14 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
 
     override fun ownerAuthority(id: Long): MutableList<Authority> {
         return bindMapper.ownerAuthority(id)
+    }
+
+    override fun getAuthorityByRoleCode(roleCode: String): List<Authority> {
+        val role = this.getOne(
+            KtQueryWrapper(Role::class.java)
+                .eq(Role::code, roleCode)
+                .last("LIMIT 1")
+        ) ?: return emptyList()
+        return bindMapper.getAuthorityByRoleCode(role.id)
     }
 }

@@ -27,4 +27,11 @@ interface UserMapper : BaseMapper<Account> {
      * @return 权限列表
      */
     fun getAuthorityByRoleIds(@Param("ids") roleIds: List<Long?>): List<Authority>
+
+    /**
+     * 根据用户查询角色列表
+     * @param uid 用户id
+     * @return 角色列表
+     */
+    fun getUserRoles(@Param("uid") uid: Long): List<Role>
 }

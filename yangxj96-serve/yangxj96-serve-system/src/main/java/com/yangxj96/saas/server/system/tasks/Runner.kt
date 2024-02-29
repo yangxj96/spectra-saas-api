@@ -1,8 +1,6 @@
 package com.yangxj96.saas.server.system.tasks
 
-import com.yangxj96.saas.starter.dubbo.service.RoleDubboService
-import org.apache.dubbo.config.annotation.DubboReference
-import org.bouncycastle.asn1.x500.style.RFC4519Style.l
+import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
 
@@ -10,12 +8,13 @@ import org.springframework.stereotype.Component
 @Component
 class Runner : CommandLineRunner {
 
-    @DubboReference
-    private lateinit var roleDubboService: RoleDubboService
-
+    companion object {
+        private val log = LoggerFactory.getLogger(this::class.java)
+    }
 
     override fun run(vararg args: String?) {
-        val list = roleDubboService.getAll()
-        println("list:$list")
+        log.atDebug().log("启动成功")
     }
+
+
 }

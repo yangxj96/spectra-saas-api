@@ -1,12 +1,15 @@
 package com.yangxj96.saas.starter.dubbo.service
 
-import com.yangxj96.saas.bean.user.Role
+import com.yangxj96.saas.bean.user.Authority
 
 
 interface RoleDubboService {
 
-    fun getAll(): List<Role>
-
-    fun getById(id: Long): Role?
+    /**
+     * 根据角色获取关联的权限
+     *
+     * @param roleCode 角色CODE
+     */
+    fun getAuthorityByRoleCode(roleCode: String): List<Authority>
 
 }

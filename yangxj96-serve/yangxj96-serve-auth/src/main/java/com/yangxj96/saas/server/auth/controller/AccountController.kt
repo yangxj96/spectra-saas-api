@@ -1,11 +1,10 @@
 package com.yangxj96.saas.server.auth.controller
 
+import cn.dev33.satoken.annotation.SaCheckPermission
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.bean.user.Account
 import com.yangxj96.saas.common.base.BaseController
 import com.yangxj96.saas.server.auth.service.AccountService
-import jakarta.validation.constraints.NotBlank
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -18,26 +17,26 @@ import org.springframework.web.bind.annotation.*
 class AccountController protected constructor(bindService: AccountService) :
     BaseController<Account, AccountService>(bindService) {
 
-    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_INSERT')")
     @PostMapping
+    @SaCheckPermission(value = ["USER_ALL", "USER_INSERT"], orRole = ["ROLE_SYSADMIN"])
     override fun create(@Validated @RequestBody obj: Account): Account {
         return super.create(obj)
     }
 
-    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_DELETE')")
     @DeleteMapping("/{id}")
+    @SaCheckPermission(value = ["USER_ALL", "USER_DELETE"], orRole = ["ROLE_SYSADMIN"])
     override fun delete(@PathVariable id: String) {
         super.delete(id)
     }
 
-    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_MODIFY')")
     @PutMapping
+    @SaCheckPermission(value = ["USER_ALL", "USER_MODIFY"], orRole = ["ROLE_SYSADMIN"])
     override fun modify(@Validated @RequestBody obj: Account): Account {
         return super.modify(obj)
     }
 
-    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_QUERY')")
     @GetMapping("/page")
+    @SaCheckPermission(value = ["USER_ALL", "USER_QUERY"], orRole = ["ROLE_SYSADMIN"])
     override fun page(
         obj: Account,
         @RequestParam(defaultValue = "1") pageNum: Long,
@@ -46,8 +45,8 @@ class AccountController protected constructor(bindService: AccountService) :
         return super.page(obj, pageNum, pageSize)
     }
 
-    @PreAuthorize("hasRole('ROLE_SYSADMIN') or hasAnyAuthority('USER_ALL','USER_QUERY')")
     @GetMapping("/{id}")
+    @SaCheckPermission(value = ["USER_ALL", "USER_QUERY"], orRole = ["ROLE_SYSADMIN"])
     override fun getById(@PathVariable id: Long): Account {
         return super.getById(id)
     }

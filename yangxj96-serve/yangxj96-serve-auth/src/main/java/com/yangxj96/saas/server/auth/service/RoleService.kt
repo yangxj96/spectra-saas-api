@@ -33,4 +33,11 @@ interface RoleService : BaseService<Role> {
      */
     fun ownerAuthority(id: Long): MutableList<Authority>
 
+    /**
+     * 根据角色获取关联的权限
+     *
+     * @param roleCode 角色CODE
+     */
+    fun getAuthorityByRoleCode(roleCode: String): List<Authority>
+
 }

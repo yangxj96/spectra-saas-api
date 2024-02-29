@@ -4,6 +4,7 @@ springCloud = "2022.0.4"
 springCloudAlibaba = "2022.0.0.0-RC1"
 mybatisPlus = "3.5.5"
 jetbrains = "23.1.0"
+satoken = "1.37.0"
 
 # 依赖
 [libraries]

@@ -62,4 +62,14 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="getUserRoles" resultType="com.yangxj96.saas.bean.user.Role">
+        SELECT tr.*
+        FROM db_user.t_role tr,
+             db_user.t_account_to_role tatr
+        WHERE tatr.account_id = #{uid}
+          AND tr.deleted IS NULL
+          AND tatr.deleted IS NULL
+          AND tatr.role_id = tr.id
+    </select>
 </mapper>

@@ -1,6 +1,6 @@
 package com.yangxj96.saas.starter.security.props
 
-import com.yangxj96.saas.starter.security.bean.StoreType
+import com.yangxj96.saas.starter.security.constant.EnvCons
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
@@ -15,24 +15,23 @@ class SecurityProperties {
     var enable = true
 
     /**
-     * 存储介质类型
-     * <br></br>
-     * 如果是redis类型的话,需要yangxj96.db.redis-enable=true
+     * token 有效期（单位：秒） 默认30天，-1 代表永久有效.
      */
-    var storeType = StoreType.REDIS
+    var timeout = 2592000L
 
-    /** token配置  */
-    var tokenOptions = TokenOptions()
+    /**
+     * token 最低活跃频率（单位：秒），如果 token 超过此时间没有访问系统就会被冻结，默认-1 代表不限制，永不冻结.
+     */
+    var activeTimeout = -1L
 
-    class TokenOptions {
-        /**
-         * 鉴权token过期时长
-         */
-        var accessExpire = 3600L
+    /**
+     * token 风格（默认可取值：uuid、simple-uuid、random-32、random-64、random-128、tik）.
+     */
+    var tokenStyle = "simple-uuid"
 
-        /**
-         * 刷新token过期时长
-         */
-        var refreshExpire = 7200L
-    }
+    /**
+     * token 名称（同时也是 cookie 名称）.
+     */
+    var tokenName = EnvCons.TOKEN_PREFIX
+
 }

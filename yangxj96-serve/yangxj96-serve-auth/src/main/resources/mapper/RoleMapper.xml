@@ -51,4 +51,19 @@
         WHERE trta.role_id = #{role_id}
     </select>
 
+    <select id="getAuthorityByRoleCode" resultType="com.yangxj96.saas.bean.user.Authority">
+        SELECT ta.id,
+               ta.name,
+               ta.code,
+               ta.created_user,
+               ta.created_time,
+               ta.updated_user,
+               ta.updated_time,
+               ta.deleted
+        FROM db_user.t_role_to_authority AS trta,
+             db_user.t_authority AS ta
+        WHERE trta.deleted IS NULL
+          AND trta.role_id = #{id,jdbcType=BIGINT}
+          AND trta.authority_id = ta.id
+    </select>
 </mapper>
