@@ -25,7 +25,7 @@ class GlobalErrorAutoConfiguration {
     @ResponseBody
     @ExceptionHandler(NotPermissionException::class)
     @ConditionalOnClass(NotPermissionException::class)
-    fun notLoginException(resp: HttpServletResponse, e: NotPermissionException): R<Any> {
+    fun notPermissionException(resp: HttpServletResponse, e: NotPermissionException): R<Any> {
         e.printStackTrace()
         return R.failure(e.message ?: "无权限")
     }

@@ -7,10 +7,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  */
 @ConfigurationProperties(prefix = "yangxj96.db")
 class DBProperties {
+
     /**
      * 是否启用
      */
     var jdbcEnable = true
+
     var redisEnable = true
+
     var securityDb = 0
 }

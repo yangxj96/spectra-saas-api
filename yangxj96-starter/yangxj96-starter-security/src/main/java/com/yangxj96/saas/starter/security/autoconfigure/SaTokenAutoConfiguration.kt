@@ -37,7 +37,7 @@ class SaTokenAutoConfiguration(private val props: SecurityProperties) {
             it.setActiveTimeout(props.activeTimeout)
             it.setIsConcurrent(true)
             it.setIsShare(true)
-            it.setTokenStyle(props.tokenStyle)
+            it.setTokenStyle(props.tokenStyle.v)
             it.setIsLog(true)
             it.setIsColorLog(true)
         }
