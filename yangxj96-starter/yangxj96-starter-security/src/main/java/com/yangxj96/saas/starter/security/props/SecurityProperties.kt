@@ -2,6 +2,7 @@ package com.yangxj96.saas.starter.security.props
 
 import com.yangxj96.saas.starter.security.constant.EnvCons
 import org.springframework.boot.context.properties.ConfigurationProperties
+import kotlin.math.truncate
 
 /**
  * security相关配置

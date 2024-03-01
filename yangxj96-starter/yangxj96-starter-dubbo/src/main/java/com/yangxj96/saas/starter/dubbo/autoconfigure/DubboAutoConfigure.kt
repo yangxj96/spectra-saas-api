@@ -34,6 +34,7 @@ class DubboAutoConfigure(private val props: DubboProps) {
         log.atDebug().log("$PREFIX 配置dubbo应用app相关配置")
         return ApplicationConfig().also {
             it.name = "${name}-provider"
+            it.logger = "slf4j"
         }
     }
 
@@ -77,24 +78,24 @@ class DubboAutoConfigure(private val props: DubboProps) {
         }
     }
 
-    @Bean
-    @ConditionalOnBean(RoleDubboService::class)
-    fun roleServiceConfig(service: RoleDubboService): ServiceConfig<RoleDubboService> {
-        val config = ServiceConfig<RoleDubboService>()
-        config.setInterface(RoleDubboService::class.java)
-        config.ref = service
-        config.version = "1.0.0"
-
-        val methods = mutableListOf<MethodConfig>()
-
-        // 可以针对每个方法进行配置
-        methods.add(MethodConfig().also {
-            it.name = "getAll"
-            it.timeout = 1000
-            it.retries = 3
-        })
-
-        config.methods = methods
-        return config
-    }
+    //@Bean
+    //@ConditionalOnBean(RoleDubboService::class)
+    //fun roleServiceConfig(service: RoleDubboService): ServiceConfig<RoleDubboService> {
+    //    val config = ServiceConfig<RoleDubboService>()
+    //    config.setInterface(RoleDubboService::class.java)
+    //    config.ref = service
+    //    config.version = "1.0.0"
+    //
+    //    val methods = mutableListOf<MethodConfig>()
+    //
+    //    // 可以针对每个方法进行配置
+    //    methods.add(MethodConfig().also {
+    //        it.name = "getAll"
+    //        it.timeout = 1000
+    //        it.retries = 3
+    //    })
+    //
+    //    config.methods = methods
+    //    return config
+    //}
 }

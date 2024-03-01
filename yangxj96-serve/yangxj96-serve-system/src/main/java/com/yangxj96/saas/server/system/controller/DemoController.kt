@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class DemoController {
 
 
-    @SaCheckPermission("DEMO", orRole = ["ROLE_SYSADMIN2"])
+    @SaCheckPermission("DEMO", orRole = ["ROLE_SYSADMIN"])
     @GetMapping("/d01")
     fun demo01(): String {
         return "${StpUtil.isLogin()}"

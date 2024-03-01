@@ -1,6 +1,7 @@
 package com.yangxj96.saas.starter.common.autoconfigure
 
 import cn.dev33.satoken.exception.NotLoginException
+import cn.dev33.satoken.exception.NotPermissionException
 import com.yangxj96.saas.common.exception.AuthException
 import com.yangxj96.saas.common.respond.R
 import jakarta.servlet.http.HttpServletResponse
@@ -18,14 +19,25 @@ import org.springframework.web.bind.annotation.ResponseBody
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 class GlobalErrorAutoConfiguration {
 
+    /**
+     * 未登录异常
+     */
+    @ResponseBody
+    @ExceptionHandler(NotPermissionException::class)
+    @ConditionalOnClass(NotPermissionException::class)
+    fun notLoginException(resp: HttpServletResponse, e: NotPermissionException): R<Any> {
+        e.printStackTrace()
+        return R.failure(e.message ?: "无权限")
+    }
 
     /**
-     * 参数验证
+     * 未登录异常
      */
     @ResponseBody
     @ExceptionHandler(NotLoginException::class)
     @ConditionalOnClass(NotLoginException::class)
     fun notLoginException(resp: HttpServletResponse, e: NotLoginException): R<Any> {
+        e.printStackTrace()
         return R.failure(e.message ?: "未能读取到有效token")
     }
 

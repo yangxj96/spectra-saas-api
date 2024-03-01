@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component
 /**
  * 获取权限使用
  */
+@Primary
 @Component
 class StpInterfaceImpl : StpInterface {
 
