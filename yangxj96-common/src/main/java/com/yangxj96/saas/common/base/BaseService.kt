@@ -1,6 +1,5 @@
 package com.yangxj96.saas.common.base
 
-import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.service.IService
 
 /**
@@ -15,7 +14,5 @@ interface BaseService<O : BaseEntity> : IService<O> {
     fun delete(id: String): Boolean
 
     fun modify(datum: O): O
-
-    fun page(datum: O, pageNum: Long, pageSize: Long): IPage<O>
 
 }

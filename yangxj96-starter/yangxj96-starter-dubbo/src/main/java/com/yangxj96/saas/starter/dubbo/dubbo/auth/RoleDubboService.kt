@@ -1,4 +1,4 @@
-package com.yangxj96.saas.starter.dubbo.service
+package com.yangxj96.saas.starter.dubbo.dubbo.auth
 
 import com.yangxj96.saas.bean.user.Authority
 

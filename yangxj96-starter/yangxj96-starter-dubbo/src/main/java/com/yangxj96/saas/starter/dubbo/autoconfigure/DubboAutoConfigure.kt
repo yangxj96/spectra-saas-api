@@ -2,13 +2,11 @@ package com.yangxj96.saas.starter.dubbo.autoconfigure
 
 import cn.hutool.core.util.RandomUtil
 import com.yangxj96.saas.starter.dubbo.props.DubboProps
-import com.yangxj96.saas.starter.dubbo.service.RoleDubboService
 import org.apache.dubbo.config.*
 import org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 

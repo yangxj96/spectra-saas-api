@@ -7,6 +7,7 @@ dependencies {
     api(project(":yangxj96-bean"))
     api(project(":yangxj96-common"))
     api(project(":yangxj96-starter:yangxj96-starter-common"))
+    api(project(":yangxj96-starter:yangxj96-starter-dubbo"))
 
     // 网关
     implementation("org.springframework.cloud:spring-cloud-starter-gateway")

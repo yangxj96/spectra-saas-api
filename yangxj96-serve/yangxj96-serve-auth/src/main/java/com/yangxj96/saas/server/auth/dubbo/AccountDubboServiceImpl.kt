@@ -2,7 +2,7 @@ package com.yangxj96.saas.server.auth.dubbo
 
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.server.auth.service.AccountService
-import com.yangxj96.saas.starter.dubbo.service.AccountDubboService
+import com.yangxj96.saas.starter.dubbo.dubbo.auth.AccountDubboService
 import jakarta.annotation.Resource
 import org.apache.dubbo.config.annotation.DubboService
 import org.slf4j.LoggerFactory

@@ -2,7 +2,6 @@ package com.yangxj96.saas.server.auth.controller
 
 import cn.dev33.satoken.annotation.SaCheckPermission
 import cn.hutool.core.lang.tree.Tree
-import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.bean.user.Authority
 import com.yangxj96.saas.bean.user.Role
 import com.yangxj96.saas.common.base.BaseController
@@ -20,8 +19,8 @@ class RoleController protected constructor(bindService: RoleService) : BaseContr
 
     @PostMapping
     @SaCheckPermission(value = ["ROLE_INSERT"], orRole = ["ROLE_SYSADMIN"])
-    override fun create(@Validated @RequestBody obj: Role): Role {
-        return super.create(obj)
+    override fun create(@Validated @RequestBody params: Role): Role {
+        return super.create(params)
     }
 
     @DeleteMapping("/{id}")
@@ -32,24 +31,8 @@ class RoleController protected constructor(bindService: RoleService) : BaseContr
 
     @PutMapping
     @SaCheckPermission(value = ["ROLE_MODIFY"], orRole = ["ROLE_SYSADMIN"])
-    override fun modify(@Validated @RequestBody obj: Role): Role {
-        return super.modify(obj)
-    }
-
-    @GetMapping("/page")
-    @SaCheckPermission(value = ["ROLE_QUERY"], orRole = ["ROLE_SYSADMIN"])
-    override fun page(
-        obj: Role,
-        @RequestParam(defaultValue = "1") pageNum: Long,
-        @RequestParam(defaultValue = "10") pageSize: Long
-    ): IPage<Role> {
-        return super.page(obj, pageNum, pageSize)
-    }
-
-    @GetMapping("/{id}")
-    @SaCheckPermission(value = ["ROLE_QUERY"], orRole = ["ROLE_SYSADMIN"])
-    override fun getById(@PathVariable id: Long): Role {
-        return super.getById(id)
+    override fun modify(@Validated @RequestBody params: Role): Role {
+        return super.modify(params)
     }
 
     @GetMapping("/tree")

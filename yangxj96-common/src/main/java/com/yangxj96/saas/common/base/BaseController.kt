@@ -1,7 +1,8 @@
 package com.yangxj96.saas.common.base
 
-import com.baomidou.mybatisplus.core.metadata.IPage
 import com.yangxj96.saas.common.respond.R
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.validation.annotation.Validated
 
 /**
@@ -13,14 +14,17 @@ import org.springframework.validation.annotation.Validated
 @Validated
 abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected constructor(protected var bindService: S) {
 
+    protected val log: Logger = LoggerFactory.getLogger(this::class.java)
+
     /**
      * 基础创建数据接口
      *
-     * @param obj 数据实体
+     * @param params 数据实体
      * @return 创建后的数据实体
      */
-    fun create(obj: O): O {
-        return bindService.create(obj)
+    fun create(params: O): O {
+        log.atDebug().log("数据新增,数据实体:{}", params)
+        return bindService.create(params)
     }
 
     /**
@@ -29,6 +33,7 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
      * @param id 数据id
      */
     fun delete(id: String) {
+        log.atDebug().log("数据删除,数据ID:{}", id)
         if (bindService.delete(id)) {
             R.success()
         } else {
@@ -39,31 +44,12 @@ abstract class BaseController<O : BaseEntity, S : BaseService<O>> protected cons
     /**
      * 基础修改接口
      *
-     * @param obj 数据实体
+     * @param params 数据实体
      * @return 修改成功返回修改后的数据, 否则返回null
      */
-    fun modify(obj: O): O {
-        return bindService.modify(obj)
-    }
-
-    /**
-     * 根据实体属性分页查询数据
-     *
-     * @param obj 查询对象
-     * @param pageNum 页码
-     * @param pageSize 每页数量
-     */
-    fun page(obj: O, pageNum: Long, pageSize: Long): IPage<O> {
-        return bindService.page(obj, pageNum, pageSize)
-    }
-
-    /**
-     * 根据ID查询数据
-     *
-     * @param id 数据的ID
-     */
-    fun getById(id: Long): O {
-        return bindService.getById(id)
+    fun modify(params: O): O {
+        log.atDebug().log("数据修改,数据实体:{}", params)
+        return bindService.modify(params)
     }
 
 }

@@ -2,8 +2,8 @@ package com.yangxj96.saas.starter.security.config
 
 import cn.dev33.satoken.stp.StpInterface
 import cn.hutool.core.collection.CollUtil
-import com.yangxj96.saas.starter.dubbo.service.AccountDubboService
-import com.yangxj96.saas.starter.dubbo.service.RoleDubboService
+import com.yangxj96.saas.starter.dubbo.dubbo.auth.AccountDubboService
+import com.yangxj96.saas.starter.dubbo.dubbo.auth.RoleDubboService
 import com.yangxj96.saas.starter.security.constant.EnvCons
 import org.apache.dubbo.config.annotation.DubboReference
 import org.slf4j.LoggerFactory

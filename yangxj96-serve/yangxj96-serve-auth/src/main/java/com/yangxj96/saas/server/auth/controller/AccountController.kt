@@ -18,37 +18,21 @@ class AccountController protected constructor(bindService: AccountService) :
     BaseController<Account, AccountService>(bindService) {
 
     @PostMapping
-    @SaCheckPermission(value = ["USER_ALL", "USER_INSERT"], orRole = ["ROLE_SYSADMIN"])
-    override fun create(@Validated @RequestBody obj: Account): Account {
-        return super.create(obj)
+    @SaCheckPermission(value = ["USER_INSERT"], orRole = ["ROLE_SYSADMIN"])
+    override fun create(@Validated @RequestBody params: Account): Account {
+        return super.create(params)
     }
 
     @DeleteMapping("/{id}")
-    @SaCheckPermission(value = ["USER_ALL", "USER_DELETE"], orRole = ["ROLE_SYSADMIN"])
+    @SaCheckPermission(value = ["USER_DELETE"], orRole = ["ROLE_SYSADMIN"])
     override fun delete(@PathVariable id: String) {
         super.delete(id)
     }
 
     @PutMapping
-    @SaCheckPermission(value = ["USER_ALL", "USER_MODIFY"], orRole = ["ROLE_SYSADMIN"])
-    override fun modify(@Validated @RequestBody obj: Account): Account {
-        return super.modify(obj)
-    }
-
-    @GetMapping("/page")
-    @SaCheckPermission(value = ["USER_ALL", "USER_QUERY"], orRole = ["ROLE_SYSADMIN"])
-    override fun page(
-        obj: Account,
-        @RequestParam(defaultValue = "1") pageNum: Long,
-        @RequestParam(defaultValue = "10") pageSize: Long
-    ): IPage<Account> {
-        return super.page(obj, pageNum, pageSize)
-    }
-
-    @GetMapping("/{id}")
-    @SaCheckPermission(value = ["USER_ALL", "USER_QUERY"], orRole = ["ROLE_SYSADMIN"])
-    override fun getById(@PathVariable id: Long): Account {
-        return super.getById(id)
+    @SaCheckPermission(value = ["USER_MODIFY"], orRole = ["ROLE_SYSADMIN"])
+    override fun modify(@Validated @RequestBody params: Account): Account {
+        return super.modify(params)
     }
 
 }
