@@ -2,9 +2,8 @@ package com.yangxj96.saas.server.auth.controller
 
 import cn.dev33.satoken.annotation.SaCheckLogin
 import cn.dev33.satoken.annotation.SaIgnore
+import cn.dev33.satoken.exception.NotLoginException
 import com.yangxj96.saas.bean.security.Token
-import com.yangxj96.saas.common.exception.AuthException
-import com.yangxj96.saas.common.respond.RStatus
 import com.yangxj96.saas.server.auth.pojo.vo.AuthLogin
 import com.yangxj96.saas.server.auth.service.AuthService
 import jakarta.annotation.Resource
@@ -71,7 +70,7 @@ class AuthController {
             log.atDebug().log("${PREFIX}用户登出,token:${request.getHeader("Authorization")}")
             bindService.logout()
         } catch (e: Exception) {
-            throw AuthException(RStatus.SECURITY_TOKEN_LOGOFF)
+            throw NotLoginException("退出异常", "", "")
         }
     }
 

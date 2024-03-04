@@ -2,16 +2,24 @@
 [versions]
 springCloud = "2022.0.4"
 springCloudAlibaba = "2022.0.0.0-RC1"
-mybatisPlus = "3.5.5"
 jetbrains = "23.1.0"
-satoken = "1.37.0"
 
 # 依赖
 [libraries]
-mybatisPlus = { module = "com.baomidou:mybatis-plus-boot-starter", version.ref = "mybatisPlus" }
+mybatisPlus = { module = "com.baomidou:mybatis-plus-boot-starter", version = "3.5.5" }
+hutoolAll = { module = "cn.hutool:hutool-all", version = "5.8.25" }
+commonsLang3 = { module = "org.apache.commons:commons-lang3", version = "3.12.0" }
+commonsCollections4 = { module = "org.apache.commons:commons-collections4", version = "4.4" }
+commonsPool2 = { module = "org.apache.commons:commons-pool2", version = "2.11.1" }
+bcprovJdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version = "1.70" }
+
+satokenCore = { module = "cn.dev33:sa-token-spring-boot3-starter", version = "1.37.0" }
+satokenAop = { module = "cn.dev33:sa-token-spring-aop", version = "1.37.0" }
+satokenRedisJackson = { module = "cn.dev33:sa-token-redis-jackson", version = "1.37.0" }
 
 # 组合
-# [bundles]
+[bundles]
+satoken = ["satokenCore", "satokenAop", "satokenRedisJackson"]
 
 # 插件
 # [plugins]

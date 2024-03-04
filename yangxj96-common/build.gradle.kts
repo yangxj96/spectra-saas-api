@@ -5,10 +5,10 @@ dependencies {
     compileOnly(libs.mybatisPlus.get())
 
     // 工具
-    api("org.apache.commons:commons-lang3:3.12.0")
-    api("org.apache.commons:commons-collections4:4.4")
-    api("org.apache.commons:commons-pool2:2.11.1")
-    api("cn.hutool:hutool-all:5.8.25")
+    api(libs.commonsLang3.get())
+    api(libs.commonsCollections4.get())
+    api(libs.commonsPool2 .get())
+    api(libs.hutoolAll.get())
     // 加密扩展
-    implementation("org.bouncycastle:bcprov-jdk15on:1.70")
+    implementation(libs.bcprovJdk15on.get())
 }

@@ -44,13 +44,6 @@ class RoleServiceImpl protected constructor(bindMapper: RoleMapper) :
         return super.create(datum)
     }
 
-    override fun page(datum: Role, pageNum: Long, pageSize: Long): IPage<Role> {
-        val wrapper = KtQueryWrapper(Role::class.java)
-            .setEntity(datum)
-            .orderByAsc(Role::createdTime)
-        return this.page(Page(pageNum, pageSize), wrapper)
-    }
-
     @Transactional(rollbackFor = [Exception::class])
     override fun relevance(params: RoleRelevance) {
 
