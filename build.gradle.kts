@@ -5,14 +5,11 @@ import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     java
-    id("org.springframework.boot") version "3.1.7" apply false
-    id("io.spring.dependency-management") version "1.1.4" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.9.21" apply false
-    id("org.jetbrains.kotlin.plugin.spring") version "1.9.21" apply false
+    alias(libs.plugins.spring.boot) apply(false)
+    alias(libs.plugins.spring.dependency.management) apply(false)
+    alias(libs.plugins.kotlin.jvm) apply(false)
+    alias(libs.plugins.kotlin.spring) apply(false)
 }
-
-// 获取预编译的ver信息
-val ver = libs.versions
 
 allprojects {
     group = "com.yangxj96.saas"
@@ -30,13 +27,12 @@ allprojects {
 }
 
 subprojects {
-
     // 此处的插件由于在最外层的plugins中声明了. 且声明了版本号,此处能直接使用apply()
     apply(plugin = "java")
-    apply(plugin = "org.springframework.boot")
-    apply(plugin = "io.spring.dependency-management")
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+    apply(plugin = rootProject.libs.plugins.spring.boot.get().pluginId)
+    apply(plugin = rootProject.libs.plugins.spring.dependency.management.get().pluginId)
+    apply(plugin = rootProject.libs.plugins.kotlin.jvm.get().pluginId)
+    apply(plugin = rootProject.libs.plugins.kotlin.spring.get().pluginId)
 
     // java源码和目标文件版本
     java {
@@ -47,8 +43,8 @@ subprojects {
     // 等同于dependencyManagement {}
     configure<DependencyManagementExtension> {
         imports {
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${ver.springCloud.get()}")
-            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${ver.springCloudAlibaba.get()}")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${rootProject.libs.versions.springCloud.get()}")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${rootProject.libs.versions.springCloudAlibaba.get()}")
         }
     }
 
@@ -56,7 +52,7 @@ subprojects {
         // 测试 begin
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         // 测试 end
-        compileOnly("org.jetbrains:annotations:${ver.jetbrains.get()}")
+        compileOnly("org.jetbrains:annotations:${rootProject.libs.versions.jetbrains.get()}")
         // kotlin支持
         implementation("org.jetbrains.kotlin:kotlin-reflect")
     }
