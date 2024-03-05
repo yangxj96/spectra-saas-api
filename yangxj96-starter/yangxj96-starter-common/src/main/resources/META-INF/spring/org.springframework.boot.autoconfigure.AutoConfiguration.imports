@@ -3,3 +3,4 @@ com.yangxj96.saas.starter.common.autoconfigure.SpringMvcAutoConfiguration
 com.yangxj96.saas.starter.common.autoconfigure.CacheAutoConfiguration
 com.yangxj96.saas.starter.common.autoconfigure.GlobalErrorAutoConfiguration
 com.yangxj96.saas.starter.common.autoconfigure.ResponseBodyModifyAutoConfiguration
+com.yangxj96.saas.starter.common.autoconfigure.EndpointAutoConfiguration
