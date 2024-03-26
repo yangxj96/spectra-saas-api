@@ -8,4 +8,5 @@ dependencies {
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
 }

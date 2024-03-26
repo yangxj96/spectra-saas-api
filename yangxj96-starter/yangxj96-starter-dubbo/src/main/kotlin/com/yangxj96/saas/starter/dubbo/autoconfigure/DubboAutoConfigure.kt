@@ -2,7 +2,10 @@ package com.yangxj96.saas.starter.dubbo.autoconfigure
 
 import cn.hutool.core.util.RandomUtil
 import com.yangxj96.saas.starter.dubbo.props.DubboProperties
-import org.apache.dubbo.config.*
+import org.apache.dubbo.config.ApplicationConfig
+import org.apache.dubbo.config.MetadataReportConfig
+import org.apache.dubbo.config.ProtocolConfig
+import org.apache.dubbo.config.RegistryConfig
 import org.apache.dubbo.spring.boot.autoconfigure.DubboAutoConfiguration
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
