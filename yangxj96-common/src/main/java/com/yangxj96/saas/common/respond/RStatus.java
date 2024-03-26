@@ -1,23 +1,21 @@
 package com.yangxj96.saas.common.respond;
 
-
-
-
 import lombok.Getter;
 
 import java.util.Objects;
 
 /**
- * 通用响应的状态,<br></br>
+ * 通用响应的状态,<br>
+ * </br>
  * 进行主要是进行标准化响应内容,也许以后如果增加国际化相关内容可能会有用
  */
 @Getter
 public enum RStatus {
 
     /*
-    code分布:
-    认证相关: 100000 - 199999
-    服务异常: 200000 - 299999
+     * code分布:
+     * 认证相关: 100000 - 199999
+     * 服务异常: 200000 - 299999
      */
     SUCCESS(0, "请求成功"),
     FAILURE(-1, "请求失败"),
@@ -46,7 +44,6 @@ public enum RStatus {
     FAILURE_DATA_NULL(200010, "查询不到数据"),
     NOT_FIND_ROUTE(200011, "未找到路由"),
     NOT_FIND_TOKEN(200012, "未获取到token");
-
 
     private final Integer code;
 

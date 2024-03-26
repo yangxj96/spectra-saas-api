@@ -7,7 +7,6 @@ import com.yangxj96.saas.common.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
 
 /**
  * 用户表
@@ -19,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "db_user.t_account")
-public class Account extends BaseEntity implements Serializable {
+public class Account extends BaseEntity {
 
     /**
      * 用户名

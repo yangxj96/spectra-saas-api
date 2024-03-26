@@ -23,7 +23,8 @@ import java.util.Base64;
 public class AesUtil {
 
     /**
-     * 算法规则<br></br>
+     * 算法规则<br>
+     * </br>
      * 最安全的算法应该是AES/GCM/NoPadding,但是前端无法解密
      * 备用 AES/CBC/PKCS7Padding
      */
@@ -33,7 +34,6 @@ public class AesUtil {
         // 使其支持PKCS7Padding
         Security.addProvider(new BouncyCastleProvider());
     }
-
 
     private static byte[] getRandomIv() {
         var nonce = new byte[16];
@@ -63,7 +63,7 @@ public class AesUtil {
             var secret = getRandomKey();
             var cipher = Cipher.getInstance(ALGORITHM);
             // GCM加密方式
-            //cipher.init(Cipher.ENCRYPT_MODE, secret, new GCMParameterSpec(128, iv))
+            // cipher.init(Cipher.ENCRYPT_MODE, secret, new GCMParameterSpec(128, iv))
             cipher.init(Cipher.ENCRYPT_MODE, secret, new IvParameterSpec(iv));
             var ciphertext = cipher.doFinal(origin.getBytes(StandardCharsets.UTF_8));
             // 把key iv ciphertext按照顺序压入字节数组
@@ -103,7 +103,8 @@ public class AesUtil {
             // 进行解码
             var cipher = Cipher.getInstance(ALGORITHM);
             // GCM解密方式
-            //cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, iv))
+            // cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new
+            // GCMParameterSpec(128, iv))
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
             var bytes = cipher.doFinal(plain);
             return new String(bytes, StandardCharsets.UTF_8);
@@ -111,6 +112,5 @@ public class AesUtil {
             throw new RuntimeException(e);
         }
     }
-
 
 }

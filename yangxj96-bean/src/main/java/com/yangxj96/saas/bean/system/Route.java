@@ -6,8 +6,6 @@ import com.yangxj96.saas.common.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 /**
  * 路由对象数据库实体
  */
@@ -18,7 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "db_system.t_route")
-class Route extends BaseEntity implements Serializable {
+public class Route extends BaseEntity {
 
     @TableField(value = "uri")
     private String uri;

@@ -8,8 +8,6 @@ import com.yangxj96.saas.common.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 /**
  * 角色表
  */
@@ -20,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "db_user.t_role")
-public class Role extends BaseEntity implements Serializable {
+public class Role extends BaseEntity {
 
     /**
      * 角色名称

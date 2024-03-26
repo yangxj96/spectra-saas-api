@@ -8,8 +8,6 @@ import com.yangxj96.saas.common.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 /**
  * 权限表实体
  */
@@ -20,7 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "db_user.t_authority")
-public class Authority extends BaseEntity implements Serializable {
+public class Authority extends BaseEntity {
 
     /**
      * 权限名称
