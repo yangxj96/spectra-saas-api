@@ -5,10 +5,10 @@ import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 
 plugins {
     java
-    alias(libs.plugins.spring.boot) apply(false)
-    alias(libs.plugins.spring.dependency.management) apply(false)
-    alias(libs.plugins.kotlin.jvm) apply(false)
-    alias(libs.plugins.kotlin.spring) apply(false)
+    alias(libs.plugins.spring.boot) apply (false)
+    alias(libs.plugins.spring.dependency.management) apply (false)
+    alias(libs.plugins.kotlin.jvm) apply (false)
+    alias(libs.plugins.kotlin.spring) apply (false)
 }
 
 allprojects {
@@ -55,6 +55,9 @@ subprojects {
         compileOnly("org.jetbrains:annotations:${rootProject.libs.versions.jetbrains.get()}")
         // kotlin支持
         implementation("org.jetbrains.kotlin:kotlin-reflect")
+        // lombok
+        compileOnly("org.projectlombok:lombok")
+        annotationProcessor("org.projectlombok:lombok")
     }
 
     // 指定中文编码
