@@ -1,11 +1,19 @@
-package com.yangxj96.saas.common.respond
+package com.yangxj96.saas.common.respond;
 
+
+
+
+import lombok.Getter;
+
+import java.util.Objects;
 
 /**
  * 通用响应的状态,<br></br>
  * 进行主要是进行标准化响应内容,也许以后如果增加国际化相关内容可能会有用
  */
-enum class RStatus(val code: Int, val msg: String) {
+@Getter
+public enum RStatus {
+
     /*
     code分布:
     认证相关: 100000 - 199999
@@ -39,14 +47,23 @@ enum class RStatus(val code: Int, val msg: String) {
     NOT_FIND_ROUTE(200011, "未找到路由"),
     NOT_FIND_TOKEN(200012, "未获取到token");
 
-    companion object {
-        fun getMsgByCode(code: Int?): String {
-            for (status in entries) {
-                if (status.code == code) {
-                    return status.msg
-                }
-            }
-            return "undefined"
-        }
+
+    private final Integer code;
+
+    private final String msg;
+
+    RStatus(Integer code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
+
+    public String getMsgByCode(Integer code) {
+        for (RStatus status : values()) {
+            if (Objects.equals(status.code, code)) {
+                return status.msg;
+            }
+        }
+        return "undefined";
+    }
+
 }
