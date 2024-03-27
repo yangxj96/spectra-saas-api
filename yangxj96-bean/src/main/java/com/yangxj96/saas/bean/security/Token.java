@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-class Token implements Serializable {
+public class Token implements Serializable {
 
     /**
      * 账户ID
