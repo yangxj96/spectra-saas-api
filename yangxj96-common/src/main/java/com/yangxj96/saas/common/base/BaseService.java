@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @param <O> 子类对应的实体
  *            </O>
  */
-interface BaseService<O extends BaseEntity> extends IService<O> {
+public interface BaseService<O extends BaseEntity> extends IService<O> {
 
     O create(O datum);
 
