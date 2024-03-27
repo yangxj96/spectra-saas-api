@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * 字符串转LocalDatetime的Converter
  */
-class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
+public class StringToLocalDateTimeConverter implements Converter<String, LocalDateTime> {
 
     @Resource
     private JacksonProperties props;

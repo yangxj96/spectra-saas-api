@@ -1,7 +1,7 @@
 plugins {
     id "java"
-    alias(libs.plugins.spring.boot) apply (false)
-    alias(libs.plugins.spring.dependency.management) apply (false)
+    alias(libs.plugins.spring.boot) apply(false)
+    alias(libs.plugins.spring.dependency.management) apply(false)
 }
 
 allprojects {
@@ -34,39 +34,30 @@ subprojects {
     // 等同于dependencyManagement {}
     dependencyManagement {
         imports {
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${rootProject.libs.versions.springCloud.get()}")
-            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${rootProject.libs.versions.springCloudAlibaba.get()}")
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${rootProject.libs.versions.springCloud.get()}"
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${rootProject.libs.versions.springCloudAlibaba.get()}"
         }
     }
 
     dependencies {
         // 测试 begin
-        testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
         // 测试 end
-        compileOnly("org.jetbrains:annotations:${rootProject.libs.versions.jetbrains.get()}")
-        // kotlin支持
-        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        compileOnly "org.jetbrains:annotations:${rootProject.libs.versions.jetbrains.get()}"
         // lombok
-        compileOnly("org.projectlombok:lombok")
-        annotationProcessor("org.projectlombok:lombok")
+        compileOnly "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
     }
 
     // 指定中文编码
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
     }
 
     // 测试
     tasks.named('test') {
-    useJUnitPlatform()
+        useJUnitPlatform()
     }
-
-    // tasks.withType<KotlinCompile> {
-    //     kotlinOptions {
-    //         freeCompilerArgs += "-Xjsr305=strict"
-    //         jvmTarget = "17"
-    //     }
-    // }
 
     // 官方提供的打包为OCI镜像的配置
     // tasks.named<BootBuildImage>("bootBuildImage") {

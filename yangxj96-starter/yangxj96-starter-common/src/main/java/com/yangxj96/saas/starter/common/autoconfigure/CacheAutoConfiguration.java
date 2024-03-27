@@ -30,15 +30,14 @@ public class CacheAutoConfiguration {
                     if (param.getClass().isArray()) {
                         var arrStr = new StringBuilder("[");
                         if (param instanceof List<?> p) {
-                            p.forEach(item -> {
-                                arrStr.append(item).append(",");
-                            });
+                            p.forEach(item -> arrStr.append(item).append(","));
                         }
                         str.append(arrStr.substring(0, arrStr.length() - 1)).append("]&");
                     } else {
                         str.append(param).append("&");
                     }
                 }
+                result = String.format("%s{%s}", method.getName(), str.substring(0, str.length() - 1));
             }
             return result;
         };
