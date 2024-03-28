@@ -54,7 +54,7 @@ public enum RStatus {
         this.msg = msg;
     }
 
-    public String getMsgByCode(Integer code) {
+    public static String getMsgByCode(Integer code) {
         for (RStatus status : values()) {
             if (Objects.equals(status.code, code)) {
                 return status.msg;
