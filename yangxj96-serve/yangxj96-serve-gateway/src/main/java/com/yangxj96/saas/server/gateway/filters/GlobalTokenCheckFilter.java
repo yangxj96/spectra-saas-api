@@ -43,9 +43,7 @@ public class GlobalTokenCheckFilter implements GlobalFilter, Ordered {
         var token = exchange.getRequest().getHeaders().get("Authorization");
         var url = exchange.getRequest().getURI().toString();
         AtomicBoolean isWhite = new AtomicBoolean(false);
-        whites.forEach(it -> {
-            isWhite.set(url.contains(it));
-        });
+        whites.forEach(it -> isWhite.set(url.contains(it)));
         if ((token != null && !token.isEmpty()) || isWhite.get()) {
             return chain.filter(exchange);
         }

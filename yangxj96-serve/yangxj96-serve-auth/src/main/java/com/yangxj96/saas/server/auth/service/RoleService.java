@@ -4,7 +4,6 @@ import cn.hutool.core.lang.tree.Tree;
 import com.yangxj96.saas.bean.user.Authority;
 import com.yangxj96.saas.bean.user.Role;
 import com.yangxj96.saas.common.base.BaseService;
-import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance;
 
 import java.util.List;
 
@@ -20,11 +19,6 @@ public interface RoleService extends BaseService<Role> {
      * @return 树结构的角色列表
      */
     List<Tree<String>> tree();
-
-    /**
-     * 关联权限
-     */
-    void relevance(RoleRelevance params);
 
     /**
      * 获取角色拥有的权限

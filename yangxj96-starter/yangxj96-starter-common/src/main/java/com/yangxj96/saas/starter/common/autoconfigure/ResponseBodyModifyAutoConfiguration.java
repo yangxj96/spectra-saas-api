@@ -26,7 +26,7 @@ public class ResponseBodyModifyAutoConfiguration implements ResponseBodyAdvice<O
         if (returnType.getMethod() != null) {
             clazz = returnType.getMethod().getDeclaringClass();
         }
-        if (converterType.getSimpleName().equals(ByteArrayHttpMessageConverter.class.getSimpleName())) {
+        if (converterType.isAssignableFrom(ByteArrayHttpMessageConverter.class)) {
             return false;
         }
         return clazz != null &&

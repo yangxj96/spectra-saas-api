@@ -6,7 +6,10 @@ package com.yangxj96.saas.starter.security.constant;
  */
 public class EnvCons {
 
-    public final static String PREFIX = "[权限配置]:";
+    private EnvCons(){
+    }
 
-    public final static String TOKEN_PREFIX = "Authorization";
+    public static final String PREFIX = "[权限配置]:";
+
+    public static final String TOKEN_PREFIX = "Authorization";
 }

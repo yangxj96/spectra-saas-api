@@ -11,7 +11,6 @@ import com.yangxj96.saas.common.base.BaseServiceImpl;
 import com.yangxj96.saas.common.respond.R;
 import com.yangxj96.saas.common.respond.RStatus;
 import com.yangxj96.saas.server.auth.mapper.RoleMapper;
-import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance;
 import com.yangxj96.saas.server.auth.service.RoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,11 +43,6 @@ public class RoleServiceImpl extends BaseServiceImpl<RoleMapper, Role> implement
             return db;
         }
         return super.create(datum);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void relevance(RoleRelevance params) {
-
     }
 
     public List<Tree<String>> tree() {

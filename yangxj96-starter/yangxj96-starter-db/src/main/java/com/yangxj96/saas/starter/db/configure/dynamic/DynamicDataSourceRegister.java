@@ -23,7 +23,7 @@ public class DynamicDataSourceRegister implements EnvironmentAware {
     /**
      * 指定默认数据源(springboot2.0默认数据源是hikari如何想使用其他数据源可以自己配置)
      */
-    private final Class<HikariDataSource> DATASOURCE_TYPE_DEFAULT = HikariDataSource.class;
+    private static final Class<HikariDataSource> DATASOURCE_TYPE_DEFAULT = HikariDataSource.class;
 
     /**
      * 默认数据源
@@ -33,7 +33,7 @@ public class DynamicDataSourceRegister implements EnvironmentAware {
     /**
      * 用户自定义数据源
      */
-    private Map<Object, Object> customDataSources = new HashMap<>();
+    private final Map<Object, Object> customDataSources = new HashMap<>();
 
 
     @Override
@@ -57,7 +57,6 @@ public class DynamicDataSourceRegister implements EnvironmentAware {
             datum.setUrl("jdbc:postgresql://localhost:5432/VJVDQIWBMEJSMYAJX");
             datum.setUsername(env.getProperty("spring.datasource.username"));
             datum.setPassword(env.getProperty("spring.datasource.password"));
-            //customDataSources["tenant-$i"] = buildDataSource(datum);
             customDataSources.put("tenant-" + i, buildDataSource(datum));
         }
     }

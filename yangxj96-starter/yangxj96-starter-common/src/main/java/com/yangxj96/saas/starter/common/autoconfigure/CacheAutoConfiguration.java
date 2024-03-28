@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnClass(value = { EnableCaching.class })
 public class CacheAutoConfiguration {
 
-    private final static String PREFIX = "[缓存配置]:";
+    private static final String PREFIX = "[缓存配置]:";
 
     /**
      * 缓存生成规则

@@ -34,7 +34,6 @@ public class GlobalExceptionHandle implements ErrorWebExceptionHandler {
         if (response.isCommitted()) {
             return Mono.error(ex);
         }
-        // ex.printStackTrace();
         log.atError().log("处理错误:{}", ex.getMessage(), ex);
         // 设置异常返回类型
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -56,19 +55,19 @@ public class GlobalExceptionHandle implements ErrorWebExceptionHandler {
      * @return 翻译后的 [R]
      */
     private R<Object> transition(Throwable ex) {
-        if (ex.getClass().getName().equals(NotFoundTokenException.class.getName())) {
+        if (ex.getClass().isAssignableFrom(NotFoundTokenException.class)) {
             return R.failure(RStatus.NOT_FIND_TOKEN);
         }
 
-        if (ex.getClass().getName().equals(NotFoundException.class.getName())) {
+        if (ex.getClass().isAssignableFrom(NotFoundException.class)) {
             return R.failure(RStatus.GATEWAY_NOT_FOUND);
         }
 
-        if (ex.getClass().getName().equals(ResponseStatusException.class.getName())) {
+        if (ex.getClass().isAssignableFrom(ResponseStatusException.class)) {
             return R.failure(RStatus.GATEWAY_RESPONSE_STATUS);
         }
 
-        if (ex.getClass().getName().equals(NullPointerException.class.getName())) {
+        if (ex.getClass().isAssignableFrom(NullPointerException.class)) {
             return R.failure(RStatus.NULL_POINTER);
         }
 

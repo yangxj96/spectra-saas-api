@@ -1,5 +1,7 @@
 package com.yangxj96.saas.common.utils;
 
+import com.yangxj96.saas.common.exception.TransitionException;
+
 import java.io.*;
 import java.util.*;
 
@@ -18,7 +20,7 @@ public class ConvertUtil {
      * @param vClass map的value的类型
      * @param <V>    V 的类型
      * @return 转换后的list map,可能为空
-     *         </V>
+     * </V>
      */
     public static <V> List<Map<String, V>> objToListMap(Object obj, Class<V> vClass) {
         return objToListMap(obj, String.class, vClass);
@@ -48,7 +50,7 @@ public class ConvertUtil {
      * @param clazz list item的类型
      * @param <T>   list item的类型
      * @return 转换后的list, 可能为空
-     *         </T>
+     * </T>
      */
     public static <T> List<T> objToList(Object obj, Class<T> clazz) {
         if (obj instanceof List<?>) {
@@ -76,7 +78,7 @@ public class ConvertUtil {
             stream.close();
             return object;
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException("字节数组转对象异常");
+            throw new TransitionException("字节数组转对象异常");
         }
     }
 
@@ -96,7 +98,7 @@ public class ConvertUtil {
             oo.close();
             return result;
         } catch (IOException e) {
-            throw new RuntimeException("对象转字节数组异常");
+            throw new TransitionException("对象转字节数组异常");
         }
     }
 }

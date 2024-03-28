@@ -5,7 +5,7 @@ package com.yangxj96.saas.common.exception;
  */
 public class DataNotExistException extends RuntimeException {
 
-    private DataNotExistException(String message) {
+    public DataNotExistException(String message) {
         super(message);
     }
 

@@ -1,5 +1,6 @@
 package com.yangxj96.saas.common.utils;
 
+import com.yangxj96.saas.common.exception.AESException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -21,6 +22,9 @@ import java.util.Base64;
  */
 @Slf4j
 public class AesUtil {
+
+    private AesUtil() {
+    }
 
     /**
      * 算法规则<br>
@@ -74,7 +78,7 @@ public class AesUtil {
                     .array();
             return Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new AESException(e);
         }
     }
 
@@ -109,7 +113,7 @@ public class AesUtil {
             var bytes = cipher.doFinal(plain);
             return new String(bytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new AESException(e);
         }
     }
 

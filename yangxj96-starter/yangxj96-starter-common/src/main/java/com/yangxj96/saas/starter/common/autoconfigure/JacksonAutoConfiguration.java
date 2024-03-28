@@ -56,7 +56,7 @@ public class JacksonAutoConfiguration {
         this.properties = properties;
     }
 
-    private final static String PREFIX = "[Jackson]:";
+    private static final String PREFIX = "[Jackson]:";
 
     /**
      * jackson 对java8的新时间对象的配置

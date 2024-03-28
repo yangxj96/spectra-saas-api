@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 @Slf4j
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
-    private final static String PREFIX = "[动态数据源]:";
+    private static final String PREFIX = "[动态数据源]:";
 
     /**
      * 确定当前数据源是那个

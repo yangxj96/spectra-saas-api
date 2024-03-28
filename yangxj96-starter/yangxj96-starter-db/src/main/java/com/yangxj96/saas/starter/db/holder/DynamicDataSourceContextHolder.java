@@ -1,9 +1,9 @@
 package com.yangxj96.saas.starter.db.holder;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -12,16 +12,19 @@ import java.util.List;
 @Slf4j
 public class DynamicDataSourceContextHolder {
 
+    private DynamicDataSourceContextHolder() {
+    }
 
     /**
      * 存放当前线程使用的数据源类型信息
      */
-    private final static ThreadLocal<String> contextHolder = new ThreadLocal<>();
+    private static final ThreadLocal<String> contextHolder = new ThreadLocal<>();
 
     /**
      * 存放数据源id
      */
-    public static List<String> dataSourceIds = new ArrayList<>();
+    @Getter
+    private static final List<String> dataSourceIds = new ArrayList<>();
 
     /**
      * 设置数据源
@@ -38,7 +41,7 @@ public class DynamicDataSourceContextHolder {
      * @return 数据源
      */
     public static String get() {
-        if (!contains(contextHolder.get())) {
+        if (Boolean.FALSE.equals(contains(contextHolder.get()))) {
             log.info("数据源不存在");
         }
         return contextHolder.get();

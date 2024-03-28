@@ -1,6 +1,6 @@
 package com.yangxj96.saas.starter.common.autoconfigure;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Slf4j
 @AutoConfiguration
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SpringMvcAutoConfiguration {
 
 
-    private final static String PREFIX = "[SpringMVC]:";
+    private static final String PREFIX = "[SpringMVC]:";
 
 
     /**
@@ -49,47 +50,57 @@ public class SpringMvcAutoConfiguration {
                 for (String param : request.getParameterMap().keySet()) {
                     var k = "";
                     if (param.contains("_")) {
-                        k = StrUtil.toCamelCase(param);
+                        k = CharSequenceUtil.toCamelCase(param);
                     } else {
                         k = param;
                     }
                     formatted.put(k, request.getParameterValues(k));
                 }
-                filterChain.doFilter(new HttpServletRequestWrapper(request) {
-                    @Override
-                    public String getParameter(String name) {
-                        log.atDebug().log("{} getParameter", PREFIX);
-                        if (formatted.containsKey(name)) {
-                            return formatted.get(name)[0];
-                        } else {
-                            return null;
-                        }
-                    }
-
-                    @Override
-                    public Enumeration<String> getParameterNames() {
-                        log.atDebug().log("{} getParameterNames", PREFIX);
-                        return Collections.enumeration(formatted.keySet());
-                    }
-
-                    @Override
-                    public String[] getParameterValues(String name) {
-                        log.atDebug().log("{} getParameterValues", PREFIX);
-                        if (formatted.containsKey(name)) {
-                            return formatted.get(name);
-                        } else {
-                            return new String[]{""};
-                        }
-                    }
-
-                    @Override
-                    public Map<String, String[]> getParameterMap() {
-                        log.atDebug().log("{} getParameterMap", PREFIX);
-                        return formatted;
-                    }
-                }, response);
+                filterChain.doFilter(new ParamsModifyHttpServletRequestWrapper(request, formatted), response);
             }
         };
+    }
+
+    static class ParamsModifyHttpServletRequestWrapper extends HttpServletRequestWrapper {
+
+        private final ConcurrentMap<String, String[]> formatted;
+
+        public ParamsModifyHttpServletRequestWrapper(HttpServletRequest request, ConcurrentMap<String, String[]> formatted) {
+            super(request);
+            this.formatted = formatted;
+        }
+
+        @Override
+        public String getParameter(String name) {
+            log.atDebug().log("{} getParameter", PREFIX);
+            if (formatted.containsKey(name)) {
+                return formatted.get(name)[0];
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public Enumeration<String> getParameterNames() {
+            log.atDebug().log("{} getParameterNames", PREFIX);
+            return Collections.enumeration(formatted.keySet());
+        }
+
+        @Override
+        public String[] getParameterValues(String name) {
+            log.atDebug().log("{} getParameterValues", PREFIX);
+            if (formatted.containsKey(name)) {
+                return formatted.get(name);
+            } else {
+                return new String[]{""};
+            }
+        }
+
+        @Override
+        public Map<String, String[]> getParameterMap() {
+            log.atDebug().log("{} getParameterMap", PREFIX);
+            return formatted;
+        }
     }
 
 

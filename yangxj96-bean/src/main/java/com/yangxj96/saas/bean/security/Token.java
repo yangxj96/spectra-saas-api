@@ -31,7 +31,7 @@ public class Token implements Serializable {
     /**
      * 访问 token
      */
-    private String token;
+    private String accessToken;
 
     /**
      * 权限列表

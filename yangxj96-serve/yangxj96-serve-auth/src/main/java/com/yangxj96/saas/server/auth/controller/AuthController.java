@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * 认证控制器
  */
@@ -24,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AuthController {
 
 
-    private final static String PREFIX = "[AuthController]: ";
+    private static final String PREFIX = "[AuthController]: ";
 
 
     @Resource
@@ -41,7 +43,7 @@ class AuthController {
      */
     @SaIgnore
     @PostMapping(value = "/login")
-    public Token login(@Validated @RequestBody AuthLogin param) {
+    public Token login(@Validated @RequestBody AuthLogin param) throws LoginException {
         log.info("${PREFIX}用户:${param.username}开始登录,输入的密码为:${param.password}");
         return bindService.login(param.getUsername(), param.getPassword());
     }
@@ -53,7 +55,7 @@ class AuthController {
      */
     @SaCheckLogin
     @PostMapping("/check_token")
-    public Token checkToken() {
+    public Token checkToken() throws LoginException {
         log.atDebug().log("{}登录检查,token:{}", PREFIX, request.getHeader("Authorization"));
         return bindService.check();
     }

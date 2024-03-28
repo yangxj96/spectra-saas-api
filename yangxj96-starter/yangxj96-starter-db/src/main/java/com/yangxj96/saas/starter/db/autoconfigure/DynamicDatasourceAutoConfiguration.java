@@ -51,7 +51,7 @@ import java.util.function.Consumer;
 @EnableConfigurationProperties(DBProperties.class)
 public class DynamicDatasourceAutoConfiguration {
 
-    private final static String PREFIX = "[动态数据源]:";
+    private static final String PREFIX = "[动态数据源]:";
 
     private final MybatisPlusProperties properties;
     private final ResourceLoader resourceLoader;
@@ -113,11 +113,11 @@ public class DynamicDatasourceAutoConfiguration {
         var targetDataSources = new HashMap<>();
         // 将主数据源添加到更多数据源中
         targetDataSources.put("default", register.getDefaultDataSource());
-        DynamicDataSourceContextHolder.dataSourceIds.add("default");
+        DynamicDataSourceContextHolder.getDataSourceIds().add("default");
         // 添加更多数据源
         targetDataSources.putAll(register.getCustomDataSources());
         for (var key : register.getCustomDataSources().keySet()) {
-            DynamicDataSourceContextHolder.dataSourceIds.add(key.toString());
+            DynamicDataSourceContextHolder.getDataSourceIds().add(key.toString());
         }
         source.setTargetDataSources(targetDataSources);
         source.setDefaultTargetDataSource(register.getDefaultDataSource());

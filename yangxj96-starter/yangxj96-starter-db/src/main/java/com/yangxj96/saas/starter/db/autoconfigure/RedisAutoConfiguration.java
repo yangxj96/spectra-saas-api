@@ -24,7 +24,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisAutoConfiguration {
 
 
-    private final static String PREFIX = "[Redis]:";
+    private static final String PREFIX = "[Redis]:";
 
 
     /**

@@ -1,3 +1,5 @@
+import org.springframework.boot.buildpack.platform.build.PullPolicy
+
 plugins {
     id "java"
     alias(libs.plugins.spring.boot) apply(false)
@@ -54,53 +56,50 @@ subprojects {
         options.encoding = "UTF-8"
     }
 
-    // 测试
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
-
-    // 官方提供的打包为OCI镜像的配置
-    // tasks.named<BootBuildImage>("bootBuildImage") {
-    //     // 是否发布到docker
-    //     publish.set(false)
-    //     // 镜像名称
-    //     // imageName.set("${project.name}:${project.version}")
-    //     // 不存在的时候才下载
-    //     pullPolicy.set(PullPolicy.IF_NOT_PRESENT)
-    //     // 构建器,指定版本
-    //     builder.set("paketobuildpacks/builder:0.1.383-tiny")
-    //     runImage.set("paketobuildpacks/run:1.3.128-tiny-cnb")
-
-    //     // 环境变量
-    //     // -Duser.timezone=Asia/Shanghai
-    //     environment.set(
-    //         mapOf(
-    //             "HTTP_PROXY" to "http://192.168.2.29:7890",
-    //             "HTTPS_PROXY" to "http://192.168.2.29:7890",
-    //             "BPE_APPEND_JAVA_TOOL_OPTIONS" to " -Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m"
-    //         )
-    //     )
-
-    //     buildCache {
-    //         volume {
-    //             name.set("cache-${rootProject.name}.build")
-    //         }
-    //     }
-    //     launchCache {
-    //         volume {
-    //             name.set("cache-${rootProject.name}.launch")
-    //         }
-    //     }
-    // }
-
     // java编译任务设置
     tasks.named("compileJava") {
         inputs.files(tasks.named("processResources"))
     }
 
+    // 测试
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+
+    bootBuildImage {
+        // 是否推送到docker仓库
+        publish.set(false)
+        // 镜像名字
+        // imageName.set("${project.name}:${project.version}")
+        pullPolicy.set(PullPolicy.IF_NOT_PRESENT)
+        // 构建器和运行环境
+        builder.set("paketobuildpacks/builder:0.1.383-tiny")
+        runImage.set("paketobuildpacks/run:1.3.128-tiny-cnb")
+        // 环境变量
+        var e = new HashMap<String, String>()
+        e.put("HTTP_PROXY", "http://192.168.2.29:7890")
+        e.put("HTTPS_PROXY", "http://192.168.2.29:7890")
+        e.put("BPE_APPEND_JAVA_TOOL_OPTIONS", " -Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m")
+        environment.set(e)
+        // 构建缓存
+        buildCache {
+            volume {
+                name.set("cache-${rootProject.name}.build")
+            }
+        }
+        // 运行缓存
+        launchCache {
+            volume {
+                name.set("cache-${rootProject.name}.launch")
+            }
+        }
+    }
+
     // java doc任务设置
-    tasks.named("javadoc") {
-        options.encoding = "UTF-8"
+    javadoc {
+        options {
+            encoding("UTF-8")
+        }
     }
 }
 

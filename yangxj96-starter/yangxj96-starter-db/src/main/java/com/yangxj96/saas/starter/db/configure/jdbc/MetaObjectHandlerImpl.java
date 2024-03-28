@@ -16,19 +16,19 @@ public class MetaObjectHandlerImpl implements MetaObjectHandler {
     /**
      * 创建人
      */
-    private final static String CREATED_USER = "createdUser";
+    private static final String CREATED_USER = "createdUser";
     /**
      * 创建时间
      */
-    private final static String CREATED_TIME = "createdTime";
+    private static final String CREATED_TIME = "createdTime";
     /**
      * 更新人
      */
-    private final static String UPDATED_USER = "updatedUser";
+    private static final String UPDATED_USER = "updatedUser";
     /**
      * 更新时间
      */
-    private final static String UPDATED_TIME = "updatedTime";
+    private static final String UPDATED_TIME = "updatedTime";
 
 
     @Override

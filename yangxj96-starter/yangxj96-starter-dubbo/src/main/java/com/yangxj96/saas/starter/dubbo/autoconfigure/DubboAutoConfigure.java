@@ -15,7 +15,28 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.HashMap;
 
-
+/**
+ * 针对方法配置
+ * <pre>
+ *      @Bean
+ *      @ConditionalOnBean(RoleDubboService.class)
+ *      fun roleServiceConfig(service: RoleDubboService): ServiceConfig<RoleDubboService> {
+ *         val config = ServiceConfig<RoleDubboService>()
+ *         config.setInterface(RoleDubboService::class.java)
+ *         config.ref = service
+ *         config.version = "1.0.0"
+ *         val methods = mutableListOf<MethodConfig>()
+ *         // 可以针对每个方法进行配置
+ *         methods.add(MethodConfig().also {
+ *             it.name = "getAll"
+ *             it.timeout = 1000
+ *             it.retries = 3
+ *         })
+ *         config.methods = methods
+ *         return config
+ *     }
+ * </pre>
+ */
 @Slf4j
 @AutoConfiguration(
         before = DubboAutoConfiguration.class
@@ -23,7 +44,7 @@ import java.util.HashMap;
 @EnableConfigurationProperties(DubboProperties.class)
 public class DubboAutoConfigure {
 
-    private final static String PREFIX = "[远程调用]: ";
+    private static final String PREFIX = "[远程调用]: ";
 
     private final DubboProperties props;
 
@@ -85,24 +106,5 @@ public class DubboAutoConfigure {
         return config;
     }
 
-    //@Bean
-    //@ConditionalOnBean(RoleDubboService::class)
-    //fun roleServiceConfig(service: RoleDubboService): ServiceConfig<RoleDubboService> {
-    //    val config = ServiceConfig<RoleDubboService>()
-    //    config.setInterface(RoleDubboService::class.java)
-    //    config.ref = service
-    //    config.version = "1.0.0"
-    //
-    //    val methods = mutableListOf<MethodConfig>()
-    //
-    //    // 可以针对每个方法进行配置
-    //    methods.add(MethodConfig().also {
-    //        it.name = "getAll"
-    //        it.timeout = 1000
-    //        it.retries = 3
-    //    })
-    //
-    //    config.methods = methods
-    //    return config
-    //}
+
 }

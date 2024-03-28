@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class GlobalErrorAutoConfiguration {
 
-    private final static String PREFIX = "[全局异常配置]:";
+    private static final String PREFIX = "[全局异常配置]:";
 
     /**
      * 无权限异常

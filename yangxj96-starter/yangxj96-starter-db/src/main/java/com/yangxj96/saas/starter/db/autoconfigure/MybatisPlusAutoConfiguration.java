@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Bean;
 @EnableConfigurationProperties(DBProperties.class)
 public class MybatisPlusAutoConfiguration {
 
-    private final static String PREFIX = "[MybatisPlus]:";
+    private static final String PREFIX = "[MybatisPlus]:";
 
 
     @Bean

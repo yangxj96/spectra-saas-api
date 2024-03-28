@@ -33,9 +33,7 @@ public class RouteServiceImpl implements RouteService {
     public void refresh() {
         val routes = routeDubboService.getAllRoute();
         log.atDebug().log("获取路由:{}", routes);
-        routes.forEach(it -> {
-            routeDefinitionWriter.save(Mono.just(RouteUtil.toDefinition(it))).subscribe();
-        });
+        routes.forEach(it -> routeDefinitionWriter.save(Mono.just(RouteUtil.toDefinition(it))).subscribe());
         publisher.publishEvent(new RefreshRoutesEvent(this));
     }
 }

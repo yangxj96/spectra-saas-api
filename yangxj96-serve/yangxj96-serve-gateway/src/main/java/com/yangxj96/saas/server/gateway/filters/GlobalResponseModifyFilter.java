@@ -28,6 +28,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -78,7 +79,7 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
         @Override
         public Mono<Void> writeWith(Publisher<? extends DataBuffer> body) {
             var httpHeaders = new HttpHeaders();
-            if (isNotModify(exchange, httpHeaders) || getDelegate().getStatusCode() == null) {
+            if (Boolean.TRUE.equals(isNotModify(exchange, httpHeaders)) || getDelegate().getStatusCode() == null) {
                 return super.writeWith(body);
             }
 
@@ -97,7 +98,7 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
             return bodyInserter
                     .insert(cachedBodyOutputMessage, new BodyInserterContext())
                     .then(Mono.defer(() -> {
-                        var result = new R<Object>(RStatus.FAILURE.getCode(), RStatus.FAILURE.getMsg());
+                        var result = new R<>(RStatus.FAILURE.getCode(), RStatus.FAILURE.getMsg());
                         var headers = exchange.getResponse().getHeaders();
                         var code = headers.getFirst("result-code");
                         if (StringUtils.isNotEmpty(code)) {
@@ -164,7 +165,9 @@ public class GlobalResponseModifyFilter implements GlobalFilter, Ordered {
          */
         private DataBuffer modify(DataBuffer buffer, R<Object> result) {
             byte[] bytes;
-            var str = StandardCharsets.UTF_8.decode(buffer.toByteBuffer()).toString();
+            var b = ByteBuffer.allocate(buffer.readableByteCount());
+            buffer.toByteBuffer(b);
+            var str = StandardCharsets.UTF_8.decode(b).toString();
             try {
                 // 在这里可以进行加解密
                 if (JSONUtil.isTypeJSON(str)) {

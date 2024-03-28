@@ -6,7 +6,6 @@ import com.yangxj96.saas.bean.user.Authority;
 import com.yangxj96.saas.bean.user.Role;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
-import com.yangxj96.saas.server.auth.pojo.vo.RoleRelevance;
 import com.yangxj96.saas.server.auth.service.RoleService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,12 +48,6 @@ public class RoleController extends BaseController<Role, RoleService> {
     @SaCheckPermission(value = "ROLE_QUERY", orRole = "ROLE_SYSADMIN")
     public List<Tree<String>> tree() {
         return bindService.tree();
-    }
-
-    @PostMapping("/relevance")
-    @SaCheckPermission(value = "ROLE_MODIFY", orRole = "ROLE_SYSADMIN")
-    public void relevance(@Validated @RequestBody RoleRelevance params) {
-        bindService.relevance(params);
     }
 
     /**

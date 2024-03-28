@@ -17,6 +17,7 @@ import java.util.Map;
 @Slf4j
 public class RouteUtil {
 
+    private RouteUtil(){}
 
     /**
      * 数据库的路由信息对象转换成gateway的路由定义
@@ -28,7 +29,7 @@ public class RouteUtil {
         definition.setId(route.getRouteId());
         definition.setOrder(route.getOrder());
         // 如果是http的则要进行转换一下,如果不是则应该就是lb开头的要进行负载均衡的
-        URI uri = null;
+        URI uri;
         if (route.getUri().startsWith("http")) {
             uri = UriComponentsBuilder.fromHttpUrl(route.getUri()).build().toUri();
         } else {
