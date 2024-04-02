@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="平台服务" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <module name="yangxj96-saas-api.yangxj96-serve.yangxj96-serve-platform.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.yangxj96.saas.server.platform.Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

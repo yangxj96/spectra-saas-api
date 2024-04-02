@@ -1,5 +1,8 @@
 package com.yangxj96.saas.server.platform.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yangxj96.saas.bean.common.QueryParams;
 import com.yangxj96.saas.bean.system.Route;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
@@ -32,6 +35,14 @@ public class RouteController extends BaseController<Route, RouteService> {
     @PutMapping
     public Route modify(@Validated @RequestBody Route params) {
         return super.modify(params);
+    }
+
+    @GetMapping
+    public Page<Route> select(QueryParams common, Route datum) {
+        return bindService.page(
+                new Page<>(common.getPageNum(), common.getPageSize()),
+                new LambdaQueryWrapper<>(Route.class).setEntity(datum)
+        );
     }
 
 }
