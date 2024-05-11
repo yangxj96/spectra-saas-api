@@ -26,3 +26,7 @@ mybatis-plus:
 dubbo:
   application:
     logger: slf4j
+
+logging:
+  level:
+    "org.apache.dubbo": warn

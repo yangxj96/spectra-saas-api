@@ -1,44 +1,36 @@
 # 版本
 [versions]
-springCloud = "2022.0.4"
-springCloudAlibaba = "2022.0.0.0-RC1"
 jetbrains = "23.1.0"
-# 插件版本号
-spring-boot = "3.1.7"
-spring-dependency-management = "1.1.4"
-kotlin-jvm = "1.9.21"
-kotlin-spring = "1.9.21"
-# satoken
-satoken = "1.37.0"
-# 工具类
-hutoolAll = "5.8.25"
-commonsLang3 = "3.12.0"
-commonsCollections4 = "4.4"
-commonsPool2 = "2.11.1"
-bcprovJdk15on = "1.70"
-# 数据库
-mybatisPlus = "3.5.5"
 # 依赖
 [libraries]
 # 数据库相关
-mybatisPlus = { module = "com.baomidou:mybatis-plus-boot-starter", version.ref = "mybatisPlus" }
+mybatis-plus = { module = "com.baomidou:mybatis-plus-boot-starter", version = "3.5.5" }
 # 用到的工具类相关
-hutoolAll = { module = "cn.hutool:hutool-all", version.ref = "hutoolAll" }
-commonsLang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3" }
-commonsCollections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections4" }
-commonsPool2 = { module = "org.apache.commons:commons-pool2", version.ref = "commonsPool2" }
-bcprovJdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version.ref = "bcprovJdk15on" }
+hutool-all = { module = "cn.hutool:hutool-all", version = "5.8.25" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.12.0" }
+commons-collections4 = { module = "org.apache.commons:commons-collections4", version = "4.4" }
+commons-pool2 = { module = "org.apache.commons:commons-pool2", version = "2.11.1" }
+bcprov-jdk15on = { module = "org.bouncycastle:bcprov-jdk15on", version = "1.70" }
+jetbrains = { module = "org.jetbrains:annotations", version = "23.1.0" }
 # satoken相关
-satokenCore = { module = "cn.dev33:sa-token-spring-boot3-starter", version.ref = "satoken" }
-satokenAop = { module = "cn.dev33:sa-token-spring-aop", version.ref = "satoken" }
-satokenRedisJackson = { module = "cn.dev33:sa-token-redis-jackson", version.ref = "satoken" }
-
+satoken-core = { module = "cn.dev33:sa-token-spring-boot3-starter", version = "1.37.0" }
+satoken-aop = { module = "cn.dev33:sa-token-spring-aop", version = "1.37.0" }
+satoken-redis-jackson = { module = "cn.dev33:sa-token-redis-jackson", version = "1.37.0" }
+# 远程RPC
+dubbo = { module = "org.apache.dubbo:dubbo-spring-boot-starter", version = "3.2.11" }
 # 组合
 [bundles]
-satoken = ["satokenCore", "satokenAop", "satokenRedisJackson"]
-commonTool = ["hutoolAll", "commonsLang3", "commonsCollections4", "commonsPool2", "bcprovJdk15on"]
-
+satoken = ["satoken-core", "satoken-aop", "satoken-redis-jackson"]
+common-tool = [
+    "hutool-all",
+    "commons-lang3",
+    "commons-collections4",
+    "commons-pool2",
+    "bcprov-jdk15on",
+    "jetbrains"
+]
+remote-rpc = ["dubbo"]
 # 插件
 [plugins]
-spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+spring-boot = { id = "org.springframework.boot", version = "3.1.7" }
+spring-dependency-management = { id = "io.spring.dependency-management", version = "1.1.4" }

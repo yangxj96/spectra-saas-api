@@ -10,11 +10,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * 用户认证服务的启动类
  */
-@EnableDubbo
-@MapperScan("com.yangxj96.saas.server.auth.mapper")
-@EnableDiscoveryClient
+@EnableDubbo(scanBasePackages = "com.yangxj96.saas.server.auth.dubbo")
 @EnableCaching
+@EnableDiscoveryClient
 @SpringBootApplication
+@MapperScan("com.yangxj96.saas.server.auth.mapper")
 public class Application {
 
     public static void main(String[] args) {
