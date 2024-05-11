@@ -1,8 +1,8 @@
 server:
-  port: 0
+  port: 8080
 spring:
   application:
-    name: yangxj96-serve-system
+    name: yangxj96-serve-gateway
   main:
     allow-bean-definition-overriding: true
   cloud:
@@ -10,12 +10,12 @@ spring:
       username: nacos
       password: QuVsKppcWvwwX2Vv
       discovery:
-        #ip: 49.235.101.106
+        ip: 49.235.101.106
         server-addr: 175.178.90.140:8848
-        namespace: 489961c7-8385-452f-b853-380f0eaf6df2
+        namespace: 5899f128-baf8-4c30-bf96-6e5a76578608
         metadata:
           depend:
-            - "yangxj96-serve-auth"
+            - "yangxj96-serve-platform"
       config:
         server-addr: 175.178.90.140:8848
         group: DEFAULT_GROUP
@@ -27,5 +27,5 @@ spring:
 mybatis-plus:
   type-aliases-package: com.yangxj96.saas.bean.platform
 yangxj96:
-  security:
-    enable: true
+  dubbo:
+    namespace: 9af98f57-9706-48a0-af1e-d685d34a1674

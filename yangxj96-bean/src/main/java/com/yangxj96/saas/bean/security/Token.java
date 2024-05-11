@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,11 +38,13 @@ public class Token implements Serializable {
     /**
      * 权限列表
      */
-    private List<String> authorities;
+    @Builder.Default
+    private List<String> authorities = new ArrayList<>();
 
     /**
      * 角色列表
      */
-    private List<String> roles;
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
 
 }

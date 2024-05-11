@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "com.yangxj96.saas"
-    version = "0.0.1-SNAPSHOT"
+    version = "0.0.1"
 
 
     repositories {
@@ -84,13 +84,13 @@ subprojects {
         builder.set("paketobuildpacks/builder:0.1.383-tiny")
         runImage.set("paketobuildpacks/run:1.3.128-tiny-cnb")
 
-        // 环境变量
         // -Duser.timezone=Asia/Shanghai
         environment.set(
             mapOf(
-                "HTTP_PROXY" to "http://192.168.2.29:7890",
-                "HTTPS_PROXY" to "http://192.168.2.29:7890",
-                "BPE_APPEND_JAVA_TOOL_OPTIONS" to " -Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m"
+                "HTTP_PROXY" to "http://192.168.1.21:7890",
+                "HTTPS_PROXY" to "http://192.168.1.21:7890",
+                "BPE_DELIM_JAVA_TOOL_OPTIONS " to " ",
+                "BPE_APPEND_JAVA_TOOL_OPTIONS" to " -Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m -XX:ParallelGCThreads=2"
             )
         )
     }

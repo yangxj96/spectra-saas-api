@@ -10,7 +10,6 @@ spring:
       username: nacos
       password: QuVsKppcWvwwX2Vv
       discovery:
-        #ip: 49.235.101.106
         server-addr: 175.178.90.140:8848
         namespace: 489961c7-8385-452f-b853-380f0eaf6df2
         metadata:
@@ -29,3 +28,5 @@ mybatis-plus:
 yangxj96:
   security:
     enable: true
+  dubbo:
+    namespace: 962cb3a9-ef75-41ee-b2c6-d1a0e49d66d8

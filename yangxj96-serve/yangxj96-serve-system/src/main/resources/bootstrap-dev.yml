@@ -1,0 +1,32 @@
+server:
+  port: 0
+spring:
+  application:
+    name: yangxj96-serve-system
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      username: nacos
+      password: QuVsKppcWvwwX2Vv
+      discovery:
+        server-addr: 175.178.90.140:8848
+        namespace: 489961c7-8385-452f-b853-380f0eaf6df2
+        metadata:
+          depend:
+            - "yangxj96-serve-auth"
+      config:
+        server-addr: 175.178.90.140:8848
+        group: DEFAULT_GROUP
+        refresh-enabled: true
+        file-extension: yml
+        extension-configs:
+          - data-id: yangxj96-saas-common.yml
+          - data-id: yangxj96-saas-datasource.yml
+mybatis-plus:
+  type-aliases-package: com.yangxj96.saas.bean.platform
+yangxj96:
+  security:
+    enable: true
+  dubbo:
+    namespace: 962cb3a9-ef75-41ee-b2c6-d1a0e49d66d8
