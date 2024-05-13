@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +39,9 @@ public class SpringMvcAutoConfiguration {
 
         return new OncePerRequestFilter() {
             @Override
-            protected void doFilterInternal(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            FilterChain filterChain) throws ServletException, IOException {
+            protected void doFilterInternal(@NotNull HttpServletRequest request,
+                                            @NotNull HttpServletResponse response,
+                                            @NotNull FilterChain filterChain) throws ServletException, IOException {
                 log.atDebug().log("{} 开始处理请求参数下划线转小驼峰命名", PREFIX);
                 if (!request.getMethod().toUpperCase(Locale.getDefault()).equals("GET")) {
                     filterChain.doFilter(request, response);
@@ -54,7 +55,7 @@ public class SpringMvcAutoConfiguration {
                     } else {
                         k = param;
                     }
-                    formatted.put(k, request.getParameterValues(k));
+                    formatted.put(k, request.getParameterValues(param));
                 }
                 filterChain.doFilter(new ParamsModifyHttpServletRequestWrapper(request, formatted), response);
             }

@@ -12,7 +12,7 @@ public interface BaseService<O extends BaseEntity> extends IService<O> {
 
     O create(O datum);
 
-    Boolean delete(String id);
+    Boolean delete(Long id);
 
     O modify(O datum);
 

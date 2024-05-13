@@ -33,7 +33,7 @@ public class BaseServiceImpl<M extends BaseMapper<O>, O extends BaseEntity>
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public Boolean delete(String id) {
+    public Boolean delete(Long id) {
         var datum = getById(id);
         if (datum == null) {
             throw new PlaceholderException();

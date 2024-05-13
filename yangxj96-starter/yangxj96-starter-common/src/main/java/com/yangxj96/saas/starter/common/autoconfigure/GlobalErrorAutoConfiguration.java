@@ -14,6 +14,8 @@ import cn.dev33.satoken.exception.NotPermissionException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.security.auth.login.LoginException;
+
 /**
  * 全局异常统一处理配置
  */
@@ -44,6 +46,18 @@ public class GlobalErrorAutoConfiguration {
     public R<Object> notLoginException(HttpServletResponse resp, NotLoginException e) {
         log.atError().log("{} 未登录异常", PREFIX, e);
         return R.failure(e.getMessage() != null ? e.getMessage() : "无权限");
+    }
+
+
+    /**
+     * 未登录异常
+     */
+    @ResponseBody
+    @ExceptionHandler(LoginException.class)
+    @ConditionalOnClass(LoginException.class)
+    public R<Object> notLoginException(HttpServletResponse resp, LoginException e) {
+        log.atError().log("{} 登录异常", PREFIX, e);
+        return R.failure(e.getMessage() != null ? e.getMessage() : "登录异常");
     }
 
     /**

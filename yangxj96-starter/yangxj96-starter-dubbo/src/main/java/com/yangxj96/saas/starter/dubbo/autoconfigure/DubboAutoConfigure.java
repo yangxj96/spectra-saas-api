@@ -61,6 +61,7 @@ public class DubboAutoConfigure {
         log.atDebug().log("{} 配置dubbo应用app相关配置", PREFIX);
         var config = new ApplicationConfig();
         config.setName(name + "-provider");
+        config.setQosPort(RandomUtil.randomInt(10000, 20000));
         // config.setLogger("slf4j");
         return config;
     }

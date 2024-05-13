@@ -29,7 +29,6 @@ public class StreamConsumer {
     @Resource
     private ObjectMapper om;
 
-
     /**
      * 租户消息
      */

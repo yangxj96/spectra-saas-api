@@ -1,7 +1,10 @@
 package com.yangxj96.saas.starter.common.autoconfigure;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
+import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -20,8 +23,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ResponseBodyModifyAutoConfiguration implements ResponseBodyAdvice<Object> {
 
+    @Resource
+    private ObjectMapper om;
+
     @Override
-    public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
+    public boolean supports(MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
         Class<?> clazz = null;
         if (returnType.getMethod() != null) {
             clazz = returnType.getMethod().getDeclaringClass();
@@ -35,9 +41,12 @@ public class ResponseBodyModifyAutoConfiguration implements ResponseBodyAdvice<O
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType contentType,
-                                  Class<? extends HttpMessageConverter<?>> converterType,
-                                  ServerHttpRequest request, ServerHttpResponse response) {
+    public Object beforeBodyWrite(Object body,
+                                  @NotNull MethodParameter returnType,
+                                  @NotNull MediaType contentType,
+                                  @NotNull Class<? extends HttpMessageConverter<?>> converterType,
+                                  @NotNull ServerHttpRequest request,
+                                  @NotNull ServerHttpResponse response) {
         if (contentType == MediaType.APPLICATION_OCTET_STREAM || converterType == StringHttpMessageConverter.class) {
             return body;
         }

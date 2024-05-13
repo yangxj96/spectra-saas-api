@@ -25,8 +25,8 @@ public class AuthorityServiceImpl extends BaseServiceImpl<AuthorityMapper, Autho
 
     @Override
     public List<Tree<String>> tree() {
-        var roles = this.list();
-        if (roles.isEmpty()) {
+        var authorities = this.list();
+        if (authorities.isEmpty()) {
             return Collections.emptyList();
         }
         var config = new TreeNodeConfig();
@@ -34,7 +34,7 @@ public class AuthorityServiceImpl extends BaseServiceImpl<AuthorityMapper, Autho
         config.setParentIdKey("pid");
         config.setNameKey("name");
         config.setChildrenKey("children");
-        return TreeUtil.build(roles, "0", config, (node, tree) -> {
+        return TreeUtil.build(authorities, "0", config, (node, tree) -> {
             tree.setId(node.getId().toString());
             tree.setParentId(node.getPid().toString());
             tree.setName(node.getName());

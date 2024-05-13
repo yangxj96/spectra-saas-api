@@ -41,7 +41,7 @@ public abstract class BaseController<O extends BaseEntity, S extends BaseService
      */
     public R<Object> delete(String id) {
         log.atDebug().log("数据删除,数据ID:{}", id);
-        if (bindService.delete(id)) {
+        if (bindService.delete(Long.parseLong(id))) {
             return R.success();
         } else {
             return R.failure();

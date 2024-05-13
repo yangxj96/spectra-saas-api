@@ -16,6 +16,7 @@ spring:
       config:
         server-addr: 175.178.90.140:8848
         group: DEFAULT_GROUP
+        namespace: 5899f128-baf8-4c30-bf96-6e5a76578608
         refresh-enabled: true
         file-extension: yml
         extension-configs:
