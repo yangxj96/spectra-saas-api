@@ -1,9 +1,9 @@
 package com.yangxj96.saas.starter.dubbo.dubbo.auth;
 
-import com.yangxj96.saas.bean.user.Role;
+
+import com.yangxj96.saas.starter.db.entity.user.Role;
 
 import java.util.List;
-
 
 /**
  * 账号信息dubbo客户端

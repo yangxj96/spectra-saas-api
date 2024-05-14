@@ -1,6 +1,6 @@
 package com.yangxj96.saas.server.auth.service;
 
-import com.yangxj96.saas.bean.security.Token;
+import com.yangxj96.saas.starter.db.entity.security.Token;
 
 import javax.security.auth.login.LoginException;
 

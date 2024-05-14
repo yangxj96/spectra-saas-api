@@ -1,7 +1,7 @@
 package com.yangxj96.saas.server.platform.service;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.yangxj96.saas.bean.platform.AdministrativeDivision;
+import com.yangxj96.saas.starter.db.entity.platform.AdministrativeDivision;
 import com.yangxj96.saas.common.base.BaseService;
 
 import java.util.List;

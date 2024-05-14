@@ -1,6 +1,6 @@
 package com.yangxj96.saas.server.auth.dubbo;
 
-import com.yangxj96.saas.bean.user.Authority;
+import com.yangxj96.saas.starter.db.entity.user.Authority;
 import com.yangxj96.saas.server.auth.service.RoleService;
 import com.yangxj96.saas.starter.dubbo.dubbo.auth.RoleDubboService;
 import jakarta.annotation.Resource;

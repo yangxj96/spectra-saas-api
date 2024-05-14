@@ -1,6 +1,6 @@
 package com.yangxj96.saas.server.platform.dubbo;
 
-import com.yangxj96.saas.bean.system.Route;
+import com.yangxj96.saas.starter.db.entity.platform.Route;
 import com.yangxj96.saas.server.platform.service.RouteService;
 import com.yangxj96.saas.starter.dubbo.dubbo.platform.RouteDubboService;
 import jakarta.annotation.Resource;

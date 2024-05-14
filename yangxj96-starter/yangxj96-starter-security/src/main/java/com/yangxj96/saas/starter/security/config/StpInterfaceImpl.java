@@ -2,8 +2,8 @@ package com.yangxj96.saas.starter.security.config;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.core.collection.CollUtil;
-import com.yangxj96.saas.bean.user.Authority;
-import com.yangxj96.saas.bean.user.Role;
+import com.yangxj96.saas.starter.db.entity.user.Authority;
+import com.yangxj96.saas.starter.db.entity.user.Role;
 import com.yangxj96.saas.starter.dubbo.dubbo.auth.AccountDubboService;
 import com.yangxj96.saas.starter.dubbo.dubbo.auth.RoleDubboService;
 import com.yangxj96.saas.starter.security.constant.EnvCons;

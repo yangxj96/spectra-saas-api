@@ -2,8 +2,8 @@ package com.yangxj96.saas.server.auth.configuration.satoken;
 
 import cn.dev33.satoken.stp.StpInterface;
 import cn.hutool.core.collection.CollUtil;
-import com.yangxj96.saas.bean.user.Authority;
-import com.yangxj96.saas.bean.user.Role;
+import com.yangxj96.saas.starter.db.entity.user.Authority;
+import com.yangxj96.saas.starter.db.entity.user.Role;
 import com.yangxj96.saas.server.auth.service.AccountService;
 import com.yangxj96.saas.server.auth.service.RoleService;
 import com.yangxj96.saas.starter.security.constant.EnvCons;

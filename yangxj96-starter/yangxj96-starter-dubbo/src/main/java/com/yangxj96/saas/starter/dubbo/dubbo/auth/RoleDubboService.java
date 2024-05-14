@@ -1,6 +1,7 @@
 package com.yangxj96.saas.starter.dubbo.dubbo.auth;
 
-import com.yangxj96.saas.bean.user.Authority;
+
+import com.yangxj96.saas.starter.db.entity.user.Authority;
 
 import java.util.List;
 

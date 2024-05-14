@@ -1,11 +1,11 @@
-package com.yangxj96.saas.bean.platform;
+package com.yangxj96.saas.starter.db.entity.platform;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.yangxj96.saas.common.base.BaseEntity;
-import com.yangxj96.saas.enums.AdministrativeDivisionLevel;
+import com.yangxj96.saas.starter.db.enums.AdministrativeDivisionLevel;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

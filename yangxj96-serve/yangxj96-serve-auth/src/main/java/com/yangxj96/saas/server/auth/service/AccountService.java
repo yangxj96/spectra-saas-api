@@ -1,7 +1,7 @@
 package com.yangxj96.saas.server.auth.service;
 
-import com.yangxj96.saas.bean.user.Account;
-import com.yangxj96.saas.bean.user.Role;
+import com.yangxj96.saas.starter.db.entity.user.Account;
+import com.yangxj96.saas.starter.db.entity.user.Role;
 import com.yangxj96.saas.common.base.BaseService;
 
 import java.util.List;

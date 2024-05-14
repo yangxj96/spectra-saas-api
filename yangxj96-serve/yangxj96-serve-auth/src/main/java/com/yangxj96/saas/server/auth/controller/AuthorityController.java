@@ -1,7 +1,7 @@
 package com.yangxj96.saas.server.auth.controller;
 
 import cn.hutool.core.lang.tree.Tree;
-import com.yangxj96.saas.bean.user.Authority;
+import com.yangxj96.saas.starter.db.entity.user.Authority;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
 import com.yangxj96.saas.server.auth.service.AuthorityService;

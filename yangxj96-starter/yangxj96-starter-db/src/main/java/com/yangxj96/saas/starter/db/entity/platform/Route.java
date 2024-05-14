@@ -1,8 +1,9 @@
-package com.yangxj96.saas.bean.system;
+package com.yangxj96.saas.starter.db.entity.platform;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yangxj96.saas.common.base.BaseEntity;
+import com.yangxj96.saas.starter.db.handlers.JacksonArrayTypeHandler;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "db_system.t_route")
+@TableName(value = "db_system.t_route", autoResultMap = true)
 public class Route extends BaseEntity {
 
     @TableField(value = "uri")
@@ -24,13 +25,13 @@ public class Route extends BaseEntity {
     @TableField(value = "\"order\"")
     private Integer order;
 
-    @TableField(value = "predicates")
+    @TableField(value = "predicates", typeHandler = JacksonArrayTypeHandler.class)
     private String predicates;
 
-    @TableField(value = "filters")
+    @TableField(value = "filters", typeHandler = JacksonArrayTypeHandler.class)
     private String filters;
 
-    @TableField(value = "metadata")
+    @TableField(value = "metadata", typeHandler = JacksonArrayTypeHandler.class)
     private String metadata;
 
     @TableField(value = "route_id")

@@ -3,7 +3,7 @@ package com.yangxj96.saas.server.gateway.utils;
 import cn.hutool.extra.spring.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yangxj96.saas.bean.system.Route;
+import com.yangxj96.saas.starter.db.entity.platform.Route;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
 import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;

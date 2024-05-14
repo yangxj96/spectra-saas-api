@@ -1,7 +1,7 @@
 package com.yangxj96.saas.server.auth.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import com.yangxj96.saas.bean.user.Account;
+import com.yangxj96.saas.starter.db.entity.user.Account;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
 import com.yangxj96.saas.server.auth.service.AccountService;

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangxj96.saas.server.platform.mapper.AdministrativeDivisionMapper">
     <!-- @formatter:off -->
-    <resultMap id="BaseResultMap" type="com.yangxj96.saas.bean.platform.AdministrativeDivision">
+    <resultMap id="BaseResultMap" type="com.yangxj96.saas.starter.db.entity.platform.AdministrativeDivision">
         <!--@mbg.generated-->
         <!--@Table db_system.t_administrative_division-->
         <id column="id"               jdbcType="BIGINT"    property="id"/>

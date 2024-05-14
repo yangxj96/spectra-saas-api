@@ -2,8 +2,8 @@ package com.yangxj96.saas.server.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.yangxj96.saas.bean.user.Account;
-import com.yangxj96.saas.bean.user.Role;
+import com.yangxj96.saas.starter.db.entity.user.Account;
+import com.yangxj96.saas.starter.db.entity.user.Role;
 import com.yangxj96.saas.common.base.BaseServiceImpl;
 import com.yangxj96.saas.server.auth.mapper.UserMapper;
 import com.yangxj96.saas.server.auth.service.AccountService;

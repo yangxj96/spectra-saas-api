@@ -2,9 +2,9 @@ package com.yangxj96.saas.server.auth
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.yangxj96.saas.bean.user.Account
-import com.yangxj96.saas.bean.user.Authority
-import com.yangxj96.saas.bean.user.Role
+import com.yangxj96.saas.starter.db.entity.user.Account
+import com.yangxj96.saas.starter.db.entity.user.Authority
+import com.yangxj96.saas.starter.db.entity.user.Role
 import com.yangxj96.saas.common.utils.AesUtil
 import com.yangxj96.saas.server.auth.service.AccountService
 import com.yangxj96.saas.server.auth.service.AuthorityService
@@ -75,7 +75,8 @@ internal class ApplicationTest {
 
     @Test
     fun addAdminUser() {
-        val account: Account = Account().also {
+        val account: Account = Account()
+            .also {
             it.id = IdWorker.getId()
             it.username = "admin"
             it.password = passwordEncoder.encode("admin")
@@ -97,7 +98,8 @@ internal class ApplicationTest {
             val descriptions = arrayOf("平台相关内容关联", "租户最高管理员", "普通用户")
             var count = 0
             for (i in codes.indices) {
-                val datum: Role = Role().also {
+                val datum: Role = Role()
+                    .also {
                     it.pid = 0L
                     it.name = names[i]
                     it.code = codes[i]

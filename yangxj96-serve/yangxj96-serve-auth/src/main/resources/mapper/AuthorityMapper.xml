@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangxj96.saas.server.auth.mapper.AuthorityMapper">
     <!-- @formatter:off -->
-    <resultMap id="BaseResultMap" type="com.yangxj96.saas.bean.user.Authority">
+    <resultMap id="BaseResultMap" type="com.yangxj96.saas.starter.db.entity.user.Authority">
         <!--@mbg.generated-->
         <!--@Table db_user.t_authority-->
         <id column="id"               jdbcType="BIGINT"    property="id"/>

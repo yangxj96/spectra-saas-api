@@ -93,6 +93,16 @@ subprojects {
                 "BPE_APPEND_JAVA_TOOL_OPTIONS" to " -Duser.timezone=Asia/Shanghai -Xms256m -Xmx256m -Xmn100m -XX:ParallelGCThreads=2"
             )
         )
+        buildCache {
+            volume {
+                name.set("cache-${project.name}.build")
+            }
+        }
+        launchCache {
+            volume {
+                name.set("cache-${project.name}.launch")
+            }
+        }
     }
 
 }

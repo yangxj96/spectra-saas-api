@@ -1,8 +1,8 @@
 package com.yangxj96.saas.starter.security.config;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.yangxj96.saas.bean.security.Token;
-import com.yangxj96.saas.bean.user.Account;
+import com.yangxj96.saas.starter.db.entity.security.Token;
+import com.yangxj96.saas.starter.db.entity.user.Account;
 
 public class StpUtilExtend {
 

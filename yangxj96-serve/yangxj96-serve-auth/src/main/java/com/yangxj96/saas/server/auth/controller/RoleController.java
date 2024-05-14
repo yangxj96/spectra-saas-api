@@ -2,8 +2,8 @@ package com.yangxj96.saas.server.auth.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.hutool.core.lang.tree.Tree;
-import com.yangxj96.saas.bean.user.Authority;
-import com.yangxj96.saas.bean.user.Role;
+import com.yangxj96.saas.starter.db.entity.user.Authority;
+import com.yangxj96.saas.starter.db.entity.user.Role;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
 import com.yangxj96.saas.server.auth.service.RoleService;

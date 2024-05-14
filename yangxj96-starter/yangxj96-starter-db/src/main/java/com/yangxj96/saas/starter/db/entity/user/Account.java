@@ -1,4 +1,4 @@
-package com.yangxj96.saas.bean.user;
+package com.yangxj96.saas.starter.db.entity.user;
 
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;

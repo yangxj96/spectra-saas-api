@@ -1,4 +1,4 @@
-package com.yangxj96.saas.stream;
+package com.yangxj96.saas.common.stream;
 
 import lombok.Data;
 import lombok.ToString;

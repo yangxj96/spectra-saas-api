@@ -1,4 +1,4 @@
-package com.yangxj96.saas.enums;
+package com.yangxj96.saas.starter.db.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;

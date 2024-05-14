@@ -6,7 +6,7 @@
  *  Copyright (c) 2021 - 2024
  */
 
-package com.yangxj96.saas.bean.common;
+package com.yangxj96.saas.starter.db.entity.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

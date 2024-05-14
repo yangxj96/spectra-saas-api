@@ -2,7 +2,7 @@ package com.yangxj96.saas.server.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.crypto.digest.BCrypt;
-import com.yangxj96.saas.bean.security.Token;
+import com.yangxj96.saas.starter.db.entity.security.Token;
 import com.yangxj96.saas.common.exception.DataNotExistException;
 import com.yangxj96.saas.server.auth.service.AccountService;
 import com.yangxj96.saas.server.auth.service.AuthService;

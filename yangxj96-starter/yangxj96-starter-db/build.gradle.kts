@@ -1,5 +1,4 @@
 dependencies {
-    api(project(":yangxj96-bean"))
     api(project(":yangxj96-common"))
     api(project(":yangxj96-starter"))
 

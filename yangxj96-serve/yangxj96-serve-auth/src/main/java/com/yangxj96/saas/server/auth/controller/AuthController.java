@@ -3,7 +3,7 @@ package com.yangxj96.saas.server.auth.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.exception.NotLoginException;
-import com.yangxj96.saas.bean.security.Token;
+import com.yangxj96.saas.starter.db.entity.security.Token;
 import com.yangxj96.saas.server.auth.pojo.vo.AuthLogin;
 import com.yangxj96.saas.server.auth.service.AuthService;
 import jakarta.annotation.Resource;

@@ -1,9 +1,9 @@
 package com.yangxj96.saas.server.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yangxj96.saas.bean.user.Account;
-import com.yangxj96.saas.bean.user.Authority;
-import com.yangxj96.saas.bean.user.Role;
+import com.yangxj96.saas.starter.db.entity.user.Account;
+import com.yangxj96.saas.starter.db.entity.user.Authority;
+import com.yangxj96.saas.starter.db.entity.user.Role;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.yangxj96.saas.bean.security;
+package com.yangxj96.saas.starter.db.entity.security;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -6,7 +6,6 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
