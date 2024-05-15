@@ -1,5 +1,4 @@
 dependencies {
-    api(project(":yangxj96-common"))
     api(project(":yangxj96-starter"))
     api(project(":yangxj96-starter:yangxj96-starter-dubbo"))
 
@@ -10,5 +9,5 @@ dependencies {
     compileOnly(project(":yangxj96-starter:yangxj96-starter-db"))
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.boot:spring-boot-starter-data-redis")
-    compileOnly(libs.mybatis.plus)
+    compileOnly(libs.bundles.database)
 }

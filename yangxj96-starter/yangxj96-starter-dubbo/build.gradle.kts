@@ -1,5 +1,4 @@
 dependencies {
-    api(project(":yangxj96-common"))
     api(project(":yangxj96-starter"))
 
     // RPC调用

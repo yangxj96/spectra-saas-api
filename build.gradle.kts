@@ -15,6 +15,7 @@ allprojects {
 
     repositories {
         mavenLocal()
+        maven { url = uri("https://repo.osgeo.org/repository/release/") }
         maven { url = uri("https://maven.aliyun.com/repository/public/") }
         maven { url = uri("https://repo.spring.io/milestone") }
         maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }

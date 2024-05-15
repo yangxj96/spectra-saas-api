@@ -17,7 +17,8 @@ import java.util.Map;
 @Slf4j
 public class RouteUtil {
 
-    private RouteUtil(){}
+    private RouteUtil() {
+    }
 
     /**
      * 数据库的路由信息对象转换成gateway的路由定义

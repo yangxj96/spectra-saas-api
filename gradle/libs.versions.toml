@@ -5,6 +5,9 @@ jetbrains = "23.1.0"
 [libraries]
 # 数据库相关
 mybatis-plus = { module = "com.baomidou:mybatis-plus-boot-starter", version = "3.5.5" }
+gt-geometry = { module = "org.geotools:gt-geometry",version = "24.7" }
+gt-geojson = { module = "org.geotools:gt-geojson", version = "24.7" }
+postgis-jdbc = { module = "net.postgis:postgis-jdbc", version = "2021.1.0" }
 # 用到的工具类相关
 hutool-all = { module = "cn.hutool:hutool-all", version = "5.8.25" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version = "3.12.0" }
@@ -20,6 +23,12 @@ satoken-redis-jackson = { module = "cn.dev33:sa-token-redis-jackson", version = 
 dubbo = { module = "org.apache.dubbo:dubbo-spring-boot-starter", version = "3.2.11" }
 # 组合
 [bundles]
+database = [
+    "mybatis-plus",
+    "gt-geometry",
+    "gt-geojson",
+    "postgis-jdbc"
+]
 satoken = ["satoken-core", "satoken-aop", "satoken-redis-jackson"]
 common-tool = [
     "hutool-all",
