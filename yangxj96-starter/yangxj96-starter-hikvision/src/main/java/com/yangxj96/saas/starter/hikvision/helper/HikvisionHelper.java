@@ -64,6 +64,27 @@ public class HikvisionHelper {
         return om.readValue(om.writeValueAsString(resp.getData()), clazz);
     }
 
+    public static <P> void postRequest(String url, P body) throws Exception {
+        var om = SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
+        postRequest(url, om.writeValueAsString(body));
+    }
+
+    public static void postRequest(String url, String body) throws Exception {
+        var result = ArtemisHttpUtil.doPostStringArtemis(
+                getConfig(),
+                assemblePath(url),
+                body,
+                null,
+                null,
+                ContentType.CONTENT_TYPE_JSON
+        );
+        var om = getObjectMapper();
+        var resp = om.readValue(result, HikvisionResult.class);
+        if (!"0".equals(resp.getCode())) {
+            throw new ArtemisException("海康接口请求异常,code:" + resp.getCode() + ",msg:" + resp.getMsg());
+        }
+    }
+
     public static <T> HikvisionPage<T> postRequestPage(String url, Map<String, Object> body, TypeReference<HikvisionPage<T>> clazz) throws Exception {
         var om = SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
         return postRequestPage(url, om.writeValueAsString(body), clazz);

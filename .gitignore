@@ -4,6 +4,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+.flattened-pom.xml
+target
+
 ### custom        ###
 document/jar
 
