@@ -29,3 +29,6 @@ findProject(":yangxj96-starter:yangxj96-starter-db")?.name = "yangxj96-starter-d
 
 include("yangxj96-starter:yangxj96-starter-common")
 findProject(":yangxj96-starter:yangxj96-starter-common")?.name = "yangxj96-starter-common"
+
+include("yangxj96-starter:yangxj96-starter-hikvision")
+findProject(":yangxj96-starter:yangxj96-starter-hikvision")?.name = "yangxj96-starter-hikvision"

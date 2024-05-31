@@ -28,6 +28,7 @@ subprojects {
     // 此处的插件由于在最外层的plugins中声明了. 且声明了版本号,此处能直接使用apply()
     apply(plugin = "java")
     apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
     apply(plugin = rootProject.libs.plugins.spring.boot.get().pluginId)
     apply(plugin = rootProject.libs.plugins.spring.dependency.management.get().pluginId)
 
@@ -44,6 +45,8 @@ subprojects {
             mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:2022.0.0.0-RC1")
         }
     }
+
+
 
     dependencies {
         // 测试 begin

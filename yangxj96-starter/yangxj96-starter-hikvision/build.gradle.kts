@@ -10,9 +10,13 @@ publishing {
 }
 
 dependencies {
-    api(libs.bundles.common.tool)
+    api(project(":yangxj96-starter"))
+
+    // 导入子级下载的jar或者aar
+    api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    // 海康的包需要
+    api("org.apache.httpcomponents:httpclient:4.5.14")
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
-    compileOnly("org.springframework.boot:spring-boot-starter-validation")
-    compileOnly(libs.bundles.database)
 }
+
