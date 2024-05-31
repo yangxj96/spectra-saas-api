@@ -1,7 +1,6 @@
 package com.yangxj96.saas.starter.hikvision.helper;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hikvision.artemis.sdk.ArtemisHttpUtil;
@@ -90,11 +89,11 @@ public class HikvisionHelper {
         return om.readValue(om.writeValueAsString(resp.getData()), clazz);
     }
 
-    private static ArtemisConfig getConfig(){
-        return  SpringUtil.getBean(ArtemisConfig.class);
+    private static ArtemisConfig getConfig() {
+        return SpringUtil.getBean(ArtemisConfig.class);
     }
 
-    private static ObjectMapper getObjectMapper(){
+    private static ObjectMapper getObjectMapper() {
         return SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
     }
 

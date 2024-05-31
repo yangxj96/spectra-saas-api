@@ -1,5 +1,6 @@
 dependencies {
     api(project(":yangxj96-starter"))
+    api(project(":yangxj96-common"))
 
     api("org.springframework.boot:spring-boot-starter-data-redis")
     api(libs.bundles.database)

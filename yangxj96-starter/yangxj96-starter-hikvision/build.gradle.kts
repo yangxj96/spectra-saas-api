@@ -16,6 +16,7 @@ dependencies {
     api(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     // 海康的包需要
     api("org.apache.httpcomponents:httpclient:4.5.14")
+    api(libs.hutool.all)
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
 }

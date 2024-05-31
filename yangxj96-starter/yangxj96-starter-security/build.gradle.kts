@@ -1,5 +1,6 @@
 dependencies {
     api(project(":yangxj96-starter"))
+    api(project(":yangxj96-common"))
     api(project(":yangxj96-starter:yangxj96-starter-dubbo"))
 
     // satoken

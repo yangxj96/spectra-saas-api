@@ -1,5 +1,6 @@
 dependencies {
     api(project(":yangxj96-starter"))
+    api(project(":yangxj96-common"))
 
     compileOnly("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.springframework.boot:spring-boot-starter-actuator")
