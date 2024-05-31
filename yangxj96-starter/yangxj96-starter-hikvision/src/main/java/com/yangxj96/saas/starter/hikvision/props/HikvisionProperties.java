@@ -20,6 +20,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
+
 /**
  * 海康相关配置
  */
@@ -54,4 +56,13 @@ public class HikvisionProperties {
      */
     private String protocol = "https://";
 
+    /**
+     * 事件订阅回调地址
+     */
+    private String eventSubscribeDest;
+
+    /**
+     * 事件订阅列表
+     */
+    private List<Integer> eventSubscribeTypes;
 }

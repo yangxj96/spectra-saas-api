@@ -39,11 +39,32 @@ public class HikvisionHelper {
         return map;
     }
 
+    /**
+     * post方法请求
+     *
+     * @param url   请求地址
+     * @param body  参数实体
+     * @param clazz 响应类型
+     * @param <P>   参数实体类型
+     * @param <T>   响应类型
+     * @return 只会返回成功序列化的响应
+     * @throws Exception e
+     */
     public static <P, T> T postRequest(String url, P body, Class<T> clazz) throws Exception {
         var om = SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
         return postRequest(url, om.writeValueAsString(body), clazz);
     }
 
+    /**
+     * post方法请求
+     *
+     * @param url   请求地址
+     * @param body  参数JSON字符串
+     * @param clazz 响应类型
+     * @param <T>   响应类型
+     * @return 只会返回成功序列化的响应
+     * @throws Exception e
+     */
     public static <T> T postRequest(String url, String body, Class<T> clazz) throws Exception {
         var result = ArtemisHttpUtil.doPostStringArtemis(
                 getConfig(),
@@ -64,11 +85,26 @@ public class HikvisionHelper {
         return om.readValue(om.writeValueAsString(resp.getData()), clazz);
     }
 
+    /**
+     * post方法请求
+     *
+     * @param url  请求地址
+     * @param body 参数实体
+     * @param <P>  参数实体
+     * @throws Exception e
+     */
     public static <P> void postRequest(String url, P body) throws Exception {
         var om = SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
         postRequest(url, om.writeValueAsString(body));
     }
 
+    /**
+     * post方法请求
+     *
+     * @param url  请求地址
+     * @param body 参数JSON字符串
+     * @throws Exception e
+     */
     public static void postRequest(String url, String body) throws Exception {
         var result = ArtemisHttpUtil.doPostStringArtemis(
                 getConfig(),
@@ -85,11 +121,31 @@ public class HikvisionHelper {
         }
     }
 
+    /**
+     * post请求结果为分页的
+     *
+     * @param url   请求地址
+     * @param body  map格式的请求参数
+     * @param clazz 分页里数据列表的实体
+     * @param <T>   分页里数据列表的实体类型
+     * @return 分页信息
+     * @throws Exception e
+     */
     public static <T> HikvisionPage<T> postRequestPage(String url, Map<String, Object> body, TypeReference<HikvisionPage<T>> clazz) throws Exception {
         var om = SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
         return postRequestPage(url, om.writeValueAsString(body), clazz);
     }
 
+    /**
+     * post请求结果为分页的
+     *
+     * @param url   请求地址
+     * @param body  参数JSON字符串
+     * @param clazz 分页里数据列表的实体
+     * @param <T>   分页里数据列表的实体类型
+     * @return 分页信息
+     * @throws Exception e
+     */
     public static <T> HikvisionPage<T> postRequestPage(String url, String body, TypeReference<HikvisionPage<T>> clazz) throws Exception {
         var result = ArtemisHttpUtil.doPostStringArtemis(
                 getConfig(),
@@ -110,10 +166,20 @@ public class HikvisionHelper {
         return om.readValue(om.writeValueAsString(resp.getData()), clazz);
     }
 
+    /**
+     * 获取配置信息bean
+     *
+     * @return {@link ArtemisConfig}
+     */
     private static ArtemisConfig getConfig() {
         return SpringUtil.getBean(ArtemisConfig.class);
     }
 
+    /**
+     * 获取Jackson
+     *
+     * @return {@link ObjectMapper}
+     */
     private static ObjectMapper getObjectMapper() {
         return SpringUtil.getBean(HIKVISION_OBJECT_MAPPER_NAME, ObjectMapper.class);
     }

@@ -33,7 +33,7 @@ public class EventSubscriptionDto {
     /**
      * 订阅类型，0-订阅原始事件，1-联动事件，2-原始事件和联动事件，不填使用默认值0
      */
-    private Integer subType;
+    private Integer subType = 0;
 
     /**
      * 事件等级，0-未配置，1-低，2-中，3-高
@@ -43,5 +43,5 @@ public class EventSubscriptionDto {
      * 在订阅类型为2时，不填使用默认值[0,1,2,3]
      * 数组大小不超过32，事件等级大小不超过31
      */
-    private List<Integer> eventLvl;
+    //private List<Integer> eventLvl;
 }
