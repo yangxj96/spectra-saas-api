@@ -18,11 +18,18 @@ public interface HikvisionEventService {
     void subscribe(EventSubscriptionDto params) throws Exception;
 
     /**
+     * 订阅默认事件,也就是props配置的事件
+     *
+     * @throws Exception e
+     */
+    void subscribeDefault() throws Exception;
+
+    /**
      * 获取订阅信息
      *
      * @throws Exception e
      */
-    EventDetails getSubscribe() throws Exception;
+    EventDetails querySubscribeDetails() throws Exception;
 
     /**
      * 取消订阅
@@ -30,4 +37,11 @@ public interface HikvisionEventService {
      * @throws Exception e
      */
     void unsubscribe(EventUnSubscriptionDto params) throws Exception;
+
+    /**
+     * 取消订阅默认事件,也就是props配置的事件
+     *
+     * @throws Exception e e
+     */
+    void unsubscribeDefault() throws Exception;
 }
