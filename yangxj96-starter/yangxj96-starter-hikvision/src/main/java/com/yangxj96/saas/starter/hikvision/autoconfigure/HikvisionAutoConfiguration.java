@@ -3,6 +3,7 @@ package com.yangxj96.saas.starter.hikvision.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
+import com.yangxj96.saas.starter.hikvision.core.HikvisionTemplate;
 import com.yangxj96.saas.starter.hikvision.props.HikvisionProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -48,6 +49,11 @@ public class HikvisionAutoConfiguration {
         config.setAppKey(props.getAppKey());
         config.setAppSecret(props.getAppSecret());
         return config;
+    }
+
+    @Bean
+    public HikvisionTemplate hikvisionTemplate(){
+        return new HikvisionTemplate();
     }
 
 
