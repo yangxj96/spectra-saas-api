@@ -1,8 +1,11 @@
 package com.yangxj96.saas.starter.hikvision.service;
 
+import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
+import com.yangxj96.saas.starter.hikvision.response.dto.EventGangedDto;
 import com.yangxj96.saas.starter.hikvision.response.dto.EventSubscriptionDto;
 import com.yangxj96.saas.starter.hikvision.response.dto.EventUnSubscriptionDto;
 import com.yangxj96.saas.starter.hikvision.response.entity.EventDetails;
+import com.yangxj96.saas.starter.hikvision.response.event.EventGanged;
 
 /**
  * 时间服务接口层
@@ -44,4 +47,12 @@ public interface HikvisionEventService {
      * @throws Exception e e
      */
     void unsubscribeDefault() throws Exception;
+
+    /**
+     * 获取联动事件列表
+     *
+     * @param params 请求参数
+     * @return 响应的数据序列化后的内容
+     */
+    HikvisionPage<EventGanged> gangedEventList(EventGangedDto params) throws Exception;
 }

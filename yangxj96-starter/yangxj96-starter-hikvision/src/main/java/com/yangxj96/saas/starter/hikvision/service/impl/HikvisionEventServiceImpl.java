@@ -1,10 +1,14 @@
 package com.yangxj96.saas.starter.hikvision.service.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.yangxj96.saas.starter.hikvision.core.HikvisionTemplate;
 import com.yangxj96.saas.starter.hikvision.props.HikvisionProperties;
+import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
+import com.yangxj96.saas.starter.hikvision.response.dto.EventGangedDto;
 import com.yangxj96.saas.starter.hikvision.response.dto.EventSubscriptionDto;
 import com.yangxj96.saas.starter.hikvision.response.dto.EventUnSubscriptionDto;
 import com.yangxj96.saas.starter.hikvision.response.entity.EventDetails;
+import com.yangxj96.saas.starter.hikvision.response.event.EventGanged;
 import com.yangxj96.saas.starter.hikvision.service.HikvisionEventService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -51,5 +55,11 @@ public class HikvisionEventServiceImpl implements HikvisionEventService {
         var params = new EventSubscriptionDto();
         params.setEventTypes(properties.getEvents().getTypes());
         template.post("/api/eventService/v1/eventUnSubscriptionByEventTypes", params);
+    }
+
+    @Override
+    public HikvisionPage<EventGanged> gangedEventList(EventGangedDto params) throws Exception {
+        return template.postPage("/api/els/v1/events/search", params, new TypeReference<>() {
+        });
     }
 }

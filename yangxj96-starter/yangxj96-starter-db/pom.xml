@@ -71,4 +71,19 @@
 
     </dependencies>
 
+    <repositories>
+        <!-- 如果想要配置生效,在settings.xml的mirror中的<mirrorOf>*,!osgeo</mirrorOf>进行配置 -->
+        <repository>
+            <id>osgeo</id>
+            <name>OSGeo Release Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
 </project>

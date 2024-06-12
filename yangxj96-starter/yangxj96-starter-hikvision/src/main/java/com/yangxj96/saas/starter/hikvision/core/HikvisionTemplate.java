@@ -132,6 +132,20 @@ public class HikvisionTemplate {
      * @return 分页信息
      * @throws Exception e
      */
+    public <P, T> HikvisionPage<T> postPage(String url, P body, TypeReference<HikvisionPage<T>> clazz) throws Exception {
+        return postPage(url, om.writeValueAsString(body), clazz);
+    }
+
+    /**
+     * post请求,结果为分页数据
+     *
+     * @param url   请求地址
+     * @param body  请求body
+     * @param clazz 数据类型
+     * @param <T>   响应分页的LIST的类型
+     * @return 分页信息
+     * @throws Exception e
+     */
     public <T> HikvisionPage<T> postPage(String url, Map<String, Object> body, TypeReference<HikvisionPage<T>> clazz) throws Exception {
         return postPage(url, om.writeValueAsString(body), clazz);
     }
