@@ -1,4 +1,4 @@
-package com.yangxj96.saas.starter.hikvision.response.dto;
+package com.yangxj96.saas.starter.hikvision.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

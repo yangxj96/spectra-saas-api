@@ -10,6 +10,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.TimeZone;
+
 /**
  * 海康自动配置
  */
@@ -32,6 +34,7 @@ public class HikvisionAutoConfiguration {
     @Bean("hikvisionObjectMapper")
     public ObjectMapper hikvisionObjectMapper() {
         var om = new ObjectMapper();
+        om.setTimeZone(TimeZone.getTimeZone("UTC+08:00"));
         om.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
         return om;
     }
@@ -51,8 +54,13 @@ public class HikvisionAutoConfiguration {
         return config;
     }
 
+    /**
+     * 海康请求bean
+     *
+     * @return {@link HikvisionTemplate} template
+     */
     @Bean
-    public HikvisionTemplate hikvisionTemplate(){
+    public HikvisionTemplate hikvisionTemplate() {
         return new HikvisionTemplate();
     }
 

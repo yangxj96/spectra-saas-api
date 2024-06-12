@@ -16,6 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 public class EventDetails {
 
+    /**
+     * 事件详情
+     */
     private List<Details> detail;
 
     @Data

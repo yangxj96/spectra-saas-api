@@ -1,9 +1,9 @@
 package com.yangxj96.saas.starter.hikvision.service;
 
 import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
-import com.yangxj96.saas.starter.hikvision.response.dto.EventGangedDto;
-import com.yangxj96.saas.starter.hikvision.response.dto.EventSubscriptionDto;
-import com.yangxj96.saas.starter.hikvision.response.dto.EventUnSubscriptionDto;
+import com.yangxj96.saas.starter.hikvision.request.EventGangedDto;
+import com.yangxj96.saas.starter.hikvision.request.EventSubscriptionDto;
+import com.yangxj96.saas.starter.hikvision.request.EventUnSubscriptionDto;
 import com.yangxj96.saas.starter.hikvision.response.entity.EventDetails;
 import com.yangxj96.saas.starter.hikvision.response.event.EventGanged;
 

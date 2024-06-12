@@ -1,7 +1,7 @@
 package com.yangxj96.saas.starter.hikvision.service;
 
 import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
-import com.yangxj96.saas.starter.hikvision.response.dto.CameraPreviewDto;
+import com.yangxj96.saas.starter.hikvision.request.CameraPreviewDto;
 import com.yangxj96.saas.starter.hikvision.response.entity.Camera;
 import com.yangxj96.saas.starter.hikvision.response.entity.CameraPreview;
 

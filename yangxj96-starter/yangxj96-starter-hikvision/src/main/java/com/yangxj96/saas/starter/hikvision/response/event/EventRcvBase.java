@@ -13,26 +13,32 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventRcvBase<T> {
+
     /**
      * 事件唯一标识
      */
     private String eventId;
+
     /**
      * 事件源编号，物理设备是资源编号
      */
     private String srcIndex;
+
     /**
      * 事件源类型
      */
     private String srcType;
+
     /**
      * 事件源名称
      */
     private String srcName;
+
     /**
      * 事件类型
      */
     private Integer eventType;
+
     /**
      * 事件状态
      * 0-瞬时
@@ -43,6 +49,7 @@ public class EventRcvBase<T> {
      * 5-异步图片上传
      */
     private Integer status;
+
     /**
      * 事件等级
      * 事件等级：
@@ -53,14 +60,17 @@ public class EventRcvBase<T> {
      * 注意，此处事件等级是指在事件联动中配置的等级，需要配置了事件联动，才返回这个字段
      */
     private Integer eventLvl;
+
     /**
      * 脉冲超时时间
      */
     private Integer timeout;
+
     /**
      * 事件发生时间（设备时间）
      */
     private String happenTime;
+
     /**
      * 事件发生的事件源父设备编码
      */

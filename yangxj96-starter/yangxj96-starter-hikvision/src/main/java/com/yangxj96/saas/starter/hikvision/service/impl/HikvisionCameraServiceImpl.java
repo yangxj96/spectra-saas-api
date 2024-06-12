@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.yangxj96.saas.starter.hikvision.core.HikvisionTemplate;
 import com.yangxj96.saas.starter.hikvision.props.HikvisionProperties;
 import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
-import com.yangxj96.saas.starter.hikvision.response.dto.CameraPreviewDto;
+import com.yangxj96.saas.starter.hikvision.request.CameraPreviewDto;
 import com.yangxj96.saas.starter.hikvision.response.entity.Camera;
 import com.yangxj96.saas.starter.hikvision.response.entity.CameraPreview;
 import com.yangxj96.saas.starter.hikvision.service.HikvisionCameraService;
