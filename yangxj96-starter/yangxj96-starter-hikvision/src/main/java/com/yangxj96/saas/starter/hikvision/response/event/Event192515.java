@@ -8,12 +8,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * 烟火检测
+ * 火点检测
  */
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class Event192514 extends EventBase<Event192514.EventData> {
+public class Event192515 extends EventBase<Event192515.EventData> {
+
 
     /**
      * 具体数据格式
@@ -73,7 +74,7 @@ public class Event192514 extends EventBase<Event192514.EventData> {
         /**
          * 分析结果
          */
-        private List<EventDataAnalyse> smokeAndFireDetection;
+        private List<EventDataAnalyse> fireDetection;
     }
 
     @Data
@@ -88,19 +89,64 @@ public class Event192514 extends EventBase<Event192514.EventData> {
         private EventDataTargetAttrs targetAttrs;
 
         /**
-         * 火点检测信息
+         * 区域ID
          */
-        private EventDataFire fireDetection;
+        @JsonProperty("regionID")
+        private Integer regionId;
 
         /**
-         * 烟雾检测信息
+         * 区域坐标列表
          */
-        private EventDataSmoke smokeDetection;
+        private List<EventRegionCoordinates> regionCoordinatesList;
+
+        /**
+         * 烟雾框
+         */
+        private EventRegionFrame fireRegion;
+
+        /**
+         * 最高温度点坐标
+         */
+        private EventPoint highestPoint;
+
+        /**
+         * 绝对高度
+         */
+        private EventAbsoluteHigh absoluteHigh;
 
         /**
          * ptz坐标信息
          */
         private EventPtzInfo ptzInfo;
+
+        /**
+         * 温度单位
+         * <ul>
+         *     <li>celsius-摄氏度</li>
+         *     <li>fahrenheit-华氏度</li>
+         *     <li>kelvin-开尔文</li>
+         * </ul>
+         */
+        private String temperatureUnit;
+
+        /**
+         * 最大温度
+         */
+        private Integer fireMaxTemperature;
+
+        /**
+         * 目标距离,[100m ~ 10000m]
+         */
+        private Integer targetDistance;
+
+        /**
+         * 火点扫描等待模式
+         * <ul>
+         *     <li>auto</li>
+         *     <li>manual</li>
+         * </ul>
+         */
+        private String fireScanWaitMode;
 
         /**
          * 报警抓拍图片URL
@@ -152,103 +198,4 @@ public class Event192514 extends EventBase<Event192514.EventData> {
          */
         private Float latitude;
     }
-
-
-    /**
-     * 火点检测信息
-     */
-    @Data
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class EventDataFire {
-
-        /**
-         * 区域ID
-         */
-        @JsonProperty("regionId")
-        private Integer regionId;
-
-        /**
-         * 区域坐标列表
-         */
-        private List<EventRegionCoordinates> regionCoordinatesList;
-
-        /**
-         * 火点框
-         */
-        private EventRegionFrame fireRegion;
-
-        /**
-         * 最高温度点坐标
-         */
-        private EventPoint highestPoint;
-
-        /**
-         * 绝对高度
-         */
-        private EventAbsoluteHigh absoluteHigh;
-
-        /**
-         * 温度单位
-         * <ul>
-         *     <li>celsius-摄氏度</li>
-         *     <li>fahrenheit-华氏度,kelvin-开尔文</li>
-         *     <li>kelvin-开尔文</li>
-         * </ul>
-         */
-        private String temperatureUnit;
-
-        /**
-         * 最大温度
-         */
-        private Integer fireMaxTemperature;
-
-        /**
-         * 目标距离	[100m ~ 10000m]
-         */
-        private Integer targetDistance;
-
-        /**
-         * 火点扫描等待模式
-         * <ul>
-         *     <li>auto</li>
-         *     <li>manual</li>
-         * </ul>
-         */
-        private String fireScanWaitMode;
-    }
-
-
-    /**
-     * 烟雾检测信息
-     */
-    @Data
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class EventDataSmoke {
-
-        /**
-         * 区域ID
-         */
-        @JsonProperty("regionID")
-        private Integer regionId;
-
-        /**
-         * 区域坐标列表
-         */
-        private List<EventRegionCoordinates> regionCoordinatesList;
-
-        /**
-         * 烟雾框
-         */
-        private EventRegionFrame smokeRegion;
-
-        /**
-         * 绝对高度
-         */
-        private EventAbsoluteHigh absoluteHigh;
-    }
-
 }
