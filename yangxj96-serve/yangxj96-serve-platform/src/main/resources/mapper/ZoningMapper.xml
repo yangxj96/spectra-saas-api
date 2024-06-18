@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yangxj96.saas.server.platform.mapper.AdministrativeDivisionMapper">
+<mapper namespace="com.yangxj96.saas.server.platform.mapper.ZoningMapper">
     <!-- @formatter:off -->
-    <resultMap id="BaseResultMap" type="com.yangxj96.saas.starter.db.entity.platform.AdministrativeDivision">
+    <resultMap id="BaseResultMap" type="com.yangxj96.saas.starter.db.entity.platform.Zoning">
         <!--@mbg.generated-->
-        <!--@Table db_system.t_administrative_division-->
+        <!--@Table db_system.t_zoning-->
         <id column="id"               jdbcType="BIGINT"    property="id"/>
         <result column="name"         jdbcType="VARCHAR"   property="name"/>
         <result column="pid"          jdbcType="BIGINT"    property="pid"/>

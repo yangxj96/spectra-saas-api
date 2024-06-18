@@ -4,10 +4,10 @@ import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yangxj96.saas.starter.db.entity.common.QueryParams;
-import com.yangxj96.saas.starter.db.entity.platform.AdministrativeDivision;
+import com.yangxj96.saas.starter.db.entity.platform.Zoning;
 import com.yangxj96.saas.common.base.BaseController;
 import com.yangxj96.saas.common.respond.R;
-import com.yangxj96.saas.server.platform.service.AdministrativeDivisionService;
+import com.yangxj96.saas.server.platform.service.ZoningService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,16 +16,16 @@ import java.util.List;
  * 行政区划接口
  */
 @RestController
-@RequestMapping("/administrativeDivision")
-public class AdministrativeDivisionController extends BaseController<AdministrativeDivision, AdministrativeDivisionService> {
+@RequestMapping("/zoning")
+public class ZoningController extends BaseController<Zoning, ZoningService> {
 
-    protected AdministrativeDivisionController(AdministrativeDivisionService bindService) {
+    protected ZoningController(ZoningService bindService) {
         super(bindService);
     }
 
     @Override
     @PostMapping
-    public AdministrativeDivision create(AdministrativeDivision params) {
+    public Zoning create(Zoning params) {
         return super.create(params);
     }
 
@@ -37,15 +37,15 @@ public class AdministrativeDivisionController extends BaseController<Administrat
 
     @Override
     @PutMapping
-    public AdministrativeDivision modify(AdministrativeDivision params) {
+    public Zoning modify(Zoning params) {
         return super.modify(params);
     }
 
     @GetMapping("/page")
-    public Page<AdministrativeDivision> page(QueryParams common, AdministrativeDivision datum) {
+    public Page<Zoning> page(QueryParams common, Zoning datum) {
         return bindService.page(
                 new Page<>(common.getPageNum(), common.getPageSize()),
-                new LambdaQueryWrapper<>(AdministrativeDivision.class).setEntity(datum)
+                new LambdaQueryWrapper<>(Zoning.class).setEntity(datum)
         );
     }
 

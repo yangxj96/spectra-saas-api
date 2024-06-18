@@ -21,8 +21,8 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName(value = "db_system.t_administrative_division")
-public class AdministrativeDivision extends BaseEntity implements Serializable {
+@TableName(value = "db_system.t_zoning")
+public class Zoning extends BaseEntity implements Serializable {
 
     /**
      * 区划名称

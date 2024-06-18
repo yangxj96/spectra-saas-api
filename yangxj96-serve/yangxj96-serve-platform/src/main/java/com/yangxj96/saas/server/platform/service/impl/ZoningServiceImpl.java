@@ -3,19 +3,19 @@ package com.yangxj96.saas.server.platform.service.impl;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import cn.hutool.core.lang.tree.TreeUtil;
-import com.yangxj96.saas.starter.db.entity.platform.AdministrativeDivision;
+import com.yangxj96.saas.starter.db.entity.platform.Zoning;
 import com.yangxj96.saas.common.base.BaseServiceImpl;
-import com.yangxj96.saas.server.platform.mapper.AdministrativeDivisionMapper;
-import com.yangxj96.saas.server.platform.service.AdministrativeDivisionService;
+import com.yangxj96.saas.server.platform.mapper.ZoningMapper;
+import com.yangxj96.saas.server.platform.service.ZoningService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
 @Service
-public class AdministrativeDivisionServiceImpl extends BaseServiceImpl<AdministrativeDivisionMapper, AdministrativeDivision> implements AdministrativeDivisionService {
+public class ZoningServiceImpl extends BaseServiceImpl<ZoningMapper, Zoning> implements ZoningService {
 
-    protected AdministrativeDivisionServiceImpl(AdministrativeDivisionMapper bindMapper) {
+    protected ZoningServiceImpl(ZoningMapper bindMapper) {
         super(bindMapper);
     }
 
