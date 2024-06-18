@@ -85,6 +85,9 @@ public class EventGanged {
      */
     private List<LogSrc> eventLogSrcList;
 
+    /**
+     * 事件记录响应
+     */
     @Data
     @ToString
     @AllArgsConstructor

@@ -1,9 +1,9 @@
 package com.yangxj96.saas.starter.hikvision.service;
 
-import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
 import com.yangxj96.saas.starter.hikvision.request.EventGangedDto;
 import com.yangxj96.saas.starter.hikvision.request.EventSubscriptionDto;
 import com.yangxj96.saas.starter.hikvision.request.EventUnSubscriptionDto;
+import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
 import com.yangxj96.saas.starter.hikvision.response.entity.EventDetails;
 import com.yangxj96.saas.starter.hikvision.response.event.EventGanged;
 
@@ -30,6 +30,7 @@ public interface HikvisionEventService {
     /**
      * 获取订阅信息
      *
+     * @return 事件详情对象
      * @throws Exception e
      */
     EventDetails querySubscribeDetails() throws Exception;
@@ -37,6 +38,7 @@ public interface HikvisionEventService {
     /**
      * 取消订阅
      *
+     * @param params 请求参数DTO
      * @throws Exception e
      */
     void unsubscribe(EventUnSubscriptionDto params) throws Exception;
@@ -44,7 +46,7 @@ public interface HikvisionEventService {
     /**
      * 取消订阅默认事件,也就是props配置的事件
      *
-     * @throws Exception e e
+     * @throws Exception e
      */
     void unsubscribeDefault() throws Exception;
 
@@ -53,6 +55,7 @@ public interface HikvisionEventService {
      *
      * @param params 请求参数
      * @return 响应的数据序列化后的内容
+     * @throws Exception e
      */
     HikvisionPage<EventGanged> gangedEventList(EventGangedDto params) throws Exception;
 }

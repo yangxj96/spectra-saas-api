@@ -128,6 +128,7 @@ public class HikvisionTemplate {
      * @param url   请求地址
      * @param body  请求body
      * @param clazz 数据类型
+     * @param <P>   请求参数类型实体
      * @param <T>   响应分页的LIST的类型
      * @return 分页信息
      * @throws Exception e
@@ -177,6 +178,16 @@ public class HikvisionTemplate {
         });
     }
 
+    /**
+     * 执行器,具体执行请求业务
+     *
+     * @param url      请求地址
+     * @param body     请求体
+     * @param function 响应处理方法
+     * @param <T>      响应内容实体
+     * @return 响应结果
+     * @throws Exception e
+     */
     public <T> T execute(String url, String body, Function<String, T> function) throws Exception {
         var str = ArtemisHttpUtil.doPostStringArtemis(
                 config,
@@ -189,6 +200,14 @@ public class HikvisionTemplate {
         return function.apply(str);
     }
 
+    /**
+     * 执行器,具体执行请求业务
+     *
+     * @param url      请求地址
+     * @param body     请求体
+     * @param consumer 响应处理方法
+     * @throws Exception e
+     */
     public void execute(String url, String body, Consumer<String> consumer) throws Exception {
         var str = ArtemisHttpUtil.doPostStringArtemis(
                 config,

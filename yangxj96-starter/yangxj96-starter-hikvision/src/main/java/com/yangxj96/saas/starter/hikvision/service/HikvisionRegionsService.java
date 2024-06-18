@@ -12,6 +12,7 @@ public interface HikvisionRegionsService {
      * 获取根区域信息
      *
      * @return 根区域信息
+     * @throws Exception e
      */
     Regions root() throws Exception;
 
