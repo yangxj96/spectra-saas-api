@@ -3,6 +3,7 @@ package com.yangxj96.saas.starter.security.autoconfigure;
 import cn.dev33.satoken.config.SaTokenConfig;
 import com.yangxj96.saas.starter.security.config.SaLogForSlf4j;
 import com.yangxj96.saas.starter.security.config.StpInterfaceImpl;
+import com.yangxj96.saas.starter.security.constant.EnvCons;
 import com.yangxj96.saas.starter.security.props.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -25,16 +26,24 @@ import org.springframework.context.annotation.Primary;
 @ConditionalOnProperty(name = "yangxj96.security.enable", havingValue = "true", matchIfMissing = true)
 class SaTokenAutoConfiguration {
 
+    /**
+     * 相关配置
+     */
     private final SecurityProperties props;
 
     public SaTokenAutoConfiguration(SecurityProperties props) {
         this.props = props;
     }
 
+    /**
+     * SaToken配置覆盖
+     *
+     * @return {@link SaTokenConfig}
+     */
     @Bean
     @Primary
-    SaTokenConfig saTokenConfig() {
-        log.atDebug().log("${EnvCons.PREFIX}注入satoken的配置");
+    public SaTokenConfig saTokenConfig() {
+        log.atDebug().log("${} 注入satoken的配置", EnvCons.PREFIX);
         var config = new SaTokenConfig();
         config.setTokenName(props.getTokenName());
         config.setTimeout(props.getTimeout());

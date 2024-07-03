@@ -15,7 +15,7 @@ import java.util.List;
 
 
 /**
- * 获取权限使用
+ * 权限数据加载源接口
  */
 @Slf4j
 public class StpInterfaceImpl implements StpInterface {
@@ -26,6 +26,13 @@ public class StpInterfaceImpl implements StpInterface {
     @DubboReference
     private AccountDubboService accountDubboService;
 
+    /**
+     * 返回指定账号id所拥有的权限码集合
+     *
+     * @param loginId   账号id
+     * @param loginType 账号类型
+     * @return 该账号id具有的权限码集合
+     */
     public List<String> getPermissionList(Object loginId, String loginType) {
         log.atDebug().log("{} satoken获取权限列表", EnvCons.PREFIX);
         var authorityList = new ArrayList<String>();
@@ -39,6 +46,13 @@ public class StpInterfaceImpl implements StpInterface {
         return authorityList;
     }
 
+    /**
+     * 返回指定账号id所拥有的角色标识集合
+     *
+     * @param loginId   账号id
+     * @param loginType 账号类型
+     * @return 该账号id具有的角色标识集合
+     */
     public List<String> getRoleList(Object loginId, String loginType) {
         log.atDebug().log("{} satoken获取角色列表", EnvCons.PREFIX);
         var roles = accountDubboService.getRoles(Long.parseLong(loginId.toString()));

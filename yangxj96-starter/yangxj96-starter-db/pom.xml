@@ -46,11 +46,6 @@
             <artifactId>mybatis-spring</artifactId>
             <version>3.0.3</version>
         </dependency>
-        <!--<dependency>-->
-        <!--    <groupId>org.mybatis.spring.boot</groupId>-->
-        <!--    <artifactId>mybatis-spring-boot-starter</artifactId>-->
-        <!--    <version>3.0.3</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-geometry</artifactId>
@@ -88,7 +83,12 @@
     </dependencies>
 
     <repositories>
-        <!-- 如果想要配置生效,在settings.xml的mirror中的<mirrorOf>*,!osgeo</mirrorOf>进行配置 -->
+        <!--
+        如果想要配置生效,
+        在settings.xml的mirror中的
+        <mirrorOf>*,!osgeo</mirrorOf>
+        进行配置
+        -->
         <repository>
             <id>osgeo</id>
             <name>OSGeo Release Repository</name>

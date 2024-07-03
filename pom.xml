@@ -118,6 +118,7 @@
                     <charset>UTF-8</charset>
                     <docencoding>UTF-8</docencoding>
                     <release>17</release>
+                    <additionalOptions>-Xdoclint:none</additionalOptions>
                 </configuration>
                 <executions>
                     <execution>

@@ -4,6 +4,9 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.yangxj96.saas.starter.db.entity.security.Token;
 import com.yangxj96.saas.starter.db.entity.user.Account;
 
+/**
+ * satoken工具类的扩展
+ */
 public class StpUtilExtend {
 
     /**
