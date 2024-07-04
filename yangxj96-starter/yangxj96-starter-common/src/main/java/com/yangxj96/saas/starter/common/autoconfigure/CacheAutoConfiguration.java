@@ -20,7 +20,7 @@ public class CacheAutoConfiguration {
      * 缓存生成规则
      */
     @Bean
-    KeyGenerator generatorCacheKey() {
+    public KeyGenerator generatorCacheKey() {
         log.info("{} 配置缓存key生成规则", PREFIX);
         return (Object target, Method method, Object... params) -> {
             var result = "";

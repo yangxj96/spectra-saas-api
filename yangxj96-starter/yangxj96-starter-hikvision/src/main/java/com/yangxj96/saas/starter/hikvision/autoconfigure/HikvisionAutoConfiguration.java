@@ -43,12 +43,6 @@ public class HikvisionAutoConfiguration {
      */
     @Bean("hikvisionObjectMapper")
     public ObjectMapper hikvisionObjectMapper(Jackson2ObjectMapperBuilder builder) {
-        //var om = new ObjectMapper();
-        //// 反序列化时忽略未知字段
-        //om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //om.setTimeZone(TimeZone.getTimeZone("UTC+08:00"));
-        //om.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
-        //return om;
         var dataformat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
         log.atDebug().log("{} 注册java8时间模块", PREFIX);
         builder.modules(new JavaTimeModule());

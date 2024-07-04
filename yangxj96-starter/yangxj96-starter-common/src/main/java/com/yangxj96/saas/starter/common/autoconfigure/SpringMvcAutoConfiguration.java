@@ -35,7 +35,7 @@ public class SpringMvcAutoConfiguration {
      * get请求参数下滑先转驼峰命名
      */
     @Bean
-    Filter requestGetSnakeCaseConverter() {
+    public Filter requestGetSnakeCaseConverter() {
 
         return new OncePerRequestFilter() {
             @Override
@@ -62,7 +62,7 @@ public class SpringMvcAutoConfiguration {
         };
     }
 
-    static class ParamsModifyHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    public static class ParamsModifyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         private final ConcurrentMap<String, String[]> formatted;
 

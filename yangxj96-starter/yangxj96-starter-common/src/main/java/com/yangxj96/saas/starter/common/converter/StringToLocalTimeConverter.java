@@ -18,7 +18,6 @@ public class StringToLocalTimeConverter implements Converter<String, LocalTime> 
 
     @Override
     @Nullable
-    @SuppressWarnings("null")
     public LocalTime convert(String source) {
         return LocalTime.parse(source.trim(), DateTimeFormatter.ofPattern(props.getLocalTimeFormat()));
     }

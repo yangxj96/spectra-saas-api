@@ -23,9 +23,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ResponseBodyModifyAutoConfiguration implements ResponseBodyAdvice<Object> {
 
-    @Resource
-    private ObjectMapper om;
-
     @Override
     public boolean supports(MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
         Class<?> clazz = null;
@@ -35,8 +32,10 @@ public class ResponseBodyModifyAutoConfiguration implements ResponseBodyAdvice<O
         if (converterType.isAssignableFrom(ByteArrayHttpMessageConverter.class)) {
             return false;
         }
-        return clazz != null &&
-                (clazz.getPackageName().startsWith("com.yangxj96.saas.server") || BaseController.class.isAssignableFrom(clazz));
+        return clazz != null && (
+                clazz.getPackageName().startsWith("com.yangxj96.saas.server")
+                        || BaseController.class.isAssignableFrom(clazz)
+        );
 
     }
 

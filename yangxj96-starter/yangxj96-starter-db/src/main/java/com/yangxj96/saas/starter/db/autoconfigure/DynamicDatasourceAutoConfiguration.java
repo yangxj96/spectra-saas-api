@@ -95,7 +95,7 @@ public class DynamicDatasourceAutoConfiguration {
      */
     @Bean
     @Order(Integer.MIN_VALUE)
-    DynamicDataSourceRegister dataSourceRegister() {
+    public DynamicDataSourceRegister dataSourceRegister() {
         return new DynamicDataSourceRegister();
     }
 
@@ -108,7 +108,7 @@ public class DynamicDatasourceAutoConfiguration {
      */
     @Bean
     @Primary
-    DataSource dataSource(DynamicDataSourceRegister register) {
+    public DataSource dataSource(DynamicDataSourceRegister register) {
         var source = new DynamicDataSource();
         var targetDataSources = new HashMap<>();
         // 将主数据源添加到更多数据源中
@@ -130,13 +130,13 @@ public class DynamicDatasourceAutoConfiguration {
      * @return 动态数据源过滤器
      */
     @Bean
-    Filter dynamicDatasourceInterceptor() {
+    public Filter dynamicDatasourceInterceptor() {
         log.info("{}载入动态数据源", PREFIX);
         return new DynamicDatasourceFilter();
     }
 
     @Bean
-    SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         // 使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean
         log.info("{}开始初始化SqlSessionFactory", PREFIX);
         var factory = new MybatisSqlSessionFactoryBean();
@@ -198,6 +198,16 @@ public class DynamicDatasourceAutoConfiguration {
         return factory.getObject();
     }
 
+    @Bean
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+        var executorType = properties.getExecutorType();
+        if (executorType != null) {
+            return new SqlSessionTemplate(sqlSessionFactory, executorType);
+        } else {
+            return new SqlSessionTemplate(sqlSessionFactory);
+        }
+    }
+
     /**
      * 入参使用 MybatisSqlSessionFactoryBean
      *
@@ -256,16 +266,6 @@ public class DynamicDatasourceAutoConfiguration {
             for (var customizer : sqlSessionFactoryBeanCustomizers) {
                 customizer.customize(factory);
             }
-        }
-    }
-
-    @Bean
-    SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
-        var executorType = properties.getExecutorType();
-        if (executorType != null) {
-            return new SqlSessionTemplate(sqlSessionFactory, executorType);
-        } else {
-            return new SqlSessionTemplate(sqlSessionFactory);
         }
     }
 

@@ -6,7 +6,7 @@ import jakarta.annotation.Resource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * 字符串转LocalDatetime的Converter
@@ -18,7 +18,6 @@ public class StringToDateConverter implements Converter<String, Date> {
 
     @Override
     @Nullable
-    @SuppressWarnings("null")
     public Date convert(String source) {
         return DateUtil.parse(source.trim(), props.getLocalDateTimeFormat());
     }

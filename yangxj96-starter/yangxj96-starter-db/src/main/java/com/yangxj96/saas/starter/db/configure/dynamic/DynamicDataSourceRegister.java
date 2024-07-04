@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -37,7 +38,7 @@ public class DynamicDataSourceRegister implements EnvironmentAware {
 
 
     @Override
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(@NotNull Environment environment) {
         // 初始化数据源注册
         initDefaultDataSource(environment);
         initCustomDataSources(environment);
