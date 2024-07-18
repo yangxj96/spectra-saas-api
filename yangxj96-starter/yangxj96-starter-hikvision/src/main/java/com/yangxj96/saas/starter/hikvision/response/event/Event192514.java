@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class Event192514 extends EventBase<Event192514.EventData> {
+public class Event192514 extends EventBase<EventParams<Event192514.Details>> {
 
     /**
      * 具体数据格式
@@ -22,7 +22,7 @@ public class Event192514 extends EventBase<Event192514.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventData {
+    public static class Details {
 
         /**
          * 数据模型标识
@@ -73,29 +73,29 @@ public class Event192514 extends EventBase<Event192514.EventData> {
         /**
          * 分析结果
          */
-        private List<EventDataAnalyse> smokeAndFireDetection;
+        private List<Analyse> smokeAndFireDetection;
     }
 
     @Data
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataAnalyse {
+    public static class Analyse {
 
         /**
          * 透传字段
          */
-        private EventDataTargetAttrs targetAttrs;
+        private TargetAttrs targetAttrs;
 
         /**
          * 火点检测信息
          */
-        private EventDataFire fireDetection;
+        private Fire fireDetection;
 
         /**
          * 烟雾检测信息
          */
-        private EventDataSmoke smokeDetection;
+        private Smoke smokeDetection;
 
         /**
          * ptz坐标信息
@@ -120,7 +120,7 @@ public class Event192514 extends EventBase<Event192514.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataTargetAttrs {
+    public static class TargetAttrs {
 
         /**
          * 图片服务编号
@@ -161,7 +161,7 @@ public class Event192514 extends EventBase<Event192514.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataFire {
+    public static class Fire {
 
         /**
          * 区域ID
@@ -227,7 +227,7 @@ public class Event192514 extends EventBase<Event192514.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataSmoke {
+    public static class Smoke {
 
         /**
          * 区域ID

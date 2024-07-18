@@ -1,10 +1,7 @@
 package com.yangxj96.saas.starter.hikvision.response.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yangxj96.saas.starter.hikvision.response.event.common.EventAbsoluteHigh;
-import com.yangxj96.saas.starter.hikvision.response.event.common.EventPtzInfo;
-import com.yangxj96.saas.starter.hikvision.response.event.common.EventRegionCoordinates;
-import com.yangxj96.saas.starter.hikvision.response.event.common.EventRegionFrame;
+import com.yangxj96.saas.starter.hikvision.response.event.common.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,8 +13,7 @@ import java.util.List;
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class Event192513 extends EventBase<Event192513.EventData> {
-
+public class Event192513 extends EventBase<EventParams<Event192513.Details>> {
 
     /**
      * 具体数据格式
@@ -26,7 +22,7 @@ public class Event192513 extends EventBase<Event192513.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventData {
+    public static class Details {
 
         /**
          * 数据模型标识
@@ -77,19 +73,19 @@ public class Event192513 extends EventBase<Event192513.EventData> {
         /**
          * 分析结果
          */
-        private List<EventDataAnalyse> smokeDetection;
+        private List<Analyse> smokeDetection;
     }
 
     @Data
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataAnalyse {
+    public static class Analyse {
 
         /**
          * 透传字段
          */
-        private EventDataTargetAttrs targetAttrs;
+        private TargetAttrs targetAttrs;
 
         /**
          * 区域ID
@@ -135,7 +131,7 @@ public class Event192513 extends EventBase<Event192513.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataTargetAttrs {
+    public static class TargetAttrs {
 
         /**
          * 图片服务编号

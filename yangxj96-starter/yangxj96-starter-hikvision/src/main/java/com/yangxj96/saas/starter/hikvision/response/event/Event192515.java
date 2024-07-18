@@ -13,8 +13,7 @@ import java.util.List;
 @Data
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class Event192515 extends EventBase<Event192515.EventData> {
-
+public class Event192515 extends EventBase<EventParams<Event192515.Details>> {
 
     /**
      * 具体数据格式
@@ -23,7 +22,7 @@ public class Event192515 extends EventBase<Event192515.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventData {
+    public static class Details {
 
         /**
          * 数据模型标识
@@ -74,19 +73,19 @@ public class Event192515 extends EventBase<Event192515.EventData> {
         /**
          * 分析结果
          */
-        private List<EventDataAnalyse> fireDetection;
+        private List<Analyse> fireDetection;
     }
 
     @Data
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataAnalyse {
+    public static class Analyse {
 
         /**
          * 透传字段
          */
-        private EventDataTargetAttrs targetAttrs;
+        private TargetAttrs targetAttrs;
 
         /**
          * 区域ID
@@ -166,7 +165,7 @@ public class Event192515 extends EventBase<Event192515.EventData> {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EventDataTargetAttrs {
+    public static class TargetAttrs {
 
         /**
          * 图片服务编号

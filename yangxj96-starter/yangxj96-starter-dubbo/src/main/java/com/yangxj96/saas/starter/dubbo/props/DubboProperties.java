@@ -40,4 +40,8 @@ public class DubboProperties {
      */
     private String namespace = "962cb3a9-ef75-41ee-b2c6-d1a0e49d66d8";
 
+    /**
+     * 启动时是否检测provider服务是否有实例
+     */
+    private Boolean check = false;
 }

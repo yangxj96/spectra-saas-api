@@ -59,6 +59,18 @@ public class DubboAutoConfigure {
     }
 
     /**
+     * dubbo的消费者通用处理
+     *
+     * @return {@link ConsumerConfig}
+     */
+    @Bean
+    public ConsumerConfig consumerConfig() {
+        var config = new ConsumerConfig();
+        config.setCheck(props.getCheck());
+        return config;
+    }
+
+    /**
      * Dubbo的注册配置
      *
      * @return {@link RegistryConfig}
@@ -114,30 +126,31 @@ public class DubboAutoConfigure {
         return config;
     }
 
-    /**
-     * 针对角色Dubbo远程调用的详细配置
-     *
-     * @param service {@link RoleDubboService}
-     * @return {@link ServiceConfig} 服务配置
-     */
-    @Bean
-    @ConditionalOnBean(RoleDubboService.class)
-    public ServiceConfig<RoleDubboService> roleServiceConfig(RoleDubboService service) {
-        var config = new ServiceConfig<RoleDubboService>();
-        config.setInterface(RoleDubboService.class);
-        config.setRef(service);
-        config.setVersion("1.0.0");
-        var methods = new ArrayList<MethodConfig>();
-        // 方法,根据角色code获取权限列表
-        var methodGetAuthorityByRoleCode = new MethodConfig();
-        methodGetAuthorityByRoleCode.setName("getAuthorityByRoleCode");
-        methodGetAuthorityByRoleCode.setTimeout(3000);
-        methodGetAuthorityByRoleCode.setRetries(3);
-        methods.add(methodGetAuthorityByRoleCode);
-
-        config.setMethods(methods);
-        return config;
-    }
+    ///////////////////////////////// 以下为示例 //////////////////////////////
+    ///**
+    // * 针对角色Dubbo远程调用的详细配置
+    // *
+    // * @param service {@link RoleDubboService}
+    // * @return {@link ServiceConfig} 服务配置
+    // */
+    //@Bean
+    //@ConditionalOnBean(RoleDubboService.class)
+    //public ServiceConfig<RoleDubboService> roleServiceConfig(RoleDubboService service) {
+    //    var config = new ServiceConfig<RoleDubboService>();
+    //    config.setInterface(RoleDubboService.class);
+    //    config.setRef(service);
+    //    config.setVersion("1.0.0");
+    //    var methods = new ArrayList<MethodConfig>();
+    //    // 方法,根据角色code获取权限列表
+    //    var methodGetAuthorityByRoleCode = new MethodConfig();
+    //    methodGetAuthorityByRoleCode.setName("getAuthorityByRoleCode");
+    //    methodGetAuthorityByRoleCode.setTimeout(3000);
+    //    methodGetAuthorityByRoleCode.setRetries(3);
+    //    methods.add(methodGetAuthorityByRoleCode);
+    //
+    //    config.setMethods(methods);
+    //    return config;
+    //}
 
 
 }
