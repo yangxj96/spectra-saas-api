@@ -1,25 +1,12 @@
 package com.yangxj96.saas.starter.hikvision.props;
 
-// @ConfigurationProperties(prefix = "app.hikvision")
-//class HikvisionProperties {
-//
-//    var host = "222.220.89.153:1443"
-//
-//    var appKey = "23572347"
-//
-//    var appSecret = "jmhLORqgqtFNUUUJqH7u"
-//
-//    var prefix = "/artemis"
-//
-//    var protocol = "https://"
-//
-//}
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * 海康相关配置
@@ -70,4 +57,27 @@ public class HikvisionProperties {
      * 海康事件订阅
      */
     private HikvisionEventProperties events = new HikvisionEventProperties();
+
+    @Data
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class HikvisionEventProperties {
+
+        /**
+         * 是否启动时开始订阅事件列表中的事件
+         */
+        private Boolean enable = Boolean.FALSE;
+
+        /**
+         * 事件订阅回调地址
+         */
+        private String destination;
+
+        /**
+         * 事件订阅列表
+         */
+        private List<Integer> types;
+
+    }
 }
