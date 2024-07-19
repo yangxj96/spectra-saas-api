@@ -17,6 +17,11 @@ import java.util.List;
 public class HikvisionEventProperties {
 
     /**
+     * 是否启动时开始订阅事件列表中的事件
+     */
+    private Boolean enable = Boolean.FALSE;
+
+    /**
      * 事件订阅回调地址
      */
     private String destination;

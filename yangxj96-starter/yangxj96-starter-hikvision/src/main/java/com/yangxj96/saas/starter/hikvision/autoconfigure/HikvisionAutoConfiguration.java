@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.hikvision.artemis.sdk.config.ArtemisConfig;
+import com.yangxj96.saas.starter.hikvision.core.HikvisionSubscribeEvent;
 import com.yangxj96.saas.starter.hikvision.core.HikvisionTemplate;
 import com.yangxj96.saas.starter.hikvision.props.HikvisionProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +66,6 @@ public class HikvisionAutoConfiguration {
         return builder.build();
     }
 
-
     /**
      * 海康相关配置
      *
@@ -90,5 +90,13 @@ public class HikvisionAutoConfiguration {
         return new HikvisionTemplate();
     }
 
-
+    /**
+     * 订阅事件处理
+     *
+     * @return {@link HikvisionSubscribeEvent}
+     */
+    @Bean
+    public HikvisionSubscribeEvent subscribeEvent() {
+        return new HikvisionSubscribeEvent();
+    }
 }

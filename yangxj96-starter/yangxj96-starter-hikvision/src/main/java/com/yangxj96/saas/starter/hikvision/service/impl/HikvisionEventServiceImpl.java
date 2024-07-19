@@ -33,27 +33,12 @@ public class HikvisionEventServiceImpl implements HikvisionEventService {
     }
 
     @Override
-    public void subscribeDefault() throws Exception {
-        var params = new EventSubscriptionDto();
-        params.setEventTypes(properties.getEvents().getTypes());
-        params.setEventDest(properties.getEvents().getDestination());
-        template.post("/api/eventService/v1/eventSubscriptionByEventTypes", params);
-    }
-
-    @Override
     public EventDetails querySubscribeDetails() throws Exception {
         return template.post("/api/eventService/v1/eventSubscriptionView", "{}", EventDetails.class);
     }
 
     @Override
     public void unsubscribe(EventUnSubscriptionDto params) throws Exception {
-        template.post("/api/eventService/v1/eventUnSubscriptionByEventTypes", params);
-    }
-
-    @Override
-    public void unsubscribeDefault() throws Exception {
-        var params = new EventSubscriptionDto();
-        params.setEventTypes(properties.getEvents().getTypes());
         template.post("/api/eventService/v1/eventUnSubscriptionByEventTypes", params);
     }
 
