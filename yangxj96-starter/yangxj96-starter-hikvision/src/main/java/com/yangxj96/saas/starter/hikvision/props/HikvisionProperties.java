@@ -77,7 +77,7 @@ public class HikvisionProperties {
         /**
          * 事件订阅列表
          */
-        private List<Integer> types;
+        private List<Long> types;
 
     }
 }

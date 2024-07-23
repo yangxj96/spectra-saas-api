@@ -19,7 +19,7 @@ public class EventSubscriptionDto {
     /**
      * 事件类型
      */
-    private List<Integer> eventTypes;
+    private List<Long> eventTypes;
 
     /**
      * 指定事件接收的地址，采用restful回调模式，支持http和https，样式如下：http://ip:port/eventRcv或者

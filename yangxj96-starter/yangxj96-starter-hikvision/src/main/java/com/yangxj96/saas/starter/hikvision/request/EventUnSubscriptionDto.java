@@ -19,6 +19,6 @@ public class EventUnSubscriptionDto {
     /**
      * 事件类型
      */
-    private List<Integer> eventTypes;
+    private List<Long> eventTypes;
 
 }
