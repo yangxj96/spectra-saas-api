@@ -2,7 +2,10 @@ package com.yangxj96.saas.starter.hikvision.response.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.yangxj96.saas.starter.hikvision.response.event.common.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,80 +15,59 @@ import java.util.List;
  */
 @Data
 @ToString
-@EqualsAndHashCode(callSuper = true)
-public class Event192513 extends EventBase<EventParams<Event192513.Details>> {
+public class Event192513 {
 
-    /**
-     * 具体数据格式
-     */
+   private Details data;
+   private String eventId;
+   private String eventObjectiveIndexCode;
+   private String eventOjectiveName;
+   private Long eventType;
+   private LocalDateTime happenTime;
+   private String sourceUuid;
+   private String srcIndex;
+   private String srcName;
+   private String srcParentIndex;
+   private String srcType;
+   private Integer status;
+   private String strEventType;
+   private List<EventTag> tags;
+
     @Data
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Details {
-
-        /**
-         * 数据模型标识
-         */
-        private String dataType;
-
-        /**
-         * 数据接收时间
-         */
-        private LocalDateTime recvTime;
-
-        /**
-         * 数据发送时间
-         */
-        private LocalDateTime sendTime;
-
-        /**
-         * 数据触发时间
-         */
-        private LocalDateTime dateTime;
-
-        /**
-         * 设备的IP地址
-         */
-        private String ipAddress;
-
-        /**
-         * 设备端口号
-         */
-        private Integer portNo;
-
-        /**
-         * 设备通道号
-         */
+   public static class Details {
         @JsonProperty("channelID")
-        private Integer channelId;
+       private String channelId;
+       private String channelName;
+       private String dataProcInterval;
+       private String dataType;
+       private LocalDateTime dateTime;
+       private String eventDescription;
+       private String eventType;
+       private String ipAddress;
+       private String picUploadInterval;
+       private Integer portNo;
+       private LocalDateTime recvTime;
+       private LocalDateTime sendTime;
+       private List<Analyse> smokeDetection;
+   }
 
-        /**
-         * 事件类型
-         */
-        private String eventType;
-
-        /**
-         * 事件类型名称
-         */
-        private String eventDescription;
-
-        /**
-         * 分析结果
-         */
-        private List<Analyse> smokeDetection;
-    }
 
     @Data
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Analyse {
+        /**
+         * 报警抓拍图片URL
+         */
+        private String imageUrl;
 
         /**
-         * 透传字段
+         * ptz坐标信息
          */
-        private TargetAttrs targetAttrs;
+        private EventPtzInfo ptzInfo;
 
         /**
          * 区域ID
@@ -94,29 +76,13 @@ public class Event192513 extends EventBase<EventParams<Event192513.Details>> {
         private Integer regionId;
 
         /**
-         * 区域坐标列表
-         */
-        private List<EventRegionCoordinates> regionCoordinatesList;
-
-        /**
          * 烟雾框
          */
         private EventRegionFrame smokeRegion;
-
         /**
-         * 绝对高度
+         * 透传字段
          */
-        private EventAbsoluteHigh absoluteHigh;
-
-        /**
-         * ptz坐标信息
-         */
-        private EventPtzInfo ptzInfo;
-
-        /**
-         * 报警抓拍图片URL
-         */
-        private String imageUrl;
+        private TargetAttrs targetAttrs;
 
         /**
          * 可见光图片URL
@@ -132,36 +98,25 @@ public class Event192513 extends EventBase<EventParams<Event192513.Details>> {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class TargetAttrs {
-
-        /**
-         * 图片服务编号
-         */
-        private String imageServerCode;
-
-        /**
-         * 设备编号，平台关联的编码
-         */
-        private String deviceIndexCode;
-
-        /**
-         * 监控点编码，平台关联的编码
-         */
-        private String cameraIndexCode;
-
-        /**
-         * 监控点安装地址
-         */
+        @JsonProperty("IACPicUp")
+        private String IACPicUp;
+        private String areaCode;
         private String cameraAddress;
-
-        /**
-         * 监控点所在经度
-         */
-        private Float longitude;
-
-        /**
-         * 监控点所在纬度
-         */
-        private Float latitude;
+        private String cameraIndexCode;
+        private String cameraName;
+        private String cameraType;
+        private String deviceIndexCode;
+        private String deviceLatitude;
+        private String deviceLongitude;
+        private String deviceName;
+        private String deviceType;
+        private String imageServerCode;
+        private String latitude;
+        private String latitudeType;
+        private String longitude;
+        private String longitudeType;
+        private String recognitionSign;
+        private String regionIndexCode;
     }
 
 }
