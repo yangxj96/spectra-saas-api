@@ -4,9 +4,11 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.yangxj96.saas.starter.hikvision.core.HikvisionTemplate;
 import com.yangxj96.saas.starter.hikvision.props.HikvisionProperties;
-import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
+import com.yangxj96.saas.starter.hikvision.request.CameraPlaybackDto;
 import com.yangxj96.saas.starter.hikvision.request.CameraPreviewDto;
+import com.yangxj96.saas.starter.hikvision.response.HikvisionPage;
 import com.yangxj96.saas.starter.hikvision.response.entity.Camera;
+import com.yangxj96.saas.starter.hikvision.response.entity.CameraPlayback;
 import com.yangxj96.saas.starter.hikvision.response.entity.CameraPreview;
 import com.yangxj96.saas.starter.hikvision.service.HikvisionCameraService;
 import jakarta.annotation.Resource;
@@ -39,6 +41,15 @@ public class HikvisionCameraServiceImpl implements HikvisionCameraService {
     public CameraPreview previewURLs(CameraPreviewDto params) throws Exception {
         var resp = template.post("/api/video/v1/cameras/previewURLs", params, CameraPreview.class);
         if (StrUtil.isAllNotBlank(properties.getPreviewHost(), properties.getPreviewExternalHost())) {
+            resp.setUrl(resp.getUrl().replace(properties.getPreviewHost(), properties.getPreviewExternalHost()));
+        }
+        return resp;
+    }
+
+    @Override
+    public CameraPlayback playbackURLs(CameraPlaybackDto params) throws Exception {
+        var resp = template.post("/api/video/v2/cameras/playbackURLs", params, CameraPlayback.class);
+        if (StrUtil.isAllNotBlank(resp.getUrl(),properties.getPreviewHost(), properties.getPreviewExternalHost())) {
             resp.setUrl(resp.getUrl().replace(properties.getPreviewHost(), properties.getPreviewExternalHost()));
         }
         return resp;
