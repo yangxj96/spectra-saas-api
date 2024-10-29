@@ -19,13 +19,6 @@
         <java.version>17</java.version>
     </properties>
 
-    <modules>
-        <module>yangxj96-serve-auth</module>
-        <module>yangxj96-serve-gateway</module>
-        <module>yangxj96-serve-platform</module>
-        <module>yangxj96-serve-system</module>
-    </modules>
-
     <dependencies>
         <dependency>
             <groupId>com.yangxj96.saas</groupId>
