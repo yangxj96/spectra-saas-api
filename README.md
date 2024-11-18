@@ -6,12 +6,12 @@
 
 技术架构：
 
-- 🚀️  `JDK 17.0.8`
-- 🚀️  `Gradle 8.6`
+- 🚀️  `JavaJDK 21`
+- 🚀️  `Maven 3.9.6`
 - 🚀️  `PostgreSQL 15`
-- 🚀️  `spring-boot  3.1.7`
-- 🚀️  `spring-cloud 2022.0.4`
-- 🚀️  `spring-cloud-alibaba 2022.0.0.0-RC1`
+- 🚀️  `spring-boot  3.2.11`
+- 🚀️  `spring-cloud 2023.0.1`
+- 🚀️  `spring-cloud-alibaba 2023.0.1.0`
 - 🚀️  `mybatis-plus 3.5.5`
 - ...
 
