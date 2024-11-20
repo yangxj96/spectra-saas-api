@@ -1,3 +1,4 @@
+com.yangxj96.saas.starter.common.autoconfigure.CommonAutoConfiguration
 com.yangxj96.saas.starter.common.autoconfigure.JacksonAutoConfiguration
 com.yangxj96.saas.starter.common.autoconfigure.SpringMvcAutoConfiguration
 com.yangxj96.saas.starter.common.autoconfigure.CacheAutoConfiguration
