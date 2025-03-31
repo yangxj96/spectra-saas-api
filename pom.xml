@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.yangxj96.saas</groupId>
-    <artifactId>yangxj96-saas-api</artifactId>
+    <groupId>com.yangxj96.spectra</groupId>
+    <artifactId>spectra-saas-api</artifactId>
     <version>${revision}</version>
-    <name>yangxj96-saas-api</name>
+    <name>spectra-saas-api</name>
     <description>SAAS平台</description>
     <packaging>pom</packaging>
 
@@ -23,12 +23,13 @@
 
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
+        <kotlin.version>1.9.24</kotlin.version>
     </properties>
 
     <modules>
-        <module>yangxj96-common</module>
-        <module>yangxj96-starter</module>
-        <module>yangxj96-serve</module>
+        <module>spectra-common</module>
+        <module>spectra-starter</module>
+        <module>spectra-serve</module>
     </modules>
 
     <dependencyManagement>
@@ -67,6 +68,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -161,6 +173,30 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                </configuration>
             </plugin>
         </plugins>
     </build>

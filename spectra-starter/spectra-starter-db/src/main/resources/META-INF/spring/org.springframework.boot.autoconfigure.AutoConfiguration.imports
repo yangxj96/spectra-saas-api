@@ -1,0 +1,2 @@
+com.yangxj96.spectra.starter.db.autoconfigure.MybatisPlusAutoConfiguration
+com.yangxj96.spectra.starter.db.autoconfigure.RedisAutoConfiguration

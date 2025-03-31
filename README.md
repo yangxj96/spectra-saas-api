@@ -23,11 +23,6 @@
 
 # 3 功能计划
 
-- [X] 封装所有模块的`entity`到单独的[yangxj96-bean](yangxj96-bean)模块
-- [X] 封装公用的一些工具类到[yangxj96-common](yangxj96-common)
-- [x] 把所有业务的微服务封装到[yangxj96-serve](yangxj96-serve)模块的子模块当中
-- [x] 把所有的自动配置相关的模块封装到[yangxj96-starter](yangxj96-starter)模块的子模块中
-
 # 使用许可
 
 [MIT](LICENSE) © yangxj96

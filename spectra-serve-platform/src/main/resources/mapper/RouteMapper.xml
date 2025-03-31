@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yangxj96.spectra.server.platform.mapper.RouteMapper">
+    <!-- @formatter:off -->
+    <resultMap id="BaseResultMap" type="com.yangxj96.spectra.starter.db.entity.platform.Route">
+        <!--@mbg.generated-->
+        <!--@Table db_system.t_route-->
+        <id column="id"               jdbcType="BIGINT"    property="id"/>
+        <result column="uri"          jdbcType="VARCHAR"   property="uri"/>
+        <result column="order"        jdbcType="INTEGER"   property="order"/>
+        <result column="predicates"   jdbcType="VARCHAR"   property="predicates"/>
+        <result column="filters"      jdbcType="VARCHAR"   property="filters"/>
+        <result column="metadata"     jdbcType="VARCHAR"   property="metadata"/>
+        <result column="route_id"     jdbcType="VARCHAR"   property="routeId"/>
+        <result column="created_user" jdbcType="BIGINT"    property="createdUser"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_user" jdbcType="BIGINT"    property="updatedUser"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="deleted"      jdbcType="TIMESTAMP" property="deleted"/>
+    </resultMap>
+    <!-- @formatter:on -->
+    <sql id="Base_Column_List">
+        <!--@mbg.generated-->
+        id,
+        uri,
+        "order",
+        predicates,
+        filters,
+        metadata,
+        route_id,
+        created_user,
+        created_time,
+        updated_user,
+        updated_time,
+        deleted
+    </sql>
+</mapper>

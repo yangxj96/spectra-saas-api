@@ -1,0 +1,7 @@
+com.yangxj96.spectra.starter.common.autoconfigure.CommonAutoConfiguration
+com.yangxj96.spectra.starter.common.autoconfigure.JacksonAutoConfiguration
+com.yangxj96.spectra.starter.common.autoconfigure.SpringMvcAutoConfiguration
+com.yangxj96.spectra.starter.common.autoconfigure.CacheAutoConfiguration
+com.yangxj96.spectra.starter.common.autoconfigure.GlobalErrorAutoConfiguration
+com.yangxj96.spectra.starter.common.autoconfigure.ResponseBodyModifyAutoConfiguration
+com.yangxj96.spectra.starter.common.autoconfigure.EndpointAutoConfiguration
