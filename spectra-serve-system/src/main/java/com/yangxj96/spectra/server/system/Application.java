@@ -11,7 +11,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  * 主运行文件
  */
 @EnableDubbo
-@MapperScan("com.yangxj96.saas.server.system.mapper")
+@MapperScan("com.yangxj96.spectra.server.system.mapper")
 @EnableDiscoveryClient
 @EnableCaching
 @SpringBootApplication

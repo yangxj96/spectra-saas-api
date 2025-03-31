@@ -9,8 +9,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * 平台内容的主启动类
  */
-@EnableDubbo(scanBasePackages = "com.yangxj96.saas.server.platform.dubbo")
-@MapperScan("com.yangxj96.saas.server.platform.mapper")
+@EnableDubbo(scanBasePackages = "com.yangxj96.spectra.server.platform.dubbo")
+@MapperScan("com.yangxj96.spectra.server.platform.mapper")
 @EnableDiscoveryClient
 @SpringBootApplication
 public class Application {
