@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: yangxj96-serve-gateway
+    name: spectra-serve-gateway
   main:
     allow-bean-definition-overriding: true
   cloud:
@@ -14,7 +14,7 @@ spring:
         namespace: 489961c7-8385-452f-b853-380f0eaf6df2
         metadata:
           depend:
-            - "yangxj96-serve-platform"
+            - "spectra-serve-platform"
       config:
         server-addr: 175.178.90.140:8848
         group: DEFAULT_GROUP
