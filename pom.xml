@@ -25,7 +25,7 @@
         <spring-cloud-alibaba.version>2023.0.3.2</spring-cloud-alibaba.version>
 
         <!-- 统一依赖版本管理 -->
-        <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <mybatis-plus.version>3.5.11</mybatis-plus.version>
         <hutool.version>5.8.25</hutool.version>
         <sa-token.version>1.41.0</sa-token.version>
     </properties>
@@ -57,9 +57,16 @@
             <!-- 统一依赖版本管理 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-bom</artifactId>
                 <version>${mybatis-plus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
+            <!--<dependency>-->
+            <!--    <groupId>com.baomidou</groupId>-->
+            <!--    <artifactId>mybatis-plus-boot-starter</artifactId>-->
+            <!--    <version>${mybatis-plus.version}</version>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>

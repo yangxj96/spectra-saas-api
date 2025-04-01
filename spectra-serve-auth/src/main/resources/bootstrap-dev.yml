@@ -22,24 +22,12 @@ spring:
     hikari:
       connection-test-query: select 1
       max-lifetime: 1200000
-  rabbitmq:
-    host: 175.178.90.140
-    port: 5672
-    username: root
-    password: QuVsKppcWvwwX2Vv
-    virtual-host: /
   data:
     redis:
       host: 175.178.90.140
       password: QuVsKppcWvwwX2Vv
       port: 6379
       database: 0
-      lettuce:
-        pool:
-          max-active: 8
-          min-idle: 0
-          max-idle: 8
-          max-wait: -1
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
