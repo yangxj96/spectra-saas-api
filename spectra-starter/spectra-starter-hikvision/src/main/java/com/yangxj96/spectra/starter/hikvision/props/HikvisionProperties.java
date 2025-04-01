@@ -15,7 +15,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ConfigurationProperties(prefix = "yangxj96.hikvision")
+@ConfigurationProperties(prefix = "spectra.hikvision")
 public class HikvisionProperties {
 
     /**

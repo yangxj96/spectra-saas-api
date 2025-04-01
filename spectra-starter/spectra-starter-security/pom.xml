@@ -19,6 +19,7 @@
     </properties>
 
     <dependencies>
+        <!-- 工具包 Begin -->
         <dependency>
             <groupId>com.yangxj96.spectra</groupId>
             <artifactId>spectra-starter-common</artifactId>
@@ -29,22 +30,24 @@
             <artifactId>spectra-starter-dubbo</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- 工具包 End -->
+
+        <!-- sa-token Begin -->
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-boot3-starter</artifactId>
-            <version>1.37.0</version>
         </dependency>
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-aop</artifactId>
-            <version>1.37.0</version>
         </dependency>
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-redis-jackson</artifactId>
-            <version>1.37.0</version>
         </dependency>
+        <!-- sa-token End -->
 
+        <!-- 以下依赖为容器提供 -->
         <dependency>
             <groupId>com.yangxj96.spectra</groupId>
             <artifactId>spectra-starter-db</artifactId>
@@ -59,12 +62,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

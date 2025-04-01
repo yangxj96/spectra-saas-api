@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ConfigurationProperties(prefix = "yangxj96.dubbo")
+@ConfigurationProperties(prefix = "spectra.dubbo")
 public class DubboProperties {
 
     /**

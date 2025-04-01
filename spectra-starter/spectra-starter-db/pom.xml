@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>17</java.version>
+
+        <geotools.version>24.7</geotools.version>
     </properties>
 
     <dependencies>
@@ -29,27 +31,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.7</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis-spring</artifactId>
-                    <groupId>org.mybatis</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-            <version>3.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-geometry</artifactId>
-            <version>24.7</version>
+            <version>${geotools.version}</version>
         </dependency>
         <!-- 为了gt-geometry依赖的漏洞修复 -->
         <dependency>
@@ -60,14 +49,15 @@
         <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-geojson</artifactId>
-            <version>24.7</version>
+            <version>${geotools.version}</version>
         </dependency>
         <dependency>
             <groupId>net.postgis</groupId>
             <artifactId>postgis-jdbc</artifactId>
-            <version>2021.1.0</version>
+            <version>2024.1.0</version>
         </dependency>
 
+        <!-- 以下依赖为容器提供 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -76,7 +66,6 @@
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-spring-boot3-starter</artifactId>
-            <version>1.37.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -100,6 +89,7 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
+
     </repositories>
 
 </project>

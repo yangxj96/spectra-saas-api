@@ -1,7 +1,6 @@
 package com.yangxj96.spectra.starter.hikvision.response.event;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.yangxj96.saas.starter.hikvision.response.event.common.*;
 import com.yangxj96.spectra.starter.hikvision.response.event.common.*;
 import lombok.*;
 

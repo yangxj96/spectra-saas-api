@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * db相关的props
  */
 @Data
-@ConfigurationProperties(prefix = "yangxj96.db")
+@ConfigurationProperties(prefix = "spectra.db")
 public class DBProperties {
 
     /**

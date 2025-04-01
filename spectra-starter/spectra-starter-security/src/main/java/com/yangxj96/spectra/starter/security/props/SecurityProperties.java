@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ConfigurationProperties(prefix = "yangxj96.security")
+@ConfigurationProperties(prefix = "spectra.security")
 public class SecurityProperties {
 
     /**

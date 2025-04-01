@@ -8,7 +8,7 @@ import lombok.Data;
  * Jackson自动配置的props
  */
 @Data
-@ConfigurationProperties(prefix = "yangxj96.jackson")
+@ConfigurationProperties(prefix = "spectra.jackson")
 public class JacksonProperties {
 
     /**
