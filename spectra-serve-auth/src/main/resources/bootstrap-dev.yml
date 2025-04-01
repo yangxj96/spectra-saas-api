@@ -11,28 +11,6 @@ spring:
       discovery:
         server-addr: 175.178.90.140:8848
         namespace: 489961c7-8385-452f-b853-380f0eaf6df2
-    sentinel:
-      transport:
-        port: 8719
-        dashboard: 175.178.90.140:8484
-    function:
-      definition: saasTenant;saasCommon
-    stream:
-      rabbit:
-        bindings:
-          saasTenant-in-0:
-            consumer:
-              acknowledge-mode: manual
-          saasCommon-in-0:
-            consumer:
-              acknowledge-mode: manual
-      bindings:
-        saasTenant-in-0:
-          destination: saas.tenant
-          group: ${spring.application.name}
-        saasCommon-in-0:
-          destination: saas.common
-          group: ${spring.application.name}
     loadbalancer:
       enabled: true
   datasource:
@@ -88,9 +66,7 @@ management:
     gateway:
       enabled: true
 
-yangxj96:
-  security:
-    store-type: redis
+spectra:
   dubbo:
     namespace: 962cb3a9-ef75-41ee-b2c6-d1a0e49d66d8
 

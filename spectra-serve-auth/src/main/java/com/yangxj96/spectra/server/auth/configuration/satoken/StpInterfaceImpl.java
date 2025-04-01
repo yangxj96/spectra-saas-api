@@ -32,7 +32,7 @@ public class StpInterfaceImpl implements StpInterface {
 
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        log.atDebug().log("{} satoken获取权限列表", EnvCons.PREFIX);
+        log.atDebug().log("{} sa-token获取权限列表", EnvCons.PREFIX);
         var authorityList = new ArrayList<String>();
         var roleList = getRoleList(loginId, loginType);
         roleList.forEach(it -> {
@@ -46,7 +46,7 @@ public class StpInterfaceImpl implements StpInterface {
 
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        log.atDebug().log("{} satoken获取角色列表", EnvCons.PREFIX);
+        log.atDebug().log("{} sa-token获取角色列表", EnvCons.PREFIX);
         var roles = accountService.getRoles(Long.parseLong(loginId.toString()));
         return roles.stream().map(Role::getCode).toList();
     }
