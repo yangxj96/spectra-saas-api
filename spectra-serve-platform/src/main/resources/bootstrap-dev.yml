@@ -4,30 +4,51 @@ spring:
   application:
     name: spectra-serve-platform
   main:
+    banner-mode: off
     allow-bean-definition-overriding: true
   cloud:
     nacos:
-      username: nacos
-      password: QuVsKppcWvwwX2Vv
+      username: admin
+      password: admin
       discovery:
-        server-addr: 175.178.90.140:8848
+        server-addr: 127.0.0.1:8848
         namespace: 489961c7-8385-452f-b853-380f0eaf6df2
-        metadata:
-          depend:
-            - "spectra-serve-auth"
-      config:
-        server-addr: 175.178.90.140:8848
-        group: DEFAULT_GROUP
-        namespace: 489961c7-8385-452f-b853-380f0eaf6df2
-        refresh-enabled: true
-        file-extension: yml
-        extension-configs:
-          - data-id: yangxj96-saas-common.yml
-          - data-id: yangxj96-saas-datasource.yml
+    loadbalancer:
+      enabled: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/spectra_saas_db?public&stringtype=unspecified
+    username: postgres
+    password: postgres
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-test-query: select 1
+      max-lifetime: 1200000
+  data:
+    redis:
+      host: 127.0.0.1
+      password:
+      port: 6379
+      database: 0
+
 mybatis-plus:
-  type-aliases-package: com.yangxj96.saas.bean.platform
-yangxj96:
-  security:
-    enable: true
-  dubbo:
-    namespace: 962cb3a9-ef75-41ee-b2c6-d1a0e49d66d8
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    local-cache-scope: statement
+  global-config:
+    banner: false
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-not-delete-value: "null"
+      logic-delete-value: "now()"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

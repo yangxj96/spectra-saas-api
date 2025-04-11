@@ -1,2 +1,2 @@
 com.yangxj96.spectra.starter.security.autoconfigure.SecurityAutoConfiguration
-autoconfigure.com.yangxj96.spectra.starter.security.SaTokenAutoConfiguration
+com.yangxj96.spectra.starter.security.autoconfigure.SaTokenAutoConfiguration

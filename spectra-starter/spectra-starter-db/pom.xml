@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -61,7 +61,6 @@
             <artifactId>postgis-jdbc</artifactId>
             <version>2024.1.0</version>
         </dependency>
-
         <!-- 以下依赖为容器提供 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -53,6 +53,7 @@ class SaTokenAutoConfiguration {
         config.setTokenStyle(props.getTokenStyle().getV());
         config.setIsLog(true);
         config.setIsColorLog(true);
+        config.setIsPrint(false);
         return config;
     }
 
