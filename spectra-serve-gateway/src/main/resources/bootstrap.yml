@@ -1,11 +1,12 @@
 server:
-  port: 0
+  port: 8888
 spring:
   application:
-    name: spectra-serve-system
+    name: spectra-serve-gateway
   main:
     banner-mode: off
     allow-bean-definition-overriding: true
+    web-application-type: reactive
   cloud:
     nacos:
       username: admin
@@ -17,7 +18,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://127.0.0.1:5432/spectra_saas_db?public&stringtype=unspecified
+    url: jdbc:postgresql://127.0.0.1:5432/spectra_saas_db
     username: postgres
     password: postgres
     type: com.zaxxer.hikari.HikariDataSource
@@ -53,7 +54,5 @@ management:
   endpoint:
     health:
       show-details: always
-
-logging:
-  level:
-    com.alibaba.dubbo: error
+    gateway:
+      enabled: true
