@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
 
         StpUtil.login(account.getId(), "admin");
 
-        return StpUtilExtend.GenerateToken(account);
+        return StpUtilExtend.generateToken(account);
     }
 
     public Token check() throws LoginException {
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
             StpUtil.checkLogin();
             var id = StpUtil.getLoginIdAsLong();
             var account = accountService.getById(id);
-            return StpUtilExtend.GenerateToken(account);
+            return StpUtilExtend.generateToken(account);
         } catch (Exception e) {
             throw new LoginException("检查token失败");
         }

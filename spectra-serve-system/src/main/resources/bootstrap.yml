@@ -24,12 +24,18 @@ spring:
     hikari:
       connection-test-query: select 1
       max-lifetime: 1200000
+
   data:
     redis:
       host: 127.0.0.1
       password:
       port: 6379
       database: 0
+flowable:
+  # 每次都更新一下schema
+  database-schema-update: true
+  # 指定schema
+  database-schema: db_workflow
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml

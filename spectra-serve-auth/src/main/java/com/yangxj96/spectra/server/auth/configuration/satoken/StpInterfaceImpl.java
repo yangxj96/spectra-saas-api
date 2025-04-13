@@ -33,15 +33,15 @@ public class StpInterfaceImpl implements StpInterface {
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
         log.atDebug().log("{} sa-token获取权限列表", EnvCons.PREFIX);
-        var authorityList = new ArrayList<String>();
+        var authoritys = new ArrayList<String>();
         var roleList = getRoleList(loginId, loginType);
         roleList.forEach(it -> {
             var ps = roleService.getAuthorityByRoleCode(it);
             if (CollUtil.isNotEmpty(ps)) {
-                authorityList.addAll(ps.stream().map(Authority::getCode).toList());
+                authoritys.addAll(ps.stream().map(Authority::getCode).toList());
             }
         });
-        return authorityList;
+        return authoritys;
     }
 
     @Override

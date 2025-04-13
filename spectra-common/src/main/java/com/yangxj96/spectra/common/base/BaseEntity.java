@@ -40,40 +40,40 @@ public class BaseEntity implements Serializable {
     /**
      * 创建人
      */
-    @TableField(value = "created_user", fill = FieldFill.INSERT)
     @JsonIgnore
+    @TableField(value = "created_user", fill = FieldFill.INSERT)
     @Null(message = "非公开字段", groups = {Verify.Insert.class, Verify.Update.class})
     private Long createdUser;
 
     /**
      * 创建时间
      */
-    @TableField(value = "created_time", fill = FieldFill.INSERT)
     @JsonIgnore
+    @TableField(value = "created_time", fill = FieldFill.INSERT)
     @Null(message = "非公开字段", groups = {Verify.Insert.class, Verify.Update.class})
     private LocalDateTime createdTime;
 
     /**
      * 更新人
      */
-    @TableField(value = "updated_user", fill = FieldFill.INSERT_UPDATE)
     @JsonIgnore
+    @TableField(value = "updated_user", fill = FieldFill.INSERT_UPDATE)
     @Null(message = "非公开字段", groups = {Verify.Insert.class, Verify.Update.class})
     private Long updatedUser;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
     @JsonIgnore
+    @TableField(value = "updated_time", fill = FieldFill.INSERT_UPDATE)
     @Null(message = "非公开字段", groups = {Verify.Insert.class, Verify.Update.class})
     private LocalDateTime updatedTime;
 
     /**
      * 删除标识
      */
-    @TableField(value = "deleted")
     @JsonIgnore
+    @TableField(value = "deleted")
     @Null(message = "非公开字段", groups = {Verify.Insert.class, Verify.Update.class})
     private LocalDateTime deleted;
 }

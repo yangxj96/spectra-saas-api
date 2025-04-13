@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AfterStartup implements CommandLineRunner {
 
-    //@Resource
-    //private RouteService routeService;
+    @Resource
+    private RouteService routeService;
 
     @Override
     public void run(String... args) throws Exception {
-        // routeService.refresh();
+        routeService.refresh();
     }
 }

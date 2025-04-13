@@ -9,12 +9,17 @@ import com.yangxj96.spectra.starter.db.entity.user.Account;
  */
 public class StpUtilExtend {
 
+    private StpUtilExtend() {
+    }
+
+
     /**
      * 生成token
+     *
      * @param account 账号信息
      * @return {@link Token} token信息
      */
-    public static Token GenerateToken(Account account){
+    public static Token generateToken(Account account) {
         var tokenInfo = StpUtil.getTokenInfo();
         var token = new Token();
         token.setId(account.getId());

@@ -1,5 +1,6 @@
 package com.yangxj96.spectra.starter.common.autoconfigure;
 
+import com.yangxj96.spectra.common.exception.DataNotExistException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.validation.BindException;
@@ -25,6 +26,19 @@ import javax.security.auth.login.LoginException;
 public class GlobalErrorAutoConfiguration {
 
     private static final String PREFIX = "[全局异常配置]:";
+
+
+    /**
+     * 无权限异常
+     */
+    @ResponseBody
+    @ExceptionHandler(DataNotExistException.class)
+    @ConditionalOnClass(DataNotExistException.class)
+    public R<Object> dataNotExistException(HttpServletResponse resp, DataNotExistException e) {
+        log.atError().log("{} 数据不存在异常", PREFIX, e);
+        return R.failure(e.getMessage() != null ? e.getMessage() : "数据不存在");
+    }
+
 
     /**
      * 无权限异常

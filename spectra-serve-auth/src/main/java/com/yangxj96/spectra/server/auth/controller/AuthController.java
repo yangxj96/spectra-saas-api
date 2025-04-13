@@ -23,11 +23,9 @@ import javax.security.auth.login.LoginException;
 @Slf4j
 @RestController
 @RequestMapping
-class AuthController {
-
+public class AuthController {
 
     private static final String PREFIX = "[AuthController]: ";
-
 
     @Resource
     private AuthService bindService;
@@ -44,7 +42,7 @@ class AuthController {
     @SaIgnore
     @PostMapping(value = "/login")
     public Token login(@Validated @RequestBody AuthLogin param) throws LoginException {
-        log.info("${PREFIX}用户:${param.username}开始登录,输入的密码为:${param.password}");
+        log.atInfo().log("{}用户:{}开始登录,输入的密码为:{}", PREFIX, param.getUsername(), param.getPassword());
         return bindService.login(param.getUsername(), param.getPassword());
     }
 
@@ -56,7 +54,7 @@ class AuthController {
     @SaCheckLogin
     @PostMapping("/check_token")
     public Token checkToken() throws LoginException {
-        log.atDebug().log("{}登录检查,token:{}", PREFIX, request.getHeader("Authorization"));
+        log.atInfo().log("{}登录检查,token:{}", PREFIX, request.getHeader("Authorization"));
         return bindService.check();
     }
 
@@ -67,7 +65,7 @@ class AuthController {
     @PostMapping("/logoff")
     public void logout() {
         try {
-            log.atDebug().log("{}用户登出,token:{}", PREFIX, request.getHeader("Authorization"));
+            log.atInfo().log("{}用户登出,token:{}", PREFIX, request.getHeader("Authorization"));
             bindService.logout();
         } catch (Exception e) {
             throw new NotLoginException("退出异常", "", "");
